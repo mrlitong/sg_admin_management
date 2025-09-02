@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <!-- 完整的viewport配置，支持安全区域 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- iOS Web App支持 -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="三国小助手" />
+    
+    <!-- 主题颜色 -->
+    <meta name="theme-color" content="#304156" />
+    
+    <!-- 格式检测（防止电话号码自动识别） -->
+    <meta name="format-detection" content="telephone=no" />
+    
+    <!-- 防止双击缩放的CSS -->
+    <style>
+      * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        touch-action: manipulation;
+      }
+      
+      /* 防止iOS橡皮筋效果 */
+      html, body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+      
+      #app {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* 加载动画 */
+      .app-loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f0f2f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+      }
+      
+      .app-loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #e4e7ed;
+        border-top-color: #409EFF;
+        border-radius: 50%;
+        animation: app-loading-spin 0.8s linear infinite;
+      }
+      
+      @keyframes app-loading-spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+    
+    <title>三国小助手后台管理系统</title>
+  </head>
+  <body>
+    <!-- 加载指示器 -->
+    <div id="app">
+      <div class="app-loading">
+        <div class="app-loading-spinner"></div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

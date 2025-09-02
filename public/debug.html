@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API调试页面</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .info { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+        .success { color: green; }
+        .error { color: red; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>API调试页面</h1>
+    
+    <div class="info">
+        <h3>当前环境信息</h3>
+        <p>页面地址: <span id="pageUrl"></span></p>
+        <p>API地址 (自动计算): <span id="apiUrl"></span></p>
+        <p>WebSocket地址: <span id="wsUrl"></span></p>
+    </div>
+    
+    <div>
+        <h3>测试按钮</h3>
+        <button onclick="testHealth()">测试健康检查</button>
+        <button onclick="testAdminLogin()">测试管理员登录</button>
+        <button onclick="testCsLogin()">测试客服登录</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        // 显示环境信息
+        document.getElementById('pageUrl').textContent = window.location.href;
+        const apiBase = window.location.origin.replace(':5173', ':8000');
+        document.getElementById('apiUrl').textContent = apiBase;
+        const wsUrl = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        document.getElementById('wsUrl').textContent = wsUrl + '//' + window.location.hostname + ':8000';
+        
+        // 添加结果
+        function addResult(text, isError = false) {
+            const div = document.createElement('div');
+            div.className = isError ? 'error' : 'success';
+            div.textContent = new Date().toLocaleTimeString() + ' - ' + text;
+            document.getElementById('results').appendChild(div);
+        }
+        
+        // 测试健康检查
+        async function testHealth() {
+            try {
+                const response = await fetch(apiBase + '/health');
+                const data = await response.json();
+                addResult('健康检查成功: ' + JSON.stringify(data));
+            } catch (e) {
+                addResult('健康检查失败: ' + e.message, true);
+            }
+        }
+        
+        // 测试管理员登录
+        async function testAdminLogin() {
+            try {
+                const response = await fetch(apiBase + '/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'admin', password: 'admin123' })
+                });
+                const data = await response.json();
+                addResult('管理员登录响应 (' + response.status + '): ' + JSON.stringify(data), !response.ok);
+            } catch (e) {
+                addResult('管理员登录请求失败: ' + e.message, true);
+            }
+        }
+        
+        // 测试客服登录
+        async function testCsLogin() {
+            try {
+                const response = await fetch(apiBase + '/api/auth/cs_login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: 'test', password: 'test' })
+                });
+                const data = await response.json();
+                addResult('客服登录响应 (' + response.status + '): ' + JSON.stringify(data), !response.ok);
+            } catch (e) {
+                addResult('客服登录请求失败: ' + e.message, true);
+            }
+        }
+    </script>
+</body>
+</html>

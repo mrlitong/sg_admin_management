@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API测试</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        button { margin: 10px; padding: 10px 20px; }
+        .result { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background: #e7f5e7; }
+        .error { background: #f5e7e7; }
+    </style>
+</head>
+<body>
+    <h1>API连接测试</h1>
+    
+    <h2>1. 测试公网IP</h2>
+    <button onclick="testPublicIP()">测试 http://14.103.181.46:8567/api</button>
+    <div id="publicResult" class="result"></div>
+    
+    <h2>2. 测试localhost</h2>
+    <button onclick="testLocalhost()">测试 http://localhost:8567/api</button>
+    <div id="localResult" class="result"></div>
+    
+    <h2>3. 测试相对路径（通过前端服务）</h2>
+    <button onclick="testRelative()">测试 /api</button>
+    <div id="relativeResult" class="result"></div>
+    
+    <script>
+        const testData = {
+            username: 'chenqi777',
+            password: 'Zb7Kd9@pTr3'
+        };
+        
+        async function testAPI(url, resultId) {
+            const resultDiv = document.getElementById(resultId);
+            resultDiv.innerHTML = '测试中...';
+            
+            try {
+                const response = await fetch(url + '/cs_login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <strong>✓ 成功!</strong><br>
+                        URL: ${url}<br>
+                        响应: ${JSON.stringify(data, null, 2)}
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <strong>✗ 失败!</strong><br>
+                        URL: ${url}<br>
+                        状态: ${response.status}<br>
+                        错误: ${JSON.stringify(data, null, 2)}
+                    `;
+                }
+            } catch (e) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>✗ 网络错误!</strong><br>
+                    URL: ${url}<br>
+                    错误: ${e.message}
+                `;
+            }
+        }
+        
+        function testPublicIP() {
+            testAPI('http://14.103.181.46:8567/api', 'publicResult');
+        }
+        
+        function testLocalhost() {
+            testAPI('http://localhost:8567/api', 'localResult');
+        }
+        
+        function testRelative() {
+            testAPI('/api', 'relativeResult');
+        }
+    </script>
+</body>
+</html>

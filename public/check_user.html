@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>检查用户登录状态</title>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; max-width: 800px; margin: 0 auto; }
+        .info { background: #f0f0f0; padding: 15px; margin: 10px 0; border-radius: 5px; }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        code { background: #eee; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>检查用户登录状态</h1>
+    
+    <div class="info">
+        <h3>使用说明：</h3>
+        <p>1. 先在主页面登录（管理员或客服）</p>
+        <p>2. 点击下面的按钮检查登录状态</p>
+        <p>3. 如果是客服账号，应该能看到"客服聊天"菜单</p>
+    </div>
+    
+    <button onclick="checkLoginStatus()">检查登录状态</button>
+    
+    <div id="result"></div>
+    
+    <script>
+        async function checkLoginStatus() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<h3>检查结果：</h3>';
+            
+            // 1. 检查localStorage
+            const userType = localStorage.getItem('user_type');
+            const csAccount = localStorage.getItem('cs_account');
+            const token = localStorage.getItem('auth-token');
+            
+            resultDiv.innerHTML += `
+                <div class="info">
+                    <h4>1. 本地存储信息：</h4>
+                    <p>用户类型 (user_type): <code>${userType || '未设置'}</code></p>
+                    <p>客服账号 (cs_account): <code>${csAccount || '未设置'}</code></p>
+                    <p>Token: <code>${token ? '已设置' : '未设置'}</code></p>
+                </div>
+            `;
+            
+            // 2. 调用API获取当前用户信息
+            if (token) {
+                try {
+                    const response = await fetch('http://14.103.181.46:8000/api/auth/me', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        resultDiv.innerHTML += `
+                            <div class="info">
+                                <h4>2. API返回的用户信息：</h4>
+                                <pre>${JSON.stringify(data, null, 2)}</pre>
+                            </div>
+                        `;
+                        
+                        // 检查用户类型
+                        if (data.user_type === 'customer_service') {
+                            resultDiv.innerHTML += `
+                                <div class="info success">
+                                    <h4>✅ 客服账号确认</h4>
+                                    <p>您使用的是客服账号，应该能看到"客服聊天"菜单。</p>
+                                    <p>如果看不到，请尝试：</p>
+                                    <ol>
+                                        <li>刷新页面（F5）</li>
+                                        <li>清除缓存并重新登录</li>
+                                    </ol>
+                                </div>
+                            `;
+                        } else {
+                            resultDiv.innerHTML += `
+                                <div class="info warning">
+                                    <h4>⚠️ 非客服账号</h4>
+                                    <p>您当前使用的是<strong>${data.user_type || '管理员'}</strong>账号。</p>
+                                    <p>只有客服账号才能看到"客服聊天"菜单。</p>
+                                    <p>请使用以下客服账号登录：</p>
+                                    <ul>
+                                        <li>账号: chenqi777, 密码: Zb7Kd9@pTr3</li>
+                                        <li>账号: cgui7645, 密码: Ex5Pm$8Jw2L</li>
+                                        <li>账号: qijiu_3535, 密码: Nq6Vy!4Ag7R</li>
+                                    </ul>
+                                </div>
+                            `;
+                        }
+                    } else {
+                        resultDiv.innerHTML += `
+                            <div class="info error">
+                                <h4>❌ API调用失败</h4>
+                                <p>状态码: ${response.status}</p>
+                                <p>可能Token已过期，请重新登录。</p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    resultDiv.innerHTML += `
+                        <div class="info error">
+                            <h4>❌ 网络错误</h4>
+                            <p>${error.message}</p>
+                        </div>
+                    `;
+                }
+            } else {
+                resultDiv.innerHTML += `
+                    <div class="info error">
+                        <h4>❌ 未登录</h4>
+                        <p>请先在主页面登录。</p>
+                    </div>
+                `;
+            }
+            
+            // 3. 登录说明
+            resultDiv.innerHTML += `
+                <div class="info">
+                    <h4>3. 如何切换登录类型：</h4>
+                    <p>在登录页面，选择"客服登录"选项，然后使用客服账号登录。</p>
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iNDAwIiBoZWlnaHQ9IjEwMCIgZmlsbD0iI2Y1ZjVmNSIgc3Ryb2tlPSIjZGRkIi8+CiAgPHJlY3QgeD0iNTAiIHk9IjMwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjZmZmIiBzdHJva2U9IiNkZGQiLz4KICA8cmVjdCB4PSIyMDAiIHk9IjMwIiB3aWR0aD0iMTUwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjNDA5ZWZmIiBzdHJva2U9IiM0MDllZmYiLz4KICA8dGV4dCB4PSIxMjUiIHk9IjU1IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMzMzIj7nrqHnkIblkZjnmbvlvZU8L3RleHQ+CiAgPHRleHQgeD0iMjc1IiB5PSI1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiI+5a6i5pyN55m75b2VPC90ZXh0Pgo8L3N2Zz4=" alt="登录类型选择" style="max-width: 300px; margin-top: 10px;">
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
