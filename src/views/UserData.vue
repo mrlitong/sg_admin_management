@@ -417,9 +417,9 @@ const isDefaultMode = ref(true)
 // 是否已经执行过查询
 const hasSearched = ref(false)
 
-// 排序状态
-const sortProp = ref('')
-const sortOrder = ref('')
+// 排序状态（默认按注册时间降序）
+const sortProp = ref('register_date')
+const sortOrder = ref('descending')
 
 // 日期快速选项配置
 const dateShortcuts = [
@@ -522,12 +522,6 @@ const fetchData = async () => {
       size: pagination.size
     }
     
-    // 添加排序参数
-    if (sortProp.value) {
-      params.sort_by = sortProp.value
-      params.sort_order = sortOrder.value === 'ascending' ? 'asc' : 'desc'
-    }
-    
     if (isSuper.value) {
       // 超级管理员可以使用所有查询参数
       params.keyword = searchKeyword.value
@@ -561,15 +555,21 @@ const fetchData = async () => {
         delete params.game_platform_list
       }
       
-      // 清理空值参数
+      // 清理空值参数（排除排序参数）
       Object.keys(params).forEach(key => {
-        if (params[key] === '' || params[key] === null || params[key] === undefined) {
+        if (key !== 'sort_by' && key !== 'sort_order' && (params[key] === '' || params[key] === null || params[key] === undefined)) {
           delete params[key]
         }
       })
     } else {
       // 普通管理员只能使用账号查询
       params.account = searchKeyword.value
+    }
+    
+    // 添加排序参数（放在最后，避免被覆盖，对所有用户生效）
+    if (sortProp.value) {
+      params.sort_by = sortProp.value
+      params.sort_order = sortOrder.value === 'ascending' ? 'asc' : 'desc'
     }
     
     const response = await getUserList(params)
