@@ -239,14 +239,16 @@
       v-loading="loading"
       :data="tableData" 
       @selection-change="handleSelectionChange"
+      @sort-change="handleSortChange"
       border
       stripe
       style="width: 100%"
       :fit="true"
+      :default-sort="{ prop: 'register_date', order: 'descending' }"
     >
       <el-table-column v-if="isSuper" type="selection" width="55" />
-      <el-table-column prop="account" label="账户" min-width="200" fixed show-overflow-tooltip />
-      <el-table-column prop="register_date" label="注册时间" min-width="160" show-overflow-tooltip>
+      <el-table-column prop="account" label="账户" min-width="200" fixed show-overflow-tooltip sortable="custom" />
+      <el-table-column prop="register_date" label="注册时间" min-width="160" show-overflow-tooltip sortable="custom">
         <template #default="{ row }">
           {{ formatDate(row.register_date) }}
         </template>
@@ -254,7 +256,7 @@
       <el-table-column prop="server_name" label="区名" min-width="100" show-overflow-tooltip />
       <el-table-column prop="server_info" label="区服" min-width="100" show-overflow-tooltip />
       <el-table-column prop="server_zone" label="区号" width="80" show-overflow-tooltip />
-      <el-table-column prop="membership_pay_money" label="充值金额" width="100" show-overflow-tooltip>
+      <el-table-column prop="membership_pay_money" label="充值金额" width="100" show-overflow-tooltip sortable="custom">
         <template #default="{ row }">
           ¥{{ row.membership_pay_money || 0 }}
         </template>
@@ -266,7 +268,7 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="membership_expire_date" label="到期时间" min-width="160" show-overflow-tooltip>
+      <el-table-column prop="membership_expire_date" label="到期时间" min-width="160" show-overflow-tooltip sortable="custom">
         <template #default="{ row }">
           {{ formatDate(row.membership_expire_date) }}
         </template>
@@ -287,12 +289,12 @@
       <el-table-column v-if="expandColumns" prop="real_account" label="真实账号" min-width="200" show-overflow-tooltip />
       <el-table-column v-if="expandColumns" prop="main_account" label="主账号" min-width="200" show-overflow-tooltip />
       <el-table-column v-if="expandColumns" prop="contact" label="联系方式" min-width="200" show-overflow-tooltip />
-      <el-table-column v-if="expandColumns" prop="last_online_time" label="最后在线时间" min-width="160" show-overflow-tooltip>
+      <el-table-column v-if="expandColumns" prop="last_online_time" label="最后在线时间" min-width="160" show-overflow-tooltip sortable="custom">
         <template #default="{ row }">
           {{ formatDate(row.last_online_time) }}
         </template>
       </el-table-column>
-      <el-table-column v-if="expandColumns" prop="last_login_time" label="最后登录时间" min-width="160" show-overflow-tooltip>
+      <el-table-column v-if="expandColumns" prop="last_login_time" label="最后登录时间" min-width="160" show-overflow-tooltip sortable="custom">
         <template #default="{ row }">
           {{ formatDate(row.last_login_time) }}
         </template>
@@ -415,6 +417,10 @@ const isDefaultMode = ref(true)
 // 是否已经执行过查询
 const hasSearched = ref(false)
 
+// 排序状态
+const sortProp = ref('')
+const sortOrder = ref('')
+
 // 日期快速选项配置
 const dateShortcuts = [
   {
@@ -516,6 +522,12 @@ const fetchData = async () => {
       size: pagination.size
     }
     
+    // 添加排序参数
+    if (sortProp.value) {
+      params.sort_by = sortProp.value
+      params.sort_order = sortOrder.value === 'ascending' ? 'asc' : 'desc'
+    }
+    
     if (isSuper.value) {
       // 超级管理员可以使用所有查询参数
       params.keyword = searchKeyword.value
@@ -568,6 +580,14 @@ const fetchData = async () => {
   } finally {
     loading.value = false
   }
+}
+
+// 排序处理
+const handleSortChange = ({ column, prop, order }) => {
+  sortProp.value = prop || ''
+  sortOrder.value = order || ''
+  pagination.page = 1
+  fetchData()
 }
 
 // 搜索处理
