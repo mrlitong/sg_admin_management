@@ -584,10 +584,16 @@ const fetchData = async () => {
 
 // 排序处理
 const handleSortChange = ({ column, prop, order }) => {
-  sortProp.value = prop || ''
-  sortOrder.value = order || ''
+  sortProp.value = prop || 'register_date'  // 默认按注册时间排序
+  sortOrder.value = order || 'descending'    // 默认降序
   pagination.page = 1
-  fetchData()
+  
+  // 根据当前模式调用不同的获取数据函数
+  if (isDefaultMode.value) {
+    fetchDefaultData()
+  } else {
+    fetchData()
+  }
 }
 
 // 搜索处理
@@ -876,7 +882,12 @@ const fetchDefaultData = async () => {
   loading.value = true
   hasSearched.value = true
   try {
-    const response = await getDefaultUserList()
+    // 传递排序参数给默认数据接口
+    const params = {
+      sort_by: sortProp.value || 'register_date',
+      sort_order: sortOrder.value === 'ascending' ? 'asc' : 'desc'
+    }
+    const response = await getDefaultUserList(params)
     tableData.value = response.data
     pagination.total = response.total
   } catch (error) {

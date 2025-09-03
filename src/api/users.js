@@ -10,10 +10,11 @@ export function getUserList(params) {
 }
 
 // 获取默认用户列表（每个game_platform 3条数据）
-export function getDefaultUserList() {
+export function getDefaultUserList(params) {
   return request({
     url: '/admin/users/default',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
