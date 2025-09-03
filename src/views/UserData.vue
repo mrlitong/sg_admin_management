@@ -128,6 +128,7 @@
                   value-format="YYYY-MM-DD"
                   style="width: 100%"
                   :size="isMobile ? 'large' : 'default'"
+                  :shortcuts="dateShortcuts"
                 />
               </el-form-item>
             </el-col>
@@ -142,6 +143,7 @@
                   value-format="YYYY-MM-DD"
                   style="width: 100%"
                   :size="isMobile ? 'large' : 'default'"
+                  :shortcuts="dateShortcuts"
                 />
               </el-form-item>
             </el-col>
@@ -412,6 +414,64 @@ const isDefaultMode = ref(true)
 
 // 是否已经执行过查询
 const hasSearched = ref(false)
+
+// 日期快速选项配置
+const dateShortcuts = [
+  {
+    text: '过去1天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 1)
+      return [start, end]
+    }
+  },
+  {
+    text: '过去3天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 3)
+      return [start, end]
+    }
+  },
+  {
+    text: '过去7天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 7)
+      return [start, end]
+    }
+  },
+  {
+    text: '过去10天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 10)
+      return [start, end]
+    }
+  },
+  {
+    text: '过去15天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 15)
+      return [start, end]
+    }
+  },
+  {
+    text: '过去30天',
+    value: () => {
+      const end = new Date()
+      const start = new Date()
+      start.setDate(start.getDate() - 30)
+      return [start, end]
+    }
+  }
+]
 
 // 筛选表单
 const filterForm = reactive({
