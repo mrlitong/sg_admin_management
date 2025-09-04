@@ -21,13 +21,13 @@
       </div>
       <div class="toolbar-right">
         <el-tooltip 
-          content="全局搜索支持在账号、真实账号、主账号、联系方式、区名、区服、备注中模糊查询（大小写不敏感），支持实时搜索和回车搜索" 
+          content="全局搜索支持在账号、真实账号、主账号、联系方式、区名、区服、备注中模糊查询（大小写不敏感），支持实时搜索和回车搜索。支持多账号同时搜索，用空格分隔，例如：account1 account2 account3" 
           placement="bottom"
           :disabled="!isSuper || isMobile"
         >
           <el-input 
             v-model="searchKeyword" 
-            :placeholder="isMobile ? '搜索' : (isSuper ? '全局搜索：账号/真实账号/主账号/联系方式/区名/区服/备注' : '请输入账号进行模糊查询（大小写不敏感）')" 
+            :placeholder="isMobile ? '搜索' : (isSuper ? '全局搜索：账号/真实账号/主账号/联系方式/区名/区服/备注（支持多账号，空格分隔）' : '请输入账号进行模糊查询（支持多账号，空格分隔）')" 
             @input="handleSearch"
             @keyup.enter="handleSearch"
             clearable
