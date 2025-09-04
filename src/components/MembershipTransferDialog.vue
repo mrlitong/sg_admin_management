@@ -45,6 +45,9 @@
             ✓ 会员等级：{{ getMembershipLevelLabel(sourceInfo.level) }}，
             到期时间：{{ sourceInfo.expire_date }}，
             剩余天数：{{ sourceInfo.remaining_days }}天
+            <div v-if="sourceInfo.remarks" style="margin-top: 4px;">
+              备注：{{ sourceInfo.remarks }}
+            </div>
           </div>
           <div v-else style="color: #F56C6C;">
             ✗ {{ sourceInfo.message }}
@@ -67,6 +70,9 @@
           <div v-if="targetInfo.valid" style="color: #67C23A;">
             ✓ 当前会员等级：{{ getMembershipLevelLabel(targetInfo.level) }}，
             到期时间：{{ targetInfo.expire_date || '无' }}
+            <div v-if="targetInfo.remarks" style="margin-top: 4px;">
+              当前备注：{{ targetInfo.remarks }}
+            </div>
           </div>
           <div v-else style="color: #F56C6C;">
             ✗ {{ targetInfo.message }}
@@ -90,6 +96,12 @@
           </el-descriptions-item>
           <el-descriptions-item label="目标账号新到期时间">
             {{ calculateNewExpireDate() }}
+          </el-descriptions-item>
+          <el-descriptions-item label="源账号备注">
+            {{ sourceInfo.remarks || '无' }}
+          </el-descriptions-item>
+          <el-descriptions-item label="目标账号新备注">
+            {{ calculateNewRemarks() }}
           </el-descriptions-item>
         </el-descriptions>
       </div>
@@ -181,6 +193,26 @@ const calculateNewExpireDate = () => {
   }).replace(/\//g, '-')
 }
 
+const calculateNewRemarks = () => {
+  if (!sourceInfo.value || !targetInfo.value) return ''
+  
+  let newRemarks = sourceInfo.value.remarks || ''
+  
+  // 如果目标账号已有备注，合并备注
+  if (targetInfo.value.remarks) {
+    newRemarks = targetInfo.value.remarks + (newRemarks ? '|' + newRemarks : '')
+  }
+  
+  // 添加转移来源信息
+  if (newRemarks) {
+    newRemarks += '|转移自账号' + formData.source_account
+  } else {
+    newRemarks = '转移自账号' + formData.source_account
+  }
+  
+  return newRemarks
+}
+
 const validateSourceAccount = async () => {
   if (!formData.source_account) {
     sourceInfo.value = null
@@ -213,7 +245,8 @@ const validateSourceAccount = async () => {
             level: user.membership_level,
             expire_date: expireDate,
             pay_money: user.membership_pay_money || 0,
-            remaining_days: remainingDays
+            remaining_days: remainingDays,
+            remarks: user.remarks || ''
           }
         }
       }
@@ -253,7 +286,8 @@ const validateTargetAccount = async () => {
         valid: true,
         level: user.membership_level || -1,
         expire_date: user.membership_expire_date,
-        pay_money: user.membership_pay_money || 0
+        pay_money: user.membership_pay_money || 0,
+        remarks: user.remarks || ''
       }
     } else {
       targetInfo.value = {
