@@ -29,6 +29,264 @@
       </div>
     </div>
 
+    <!-- 服务器负载监控 -->
+    <div class="server-section">
+      <div class="section-header">
+        <h2 class="section-title">
+          <el-icon><Monitor /></el-icon>
+          服务器负载监控
+          <el-tooltip placement="top">
+            <template #content>
+              <div style="max-width: 350px">
+                <strong>统计维度：</strong>GROUP BY bucket（服务器编号）<br/>
+                <strong>负载率：</strong>在线用户数 ÷ 总用户数 × 100%<br/>
+                <strong>颜色标识：</strong>绿色(<60%) 黄色(60-80%) 红色(>80%)
+              </div>
+            </template>
+            <el-icon class="info-icon" style="margin-left: 8px; cursor: help;"><InfoFilled /></el-icon>
+          </el-tooltip>
+        </h2>
+      </div>
+      <div class="server-grid">
+        <div v-for="server in serverLoad" :key="server.bucket" class="server-card">
+          <div class="server-header">
+            <span class="server-name">服务器 {{ server.bucket }}</span>
+            <el-tag :type="getLoadType(server.load_rate)" size="small">
+              {{ server.load_rate }}%
+            </el-tag>
+          </div>
+          <el-progress 
+            :percentage="server.load_rate" 
+            :color="getLoadColor(server.load_rate)"
+            :stroke-width="8"
+          />
+          <div class="server-stats">
+            <div class="stat-item">
+              <span class="stat-label">总用户</span>
+              <span class="stat-value">{{ server.total }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">在线数</span>
+              <span class="stat-value">{{ server.online }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 浏览器负载监控 -->
+    <div class="browser-section" v-if="browserMetrics">
+      <div class="section-header">
+        <h2 class="section-title">
+          <el-icon><Monitor /></el-icon>
+          浏览器负载监控
+          <el-tooltip placement="top">
+            <template #content>
+              <div style="max-width: 350px">
+                <strong>服务地址：</strong>218.78.128.120:8888<br/>
+                <strong>Context池：</strong>浏览器实例 × Context数量<br/>
+                <strong>实时监控：</strong>显示当前运行状态和性能指标
+              </div>
+            </template>
+            <el-icon class="info-icon" style="margin-left: 8px; cursor: help;"><InfoFilled /></el-icon>
+          </el-tooltip>
+        </h2>
+        <el-button 
+          :icon="Refresh" 
+          @click="refreshBrowserMetrics" 
+          :loading="browserLoading"
+          size="small"
+          type="primary"
+          plain>
+          刷新
+        </el-button>
+      </div>
+      
+      <!-- 整体状态卡片 -->
+      <el-row :gutter="16" class="browser-overview">
+        <el-col :xs="24" :sm="12" :md="6">
+          <div class="browser-stat-card" :class="browserMetrics.health.status === 'healthy' ? 'healthy' : 'unhealthy'">
+            <div class="stat-header">
+              <span class="stat-label">服务状态</span>
+              <el-icon v-if="browserMetrics.health.status === 'healthy'" class="status-icon success"><CircleCheck /></el-icon>
+              <el-icon v-else class="status-icon danger"><CircleClose /></el-icon>
+            </div>
+            <div class="stat-value">{{ browserMetrics.health.status === 'healthy' ? '正常' : '异常' }}</div>
+            <div class="stat-meta">{{ browserMetrics.health.service }}</div>
+          </div>
+        </el-col>
+        
+        <el-col :xs="24" :sm="12" :md="6">
+          <div class="browser-stat-card">
+            <div class="stat-header">
+              <span class="stat-label">池利用率</span>
+              <el-tooltip content="当前使用中的Context占比">
+                <el-icon class="info-icon"><InfoFilled /></el-icon>
+              </el-tooltip>
+            </div>
+            <div class="stat-value">
+              <animated-number :value="browserMetrics.health.pool_status.utilization * 100" format="percent" />
+              <span class="stat-unit">%</span>
+            </div>
+            <div class="stat-meta">
+              {{ browserMetrics.health.pool_status.busy }}/{{ browserMetrics.health.pool_status.total }} 使用中
+            </div>
+            <el-progress 
+              :percentage="browserMetrics.health.pool_status.utilization * 100" 
+              :color="getBrowserLoadColor(browserMetrics.health.pool_status.utilization * 100)"
+              :show-text="false"
+              :stroke-width="4"
+            />
+          </div>
+        </el-col>
+        
+        <el-col :xs="24" :sm="12" :md="6">
+          <div class="browser-stat-card">
+            <div class="stat-header">
+              <span class="stat-label">请求成功率</span>
+              <el-tooltip content="最近5分钟的请求成功率">
+                <el-icon class="info-icon"><InfoFilled /></el-icon>
+              </el-tooltip>
+            </div>
+            <div class="stat-value" :class="getSuccessRateClass(browserMetrics.poolStatus?.metrics?.recent_5min?.success_rate)">
+              <animated-number 
+                :value="(browserMetrics.poolStatus?.metrics?.recent_5min?.success_rate || 0) * 100" 
+                format="percent" 
+              />
+              <span class="stat-unit">%</span>
+            </div>
+            <div class="stat-meta">
+              {{ browserMetrics.poolStatus?.metrics?.recent_5min?.success_count || 0 }}/{{ browserMetrics.poolStatus?.metrics?.recent_5min?.request_count || 0 }} 成功
+            </div>
+          </div>
+        </el-col>
+        
+        <el-col :xs="24" :sm="12" :md="6">
+          <div class="browser-stat-card">
+            <div class="stat-header">
+              <span class="stat-label">活跃请求</span>
+              <el-tooltip content="当前正在处理的请求数">
+                <el-icon class="info-icon"><InfoFilled /></el-icon>
+              </el-tooltip>
+            </div>
+            <div class="stat-value">
+              {{ browserMetrics.poolStatus?.metrics?.active_requests || 0 }}
+            </div>
+            <div class="stat-meta">
+              队列长度: {{ browserMetrics.poolStatus?.metrics?.queue_length || 0 }}
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+      
+      <!-- 浏览器实例详情 -->
+      <div class="browser-instances">
+        <h3 class="subsection-title">浏览器实例状态</h3>
+        <el-row :gutter="16">
+          <el-col 
+            v-for="browser in browserMetrics.poolStatus?.pool?.browsers" 
+            :key="browser.browser_id"
+            :xs="24" 
+            :sm="12" 
+            :md="6">
+            <div class="browser-instance-card">
+              <div class="instance-header">
+                <span class="instance-name">{{ browser.browser_id }}</span>
+                <el-tag 
+                  :type="browser.is_healthy ? 'success' : 'danger'" 
+                  size="small">
+                  {{ browser.is_healthy ? '健康' : '异常' }}
+                </el-tag>
+              </div>
+              
+              <div class="instance-stats">
+                <div class="stat-row">
+                  <span class="stat-label">Context数</span>
+                  <span class="stat-value">{{ browser.total_contexts }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">使用中</span>
+                  <span class="stat-value">{{ browser.busy_contexts }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">总使用次数</span>
+                  <span class="stat-value">{{ browser.total_usage }}</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">运行时长</span>
+                  <span class="stat-value">{{ formatDuration(browser.age_seconds) }}</span>
+                </div>
+              </div>
+              
+              <el-progress 
+                :percentage="(browser.busy_contexts / browser.total_contexts) * 100" 
+                :color="getBrowserLoadColor((browser.busy_contexts / browser.total_contexts) * 100)"
+                :stroke-width="6"
+              />
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+      
+      <!-- 性能指标 -->
+      <div class="browser-performance">
+        <h3 class="subsection-title">性能指标</h3>
+        <el-row :gutter="16">
+          <el-col :xs="24" :md="12">
+            <div class="performance-card">
+              <h4 class="card-title">最近1分钟</h4>
+              <div class="metrics-grid">
+                <div class="metric-item">
+                  <span class="metric-label">请求数</span>
+                  <span class="metric-value">{{ browserMetrics.poolStatus?.metrics?.recent_1min?.request_count || 0 }}</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">成功率</span>
+                  <span class="metric-value" :class="getSuccessRateClass(browserMetrics.poolStatus?.metrics?.recent_1min?.success_rate)">
+                    {{ ((browserMetrics.poolStatus?.metrics?.recent_1min?.success_rate || 0) * 100).toFixed(1) }}%
+                  </span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">平均耗时</span>
+                  <span class="metric-value">{{ (browserMetrics.poolStatus?.metrics?.recent_1min?.avg_duration || 0).toFixed(2) }}s</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">QPS</span>
+                  <span class="metric-value">{{ (browserMetrics.poolStatus?.metrics?.recent_1min?.qps || 0).toFixed(2) }}</span>
+                </div>
+              </div>
+            </div>
+          </el-col>
+          
+          <el-col :xs="24" :md="12">
+            <div class="performance-card">
+              <h4 class="card-title">最近5分钟</h4>
+              <div class="metrics-grid">
+                <div class="metric-item">
+                  <span class="metric-label">请求数</span>
+                  <span class="metric-value">{{ browserMetrics.poolStatus?.metrics?.recent_5min?.request_count || 0 }}</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">成功率</span>
+                  <span class="metric-value" :class="getSuccessRateClass(browserMetrics.poolStatus?.metrics?.recent_5min?.success_rate)">
+                    {{ ((browserMetrics.poolStatus?.metrics?.recent_5min?.success_rate || 0) * 100).toFixed(1) }}%
+                  </span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">平均耗时</span>
+                  <span class="metric-value">{{ (browserMetrics.poolStatus?.metrics?.recent_5min?.avg_duration || 0).toFixed(2) }}s</span>
+                </div>
+                <div class="metric-item">
+                  <span class="metric-label">P95耗时</span>
+                  <span class="metric-value">{{ (browserMetrics.poolStatus?.metrics?.recent_5min?.p95_duration || 0).toFixed(2) }}s</span>
+                </div>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+      </div>
+    </div>
+
     <!-- 核心指标卡片 -->
     <div class="metrics-section">
       <el-row :gutter="16">
@@ -326,51 +584,6 @@
         </el-col>
       </el-row>
     </div>
-
-    <!-- 服务器负载监控 -->
-    <div class="server-section">
-      <div class="section-header">
-        <h2 class="section-title">
-          <el-icon><Monitor /></el-icon>
-          服务器负载监控
-          <el-tooltip placement="top">
-            <template #content>
-              <div style="max-width: 350px">
-                <strong>统计维度：</strong>GROUP BY bucket（服务器编号）<br/>
-                <strong>负载率：</strong>在线用户数 ÷ 总用户数 × 100%<br/>
-                <strong>颜色标识：</strong>绿色(<60%) 黄色(60-80%) 红色(>80%)
-              </div>
-            </template>
-            <el-icon class="info-icon" style="margin-left: 8px; cursor: help;"><InfoFilled /></el-icon>
-          </el-tooltip>
-        </h2>
-      </div>
-      <div class="server-grid">
-        <div v-for="server in serverLoad" :key="server.bucket" class="server-card">
-          <div class="server-header">
-            <span class="server-name">服务器 {{ server.bucket }}</span>
-            <el-tag :type="getLoadType(server.load_rate)" size="small">
-              {{ server.load_rate }}%
-            </el-tag>
-          </div>
-          <el-progress 
-            :percentage="server.load_rate" 
-            :color="getLoadColor(server.load_rate)"
-            :stroke-width="8"
-          />
-          <div class="server-stats">
-            <div class="stat-item">
-              <span class="stat-label">总用户</span>
-              <span class="stat-value">{{ server.total }}</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">在线数</span>
-              <span class="stat-value">{{ server.online }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -380,10 +593,12 @@ import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { 
   Refresh, Download, DataAnalysis, InfoFilled, Warning, 
-  Trophy, Monitor, Clock, CircleClose, TrendCharts
+  Trophy, Monitor, Clock, CircleClose, TrendCharts,
+  CircleCheck
 } from '@element-plus/icons-vue'
 import * as echarts from 'echarts'
 import { getAnalyticsOverview, getAnalyticsTrends, getHighValueUsers, getServerDistribution } from '../api/analytics'
+import { getAllBrowserMetrics } from '../api/browserService'
 import AnimatedNumber from '../components/AnimatedNumber.vue'
 import MiniChart from '../components/MiniChart.vue'
 import { useResponsive } from '../utils/responsive'
@@ -416,6 +631,10 @@ const analyticsData = reactive({
   highValueUsers: null,
   serverDistribution: null
 })
+
+// 浏览器监控数据
+const browserMetrics = ref(null)
+const browserLoading = ref(false)
 
 // 核心指标
 const coreMetrics = computed(() => {
@@ -1020,11 +1239,39 @@ const refreshData = async () => {
     await nextTick()
     updateCharts()
     
+    // 同时加载浏览器监控数据
+    loadBrowserMetrics()
+    
     ElMessage.success('数据刷新成功')
   } catch (error) {
     ElMessage.error('加载数据失败：' + error.message)
   } finally {
     loading.value = false
+  }
+}
+
+// 加载浏览器监控数据
+const loadBrowserMetrics = async () => {
+  try {
+    const metrics = await getAllBrowserMetrics()
+    browserMetrics.value = metrics
+  } catch (error) {
+    console.error('Failed to load browser metrics:', error)
+    // 不显示错误消息，因为这是外部服务
+  }
+}
+
+// 刷新浏览器监控数据
+const refreshBrowserMetrics = async () => {
+  browserLoading.value = true
+  try {
+    const metrics = await getAllBrowserMetrics()
+    browserMetrics.value = metrics
+    ElMessage.success('浏览器监控数据已刷新')
+  } catch (error) {
+    ElMessage.error('刷新浏览器监控失败')
+  } finally {
+    browserLoading.value = false
   }
 }
 
@@ -1089,6 +1336,37 @@ const getLoadColor = (rate) => {
   return '#909399'
 }
 
+// 获取浏览器负载颜色
+const getBrowserLoadColor = (percentage) => {
+  if (percentage >= 90) return '#f56c6c'
+  if (percentage >= 70) return '#e6a23c'
+  if (percentage >= 50) return '#67c23a'
+  return '#909399'
+}
+
+// 获取成功率样式类
+const getSuccessRateClass = (rate) => {
+  if (!rate || rate === 0) return 'danger'
+  if (rate < 0.5) return 'warning'
+  if (rate < 0.8) return 'info'
+  return 'success'
+}
+
+// 格式化持续时间
+const formatDuration = (seconds) => {
+  if (!seconds) return '0s'
+  const hours = Math.floor(seconds / 3600)
+  const minutes = Math.floor((seconds % 3600) / 60)
+  const secs = Math.floor(seconds % 60)
+  
+  if (hours > 0) {
+    return `${hours}h ${minutes}m`
+  } else if (minutes > 0) {
+    return `${minutes}m ${secs}s`
+  }
+  return `${secs}s`
+}
+
 // 格式化日期
 const formatDate = (dateStr) => {
   if (!dateStr) return '-'
@@ -1151,7 +1429,20 @@ onMounted(async () => {
   initCharts()
   updateCharts()
   
+  // 加载浏览器监控数据
+  loadBrowserMetrics()
+  
+  // 设置定时刷新浏览器监控数据（每30秒）
+  const browserMetricsTimer = setInterval(() => {
+    loadBrowserMetrics()
+  }, 30000)
+  
   window.addEventListener('resize', handleResize)
+  
+  // 组件卸载时清理定时器
+  onUnmounted(() => {
+    clearInterval(browserMetricsTimer)
+  })
 })
 
 // 组件卸载
@@ -1663,6 +1954,267 @@ onUnmounted(() => {
               color: #303133;
               font-weight: 600;
               font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // 浏览器监控区域
+  .browser-section {
+    margin-bottom: 24px;
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      
+      .section-title {
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 600;
+        color: #303133;
+        margin: 0;
+        
+        .el-icon {
+          margin-right: 8px;
+          color: #409eff;
+        }
+        
+        .info-icon {
+          color: #909399;
+          cursor: help;
+          transition: color 0.3s;
+          font-size: 16px;
+          
+          &:hover {
+            color: #409eff;
+          }
+        }
+      }
+    }
+    
+    .browser-overview {
+      margin-bottom: 24px;
+      
+      .browser-stat-card {
+        background: #f5f7fa;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+        position: relative;
+        transition: all 0.3s ease;
+        
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        &.healthy {
+          border-left: 3px solid #67c23a;
+        }
+        
+        &.unhealthy {
+          border-left: 3px solid #f56c6c;
+        }
+        
+        .stat-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 8px;
+          
+          .stat-label {
+            color: #909399;
+            font-size: 13px;
+          }
+          
+          .status-icon {
+            font-size: 18px;
+            
+            &.success {
+              color: #67c23a;
+            }
+            
+            &.danger {
+              color: #f56c6c;
+            }
+          }
+          
+          .info-icon {
+            color: #909399;
+            font-size: 14px;
+            cursor: help;
+            
+            &:hover {
+              color: #409eff;
+            }
+          }
+        }
+        
+        .stat-value {
+          font-size: 24px;
+          font-weight: 600;
+          color: #303133;
+          margin-bottom: 4px;
+          
+          &.danger {
+            color: #f56c6c;
+          }
+          
+          &.warning {
+            color: #e6a23c;
+          }
+          
+          &.info {
+            color: #409eff;
+          }
+          
+          &.success {
+            color: #67c23a;
+          }
+          
+          .stat-unit {
+            font-size: 14px;
+            font-weight: 400;
+            color: #909399;
+            margin-left: 2px;
+          }
+        }
+        
+        .stat-meta {
+          color: #909399;
+          font-size: 12px;
+          margin-bottom: 8px;
+        }
+        
+        .el-progress {
+          margin-top: 8px;
+        }
+      }
+    }
+    
+    .browser-instances {
+      margin-bottom: 24px;
+      
+      .subsection-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #303133;
+        margin: 0 0 16px 0;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ebeef5;
+      }
+      
+      .browser-instance-card {
+        background: #f5f7fa;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+        
+        .instance-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 12px;
+          
+          .instance-name {
+            font-weight: 600;
+            color: #303133;
+            font-size: 14px;
+          }
+        }
+        
+        .instance-stats {
+          margin-bottom: 12px;
+          
+          .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 13px;
+            
+            .stat-label {
+              color: #909399;
+            }
+            
+            .stat-value {
+              color: #303133;
+              font-weight: 500;
+            }
+          }
+        }
+      }
+    }
+    
+    .browser-performance {
+      .subsection-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #303133;
+        margin: 0 0 16px 0;
+        padding-bottom: 8px;
+        border-bottom: 1px solid #ebeef5;
+      }
+      
+      .performance-card {
+        background: #f5f7fa;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+        
+        .card-title {
+          font-size: 14px;
+          font-weight: 600;
+          color: #303133;
+          margin: 0 0 12px 0;
+        }
+        
+        .metrics-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 12px;
+          
+          .metric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            
+            .metric-label {
+              color: #909399;
+              font-size: 12px;
+            }
+            
+            .metric-value {
+              color: #303133;
+              font-weight: 600;
+              font-size: 14px;
+              
+              &.danger {
+                color: #f56c6c;
+              }
+              
+              &.warning {
+                color: #e6a23c;
+              }
+              
+              &.info {
+                color: #409eff;
+              }
+              
+              &.success {
+                color: #67c23a;
+              }
             }
           }
         }
