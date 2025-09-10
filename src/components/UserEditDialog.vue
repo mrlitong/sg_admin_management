@@ -6,271 +6,307 @@
     :fullscreen="isMobile"
     :close-on-click-modal="!isMobile"
     @close="handleClose"
+    class="user-edit-dialog"
   >
     <el-form 
       ref="formRef" 
       :model="formData" 
       :rules="formRules" 
-      :label-width="isMobile ? '80px' : '120px'"
+      :label-width="isMobile ? '80px' : '85px'"
       :label-position="isMobile ? 'top' : 'right'"
+      :size="isMobile ? 'default' : 'small'"
     >
-      <el-tabs v-model="activeTab">
-        <el-tab-pane label="基本信息" name="basic">
-          <el-row :gutter="isMobile ? 0 : 20">
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="账号" prop="account">
-                <el-input 
-                  v-model="formData.account" 
-                  placeholder="请输入账号"
-                  :disabled="!!userData"
-                  :size="isMobile ? 'large' : 'default'"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="密码" prop="password">
-                <div style="display: flex; gap: 8px;">
-                  <el-input 
-                    v-model="formData.password" 
-                    placeholder="请输入密码"
-                    :size="isMobile ? 'large' : 'default'"
-                    :style="formData.game_platform === 0 ? 'flex: 1;' : ''"
-                  />
-                  <el-button 
-                    v-if="formData.game_platform === 0"
-                    type="primary" 
-                    :size="isMobile ? 'large' : 'default'"
-                    @click="validateAccount"
-                    :loading="validating"
-                  >
-                    校验
-                  </el-button>
-                </div>
-              </el-form-item>
-            </el-col>
-          </el-row>
+      <!-- 基本信息区域 -->
+      <div class="form-section">
+        <h4 v-if="!isMobile" class="section-title">基本信息</h4>
+        
+        <el-row :gutter="isMobile ? 0 : 10">
+          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+            <el-form-item label="账号" prop="account">
+              <el-input 
+                v-model="formData.account" 
+                placeholder="账号"
+                :disabled="!!userData"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+            <el-form-item label="密码" prop="password">
+              <el-input 
+                v-model="formData.password" 
+                placeholder="密码"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+            <el-form-item label="关联账户" prop="real_account">
+              <el-input 
+                v-model="formData.real_account" 
+                placeholder="关联账户"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+            <el-form-item label="主账户" prop="main_account">
+              <el-input 
+                v-model="formData.main_account" 
+                placeholder="主账户"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-          <el-row :gutter="isMobile ? 0 : 20">
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="关联账户" prop="real_account">
-                <el-input 
-                  v-model="formData.real_account" 
-                  placeholder="请输入关联账户"
-                  :size="isMobile ? 'large' : 'default'"
+        <el-row :gutter="isMobile ? 0 : 10">
+          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+            <el-form-item label="联系方式" prop="contact">
+              <el-input 
+                v-model="formData.contact" 
+                placeholder="微信号"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+            <el-form-item label="游戏版本" prop="game_platform">
+              <el-select 
+                v-model="formData.game_platform" 
+                placeholder="游戏版本"
+                :size="isMobile ? 'large' : 'small'"
+                style="width: 100%"
+              >
+                <el-option 
+                  v-for="(label, value) in GAME_PLATFORMS" 
+                  :key="value" 
+                  :label="label" 
+                  :value="Number(value)" 
                 />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="主账户" prop="main_account">
-                <el-input 
-                  v-model="formData.main_account" 
-                  placeholder="请输入主账户"
-                  :size="isMobile ? 'large' : 'default'"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="6" v-if="formData.game_platform === 0">
+            <el-form-item label="校验">
+              <el-button 
+                type="primary" 
+                :size="isMobile ? 'large' : 'small'"
+                @click="validateAccount"
+                :loading="validating"
+                style="width: 100%"
+              >
+                校验账号
+              </el-button>
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
 
-          <el-row :gutter="isMobile ? 0 : 20">
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="联系方式" prop="contact">
-                <el-input 
-                  v-model="formData.contact" 
-                  placeholder="请输入联系方式（微信号）"
-                  :size="isMobile ? 'large' : 'default'"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="区名" prop="server_name">
-                <el-input 
-                  v-model="formData.server_name" 
-                  placeholder="请输入区名"
-                  :size="isMobile ? 'large' : 'default'"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
+      <!-- 游戏信息区域 -->
+      <div class="form-section">
+        <h4 v-if="!isMobile" class="section-title">游戏信息</h4>
+        
+        <el-row :gutter="isMobile ? 0 : 10">
+          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+            <el-form-item label="区名" prop="server_name">
+              <el-input 
+                v-model="formData.server_name" 
+                placeholder="区名"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+            <el-form-item label="区服" prop="server_info">
+              <el-input 
+                v-model="formData.server_info" 
+                placeholder="4_5"
+                :size="isMobile ? 'large' : 'small'"
+              >
+                <template #prepend>h</template>
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+            <el-form-item label="区号" prop="server_zone">
+              <el-input 
+                v-model="formData.server_zone" 
+                placeholder="区号"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+            <el-form-item label="WebSocket" prop="websocket_url">
+              <el-input 
+                v-model="formData.websocket_url" 
+                placeholder="服务器地址"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="6">
+            <el-form-item label="游戏链接" prop="game_web_url">
+              <el-input 
+                v-model="formData.game_web_url" 
+                placeholder="游戏链接"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
 
-          <el-row :gutter="isMobile ? 0 : 20">
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="区服" prop="server_info">
-                <el-input 
-                  v-model="formData.server_info" 
-                  placeholder="请输入区服号（如：4_5）"
-                  :size="isMobile ? 'large' : 'default'"
-                >
-                  <template #prepend>h</template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="区号" prop="server_zone">
-                <el-input 
-                  v-model="formData.server_zone" 
-                  placeholder="请输入区号"
-                  :size="isMobile ? 'large' : 'default'"
+      <!-- 会员与系统设置区域 -->
+      <div class="form-section">
+        <h4 v-if="!isMobile" class="section-title">会员与系统</h4>
+        
+        <el-row :gutter="isMobile ? 0 : 10">
+          <el-col :xs="24" :sm="12" :md="6" :lg="5">
+            <el-form-item label="会员级别" prop="membership_level">
+              <el-select 
+                v-model="formData.membership_level" 
+                placeholder="会员级别"
+                :size="isMobile ? 'large' : 'small'"
+                style="width: 100%"
+              >
+                <el-option 
+                  v-for="(info, value) in MEMBERSHIP_LEVELS" 
+                  :key="value" 
+                  :label="info.label" 
+                  :value="Number(value)" 
                 />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="isMobile ? 0 : 20">
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="游戏版本" prop="game_platform">
-                <el-select 
-                  v-model="formData.game_platform" 
-                  placeholder="请选择游戏版本"
-                  :size="isMobile ? 'large' : 'default'"
-                  style="width: 100%"
-                >
-                  <el-option 
-                    v-for="(label, value) in GAME_PLATFORMS" 
-                    :key="value" 
-                    :label="label" 
-                    :value="Number(value)" 
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="会员级别" prop="membership_level">
-                <el-select 
-                  v-model="formData.membership_level" 
-                  placeholder="请选择会员级别"
-                  :size="isMobile ? 'large' : 'default'"
-                  style="width: 100%"
-                >
-                  <el-option 
-                    v-for="(info, value) in MEMBERSHIP_LEVELS" 
-                    :key="value" 
-                    :label="info.label" 
-                    :value="Number(value)" 
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="isMobile ? 0 : 20">
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="充值金额" prop="membership_pay_money">
-                <el-input-number 
-                  v-model="formData.membership_pay_money" 
-                  :min="0"
-                  placeholder="请输入充值金额"
-                  style="width: 100%"
-                  :size="isMobile ? 'large' : 'default'"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="分桶号" prop="bucket">
-                <el-input-number 
-                  v-model="formData.bucket" 
-                  :min="0"
-                  :max="255"
-                  placeholder="分桶号（系统自动分配）"
-                  style="width: 100%"
-                  disabled
-                  :size="isMobile ? 'large' : 'default'"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="isMobile ? 0 : 20">
-            <el-col :xs="24" :sm="24" :md="12">
-              <el-form-item label="开启状态" prop="is_open">
-                <el-switch 
-                  v-model="formData.is_open" 
-                  :active-value="1" 
-                  :inactive-value="0"
-                  :size="isMobile ? 'large' : 'default'"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-form-item label="会员到期时间" prop="membership_expire_date">
-            <el-text v-if="formData.membership_expire_date">
-              {{ formatExpireDate(formData.membership_expire_date) }}
-            </el-text>
-            <el-text v-else type="info">无</el-text>
-            <div style="margin-top: 8px;">
-              <el-text type="info" size="small">
-                提示：请使用充值功能来延长会员时长
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+            <el-form-item label="充值金额" prop="membership_pay_money">
+              <el-input-number 
+                v-model="formData.membership_pay_money" 
+                :min="0"
+                placeholder="金额"
+                style="width: 100%"
+                :size="isMobile ? 'large' : 'small'"
+                :controls="false"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="3">
+            <el-form-item label="分桶号" prop="bucket">
+              <el-input-number 
+                v-model="formData.bucket" 
+                :min="0"
+                :max="255"
+                placeholder="自动"
+                style="width: 100%"
+                disabled
+                :size="isMobile ? 'large' : 'small'"
+                :controls="false"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="3">
+            <el-form-item label="开启状态" prop="is_open">
+              <el-switch 
+                v-model="formData.is_open" 
+                :active-value="1" 
+                :inactive-value="0"
+                :size="isMobile ? 'default' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="6" :lg="3">
+            <el-form-item label="钉钉通知" prop="dingding">
+              <el-switch 
+                v-model="formData.dingding" 
+                :active-value="1" 
+                :inactive-value="0"
+                :size="isMobile ? 'default' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="12" :md="12" :lg="6">
+            <el-form-item label="到期时间" prop="membership_expire_date">
+              <el-text :size="isMobile ? 'default' : 'small'" v-if="formData.membership_expire_date">
+                {{ formatExpireDate(formData.membership_expire_date) }}
               </el-text>
-            </div>
-          </el-form-item>
+              <el-text :size="isMobile ? 'default' : 'small'" v-else type="info">无</el-text>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-          <el-form-item label="备注" prop="remarks">
-            <el-input 
-              v-model="formData.remarks" 
-              type="textarea" 
-              :rows="3"
-              placeholder="请输入备注信息"
-            />
-          </el-form-item>
-        </el-tab-pane>
+        <el-row :gutter="isMobile ? 0 : 10">
+          <el-col :xs="24" :sm="24" :md="10" :lg="8">
+            <el-form-item label="横幅通知" prop="banner">
+              <el-input 
+                v-model="formData.banner" 
+                placeholder="横幅通知内容"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="14" :lg="16">
+            <el-form-item label="备注" prop="remarks">
+              <el-input 
+                v-model="formData.remarks" 
+                placeholder="备注信息"
+                :size="isMobile ? 'large' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
 
-        <el-tab-pane label="高级设置" name="advanced">
-          <el-form-item label="钉钉通知" prop="dingding">
-            <el-switch 
-              v-model="formData.dingding" 
-              :active-value="1" 
-              :inactive-value="0"
-              :size="isMobile ? 'large' : 'default'"
-            />
-          </el-form-item>
-
-          <el-form-item label="横幅通知" prop="banner">
-            <el-input v-model="formData.banner" placeholder="请输入横幅通知内容" />
-          </el-form-item>
-
-          <el-form-item label="WebSocket URL" prop="websocket_url">
-            <el-input v-model="formData.websocket_url" placeholder="请输入游戏服务器地址" />
-          </el-form-item>
-
-          <el-form-item label="游戏链接" prop="game_web_url">
-            <el-input v-model="formData.game_web_url" placeholder="请输入游戏链接" />
-          </el-form-item>
-
-          <el-form-item label="登录数据" prop="user_login_data">
-            <el-input 
-              v-model="formData.user_login_data" 
-              type="textarea" 
-              :rows="3"
-              placeholder="请输入用户登录数据"
-            />
-          </el-form-item>
-
-          <el-form-item label="游戏信息" prop="game_info">
-            <el-input 
-              v-model="gameInfoText" 
-              type="textarea" 
-              :rows="5"
-              placeholder="请输入JSON格式的游戏信息"
-              @blur="handleGameInfoChange"
-            />
-          </el-form-item>
-
-          <el-form-item label="用户设置" prop="user_setting">
-            <el-input 
-              v-model="userSettingText" 
-              type="textarea" 
-              :rows="5"
-              placeholder="请输入JSON格式的用户设置"
-              @blur="handleUserSettingChange"
-            />
-          </el-form-item>
-        </el-tab-pane>
-      </el-tabs>
+      <!-- 扩展数据区域 -->
+      <div class="form-section" style="border-bottom: none;">
+        <h4 v-if="!isMobile" class="section-title">扩展数据</h4>
+        
+        <el-row :gutter="isMobile ? 0 : 10">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+            <el-form-item label="登录数据" prop="user_login_data">
+              <el-input 
+                v-model="formData.user_login_data" 
+                type="textarea" 
+                :rows="isMobile ? 3 : 4"
+                placeholder="用户登录数据"
+                :size="isMobile ? 'default' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+            <el-form-item label="游戏信息" prop="game_info">
+              <el-input 
+                v-model="gameInfoText" 
+                type="textarea" 
+                :rows="isMobile ? 3 : 4"
+                placeholder="JSON格式"
+                @blur="handleGameInfoChange"
+                :size="isMobile ? 'default' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+            <el-form-item label="用户设置" prop="user_setting">
+              <el-input 
+                v-model="userSettingText" 
+                type="textarea" 
+                :rows="isMobile ? 3 : 4"
+                placeholder="JSON格式"
+                @blur="handleUserSettingChange"
+                :size="isMobile ? 'default' : 'small'"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </div>
     </el-form>
 
     <template #footer>
-      <el-button @click="handleClose">取消</el-button>
-      <el-button type="primary" @click="handleSave">保存</el-button>
+      <span class="dialog-footer">
+        <el-button @click="handleClose" :size="isMobile ? 'default' : 'small'">取消</el-button>
+        <el-button type="primary" @click="handleSave" :size="isMobile ? 'default' : 'small'">保存</el-button>
+      </span>
     </template>
   </el-dialog>
 </template>
@@ -294,7 +330,6 @@ const { isMobile, isTablet } = useResponsive()
 const { dialogWidth } = useDialogResponsive()
 
 const formRef = ref()
-const activeTab = ref('basic')
 const originalData = ref(null) // 保存原始数据用于对比
 const validating = ref(false) // 校验状态
 
@@ -383,7 +418,6 @@ watch(() => props.userData, (newVal) => {
     })
     gameInfoText.value = ''
     userSettingText.value = ''
-    activeTab.value = 'basic'
   }
 }, { immediate: true })
 
@@ -552,9 +586,33 @@ const handleSave = async () => {
 </script>
 
 <style scoped>
+.form-section {
+  margin-bottom: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #e4e7ed;
+}
+
+.form-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  margin: 0 0 8px 0;
+  padding: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #303133;
+}
+
 :deep(.el-dialog__body) {
-  max-height: 70vh;
+  max-height: 85vh;
   overflow-y: auto;
+  padding: 12px 16px;
+}
+
+/* 紧凑布局 */
+:deep(.el-form-item) {
+  margin-bottom: 10px;
 }
 
 /* 区服输入框的前缀样式 */
@@ -562,20 +620,155 @@ const handleSave = async () => {
   background-color: #f5f7fa;
   color: #909399;
   font-weight: 600;
-  padding: 0 15px;
-  min-width: 30px;
+  padding: 0 10px;
+  min-width: 20px;
   text-align: center;
+}
+
+/* PC端超紧凑样式 */
+@media (min-width: 1024px) {
+  .user-edit-dialog :deep(.el-dialog) {
+    margin-top: 5vh !important;
+  }
+  
+  :deep(.el-dialog__body) {
+    max-height: 88vh;
+    padding: 10px 16px;
+  }
+  
+  :deep(.el-dialog__header) {
+    padding: 12px 16px;
+  }
+  
+  :deep(.el-dialog__footer) {
+    padding: 8px 16px;
+  }
+  
+  .form-section {
+    padding: 4px 0;
+    margin-bottom: 6px;
+  }
+  
+  .section-title {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  
+  :deep(.el-form-item) {
+    margin-bottom: 8px;
+  }
+  
+  :deep(.el-form-item__label) {
+    font-size: 12px;
+    padding-right: 8px;
+  }
+  
+  :deep(.el-input--small) {
+    font-size: 12px;
+  }
+  
+  :deep(.el-input--small .el-input__inner) {
+    height: 28px;
+    line-height: 28px;
+  }
+  
+  :deep(.el-select--small) {
+    font-size: 12px;
+  }
+  
+  :deep(.el-textarea__inner) {
+    font-size: 12px;
+    padding: 3px 7px;
+  }
+  
+  :deep(.el-input-number--small) {
+    width: 100%;
+  }
+  
+  :deep(.el-input-number--small .el-input__inner) {
+    height: 28px;
+    line-height: 28px;
+  }
+  
+  :deep(.el-button--small) {
+    padding: 5px 11px;
+    font-size: 12px;
+  }
+  
+  :deep(.el-switch--small) {
+    height: 16px;
+  }
+  
+  :deep(.el-text) {
+    font-size: 12px;
+  }
+}
+
+/* 超大屏幕优化 */
+@media (min-width: 1920px) {
+  :deep(.el-dialog__body) {
+    max-height: 90vh;
+  }
 }
 
 /* 移动端样式优化 */
 @media (max-width: 767px) {
-  :deep(.el-dialog__header) {
-    padding: 16px;
-    border-bottom: 1px solid #e4e7ed;
+  /* 全屏对话框的特殊处理 */
+  :deep(.el-dialog.is-fullscreen) {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
   }
   
-  :deep(.el-dialog__footer) {
+  :deep(.el-dialog.is-fullscreen .el-dialog__header) {
+    padding: 16px;
+    border-bottom: 1px solid #e4e7ed;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 100;
+  }
+  
+  :deep(.el-dialog.is-fullscreen .el-dialog__body) {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    padding-bottom: 90px !important; /* 为底部按钮留出更多空间 */
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  :deep(.el-dialog.is-fullscreen .el-dialog__footer) {
     border-top: 1px solid #e4e7ed;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    background: white !important;
+    z-index: 2000 !important;
+    padding: 12px 16px !important;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15) !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    gap: 12px !important;
+  }
+  
+  /* 确保按钮容器也正确显示 */
+  .dialog-footer {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .form-section {
+    margin-bottom: 20px;
+    padding: 12px 0;
+  }
+  
+  .form-section:last-child {
+    margin-bottom: 20px; /* 确保最后一个section也有底部间距 */
   }
   
   :deep(.el-form-item) {
@@ -585,22 +778,20 @@ const handleSave = async () => {
   :deep(.el-form-item__label) {
     padding-bottom: 4px;
   }
-  
-  :deep(.el-tabs__nav-wrap) {
-    padding: 0;
-  }
-  
-  :deep(.el-tabs__item) {
-    padding: 0 12px;
-    height: 44px;
-    line-height: 44px;
-  }
 }
 
 /* 平板端样式 */
 @media (min-width: 768px) and (max-width: 1023px) {
   :deep(.el-dialog__body) {
-    max-height: 75vh;
+    max-height: 80vh;
+  }
+  
+  .form-section {
+    padding: 8px 0;
+  }
+  
+  :deep(.el-form-item) {
+    margin-bottom: 12px;
   }
 }
 </style>
