@@ -154,7 +154,7 @@
         <el-input
           v-model="rechargeForm.remark"
           type="textarea"
-          :rows="3"
+          :rows="isMobile ? 2 : 3"
           placeholder="请输入备注信息（选填）"
           :size="isMobile ? 'large' : 'default'"
         />
@@ -377,17 +377,43 @@ const handleConfirm = async () => {
 
 /* 移动端样式优化 */
 @media (max-width: 767px) {
+  :deep(.el-dialog) {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0 !important;
+  }
+  
   :deep(.el-dialog__header) {
     padding: 16px;
     border-bottom: 1px solid #e4e7ed;
+    flex-shrink: 0;
+  }
+  
+  :deep(.el-dialog__body) {
+    flex: 1;
+    overflow-y: auto;
+    /* 为系统UI预留底部安全区域 */
+    padding-bottom: 20px;
+    /* 支持iOS安全区域 */
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
   }
   
   :deep(.el-dialog__footer) {
     border-top: 1px solid #e4e7ed;
+    position: sticky;
+    bottom: 0;
+    background: white;
+    z-index: 10;
+    flex-shrink: 0;
+    /* 为系统按钮预留底部空间 */
+    padding-bottom: 60px;
+    /* 支持iOS安全区域 */
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
   }
   
   :deep(.el-form-item) {
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
   
   :deep(.el-form-item__label) {
@@ -401,6 +427,17 @@ const handleConfirm = async () => {
   
   :deep(.el-radio-button) {
     margin-bottom: 8px;
+  }
+  
+  /* 减少备注框最后一项的间距，避免过多占用空间 */
+  :deep(.el-form-item:last-child) {
+    margin-bottom: 12px;
+  }
+  
+  /* 确保textarea不会过高 */
+  :deep(.el-textarea__inner) {
+    max-height: 80px;
+    resize: none;
   }
 }
 </style>
