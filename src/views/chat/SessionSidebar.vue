@@ -15,7 +15,7 @@
         <span class="status-text">
           {{ currentStatus === 'offline' || !chatStore.isConnected ? '离线' : getStatusDisplayText(currentStatus) }}
         </span>
-        <button @click="forceRefreshSessions" style="margin-left: 8px; padding: 2px 6px; font-size: 10px; background: #007bff; color: white; border: none; border-radius: 3px; cursor: pointer;">
+        <button @click="forceRefreshSessions" style="margin-left: 8px; padding: 2px 6px; font-size: 10px; background: var(--primary-color); color: white; border: none; border-radius: 3px; cursor: pointer;">
           强制刷新
         </button>
       </div>
@@ -119,7 +119,7 @@
         @change="handlePageChange"
       />
       <div v-else class="pagination-loading">
-        <span style="color: #666; font-size: 12px;">加载中...</span>
+        <span style="color: var(--text-color-regular); font-size: 12px;">加载中...</span>
       </div>
     </div>
   </div>
@@ -497,8 +497,8 @@ defineExpose({
 <style scoped>
 .sidebar {
   width: 320px;
-  background: white;
-  border-right: 1px solid #e0e0e0;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border-color-base);
   display: flex;
   flex-direction: column;
   height: 100%; /* 使用100%而不是100vh，让父容器控制高度 */
@@ -506,7 +506,7 @@ defineExpose({
 
 .sidebar-header {
   padding: 16px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color-base);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -515,7 +515,7 @@ defineExpose({
 .sidebar-header h3 {
   margin: 0;
   font-size: 16px;
-  color: #333;
+  color: var(--text-color-primary);
 }
 
 .status-indicator {
@@ -523,32 +523,32 @@ defineExpose({
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #666;
+  color: var(--text-color-regular);
 }
 
 .status-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #dc3545;
+  background: var(--danger-color);
   transition: background-color 0.3s ease;
 }
 
 .status-dot.online {
-  background: #28a745;
+  background: var(--success-color);
 }
 
 .status-dot.busy {
-  background: #ffc107;
+  background: var(--warning-color);
 }
 
 .status-dot.offline {
-  background: #6c757d;
+  background: var(--info-color);
 }
 
 .cs-status-control {
   padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color-light);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -558,26 +558,26 @@ defineExpose({
 .cs-status-control select {
   flex: 1;
   padding: 4px 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color-base);
   border-radius: 4px;
   font-size: 12px;
-  background: white;
+  background: var(--card-bg);
   cursor: pointer;
   transition: border-color 0.2s ease;
 }
 
 .cs-status-control select:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: var(--primary-color);
 }
 
 .cs-status-control select:hover {
-  border-color: #999;
+  border-color: var(--text-color-secondary);
 }
 
 .logout-btn {
   padding: 4px 8px;
-  background: #dc3545;
+  background: var(--danger-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -588,12 +588,12 @@ defineExpose({
 }
 
 .logout-btn:hover {
-  background: #c82333;
+  background: var(--danger-color); opacity: 0.8;
 }
 
 .session-filters {
   padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color-light);
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -601,8 +601,8 @@ defineExpose({
 
 .filter-btn {
   padding: 4px 8px;
-  border: 1px solid #ddd;
-  background: white;
+  border: 1px solid var(--border-color-base);
+  background: var(--card-bg);
   border-radius: 12px;
   font-size: 11px;
   cursor: pointer;
@@ -613,13 +613,13 @@ defineExpose({
 }
 
 .filter-btn.active {
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
-  border-color: #007bff;
+  border-color: var(--primary-color);
 }
 
 .count-badge {
-  background: #dc3545;
+  background: var(--danger-color);
   color: white;
   border-radius: 8px;
   padding: 0 4px;
@@ -645,15 +645,15 @@ defineExpose({
   align-items: center;
   justify-content: center;
   padding: 40px;
-  color: #666;
+  color: var(--text-color-regular);
   text-align: center;
 }
 
 .loading-spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid #e0e0e0;
-  border-top: 2px solid #007bff;
+  border: 2px solid var(--border-color-base);
+  border-top: 2px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 8px;
@@ -666,7 +666,7 @@ defineExpose({
 
 .session-item {
   padding: 12px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color-light);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -675,45 +675,45 @@ defineExpose({
 }
 
 .session-item:hover {
-  background: #f8f9fa;
+  background: var(--bg-color-secondary);
 }
 
 .session-item.active {
-  background: #e3f2fd;
-  border-left: 3px solid #007bff;
+  background: var(--bg-color-secondary);
+  border-left: 3px solid var(--primary-color);
 }
 
 .session-item.important {
-  border-left: 3px solid #ff9800;
+  border-left: 3px solid var(--warning-color);
 }
 
 .session-item.important.active {
-  border-left: 3px solid #007bff;
-  background: linear-gradient(90deg, #fff3e0 0%, #e3f2fd 100%);
+  border-left: 3px solid var(--primary-color);
+  background: var(--bg-color-secondary);
 }
 
 .session-item.has-unread {
-  background: #f8f9ff;
-  border-left: 4px solid #007bff;
+  background: var(--bg-color-secondary);
+  border-left: 4px solid var(--primary-color);
   position: relative;
 }
 
 .session-item.has-unread:hover {
-  background: #f0f2ff;
+  background: var(--bg-color-secondary);
 }
 
 .session-item.has-unread.active {
-  background: #e3f2fd;
-  border-left: 4px solid #0056b3;
+  background: var(--bg-color-secondary);
+  border-left: 4px solid var(--primary-color); opacity: 0.8;
 }
 
 .session-item.has-unread .user-name {
   font-weight: 600;
-  color: #0056b3;
+  color: var(--primary-color); opacity: 0.8;
 }
 
 .session-item.has-unread .last-message-time {
-  color: #007bff;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
@@ -725,7 +725,7 @@ defineExpose({
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
   display: flex;
   align-items: center;
@@ -739,12 +739,12 @@ defineExpose({
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #e0e0e0;
+  border: 2px solid var(--border-color-base);
   transition: border-color 0.2s ease;
 }
 
 .session-avatar .avatar-image:hover {
-  border-color: #007bff;
+  border-color: var(--primary-color);
 }
 
 .session-info {
@@ -761,7 +761,7 @@ defineExpose({
 }
 
 .important-badge {
-  background: #ff9800;
+  background: var(--warning-color);
   color: white;
   font-size: 10px;
   padding: 1px 4px;
@@ -770,7 +770,7 @@ defineExpose({
 
 .last-message-preview {
   font-size: 12px;
-  color: #888;
+  color: var(--text-color-secondary);
   margin-bottom: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -779,18 +779,18 @@ defineExpose({
 
 .last-message-time {
   font-size: 11px;
-  color: #666;
+  color: var(--text-color-regular);
   margin-bottom: 2px;
 }
 
 .user-meta {
   font-size: 10px;
-  color: #888;
+  color: var(--text-color-secondary);
 }
 
 .membership {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: var(--bg-color-secondary);
+  color: var(--primary-color);
   padding: 1px 4px;
   border-radius: 6px;
 }
@@ -803,7 +803,7 @@ defineExpose({
 }
 
 .unread-badge {
-  background: #dc3545;
+  background: var(--danger-color);
   color: white;
   border-radius: 8px;
   padding: 1px 5px;
@@ -814,9 +814,9 @@ defineExpose({
 
 .pagination-container {
   flex-shrink: 0;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-color-light);
   padding: 8px 12px;
-  background: white;
+  background: var(--card-bg);
   min-height: 40px;
   display: flex;
   align-items: center;

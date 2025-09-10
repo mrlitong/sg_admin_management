@@ -61,8 +61,8 @@ const changePage = (page) => {
   justify-content: center;
   padding: 10px;
   gap: 10px;
-  border-top: 1px solid #e4e7ed;
-  background-color: #fff;
+  border-top: 1px solid var(--border-color-light);
+  background-color: var(--card-bg);
 }
 
 .pagination-btn {
@@ -71,16 +71,16 @@ const changePage = (page) => {
   justify-content: center;
   width: 32px;
   height: 32px;
-  border: 1px solid #dcdfe6;
-  background-color: #fff;
+  border: 1px solid var(--border-color-base);
+  background-color: var(--card-bg);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.3s;
 }
 
 .pagination-btn:hover:not(:disabled) {
-  color: #409eff;
-  border-color: #409eff;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
 }
 
 .pagination-btn:disabled {
@@ -90,7 +90,7 @@ const changePage = (page) => {
 
 .pagination-info {
   font-size: 14px;
-  color: #606266;
+  color: var(--text-color-regular);
   user-select: none;
 }
 </style>

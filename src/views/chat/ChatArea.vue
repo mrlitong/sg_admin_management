@@ -272,7 +272,7 @@ defineExpose({
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: white;
+  background: var(--card-bg);
   overflow: hidden;
   height: 100%; /* 确保高度为100%而不是超出 */
 }
@@ -283,7 +283,7 @@ defineExpose({
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #666;
+  color: var(--text-color-regular);
   text-align: center;
   padding: 40px;
 }
@@ -296,7 +296,7 @@ defineExpose({
 
 .no-session h3 {
   margin: 0 0 8px 0;
-  color: #333;
+  color: var(--text-color-primary);
 }
 
 .chat-container {
@@ -309,18 +309,18 @@ defineExpose({
 
 .quick-replies {
   padding: 8px 16px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color-base);
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  background: #f8f9fa;
+  background: var(--bg-color-secondary);
   align-items: center;
 }
 
 .quick-reply-btn {
   padding: 6px 12px;
-  background: white;
-  border: 1px solid #ddd;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color-base);
   border-radius: 16px;
   font-size: 13px;
   cursor: pointer;
@@ -331,13 +331,13 @@ defineExpose({
 }
 
 .quick-reply-btn:hover {
-  background: #e9ecef;
-  border-color: #409EFF;
+  background: var(--bg-color-secondary); opacity: 0.8;
+  border-color: var(--primary-color);
 }
 
 .quick-reply-btn:active {
   transform: scale(0.95);
-  background: #dee2e6;
+  background: var(--bg-color-secondary); opacity: 0.6;
 }
 
 /* 移动端样式 */
@@ -353,9 +353,9 @@ defineExpose({
   .quick-replies {
     padding: 10px 12px;
     gap: 8px;
-    border-top: 1px solid #e0e0e0;
-    border-bottom: 1px solid #e0e0e0;
-    background: #ffffff;
+    border-top: 1px solid var(--border-color-base);
+    border-bottom: 1px solid var(--border-color-base);
+    background: var(--card-bg);
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
@@ -376,13 +376,13 @@ defineExpose({
     align-items: center;
     justify-content: center;
     border-radius: 20px;
-    background: #f0f2f5;
+    background: var(--bg-color-secondary);
     border: 1px solid transparent;
     font-weight: 500;
   }
   
   .quick-reply-btn:active {
-    background: #409EFF;
+    background: var(--primary-color);
     color: white;
     transform: none;
   }

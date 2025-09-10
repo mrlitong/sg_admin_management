@@ -393,11 +393,11 @@ const handleImageLoad = (sessionId) => {
 <style scoped>
 .user-info-bar {
   padding: 12px 16px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color-light);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f8f9fa;
+  background: var(--bg-color-secondary);
   min-height: 60px;
   position: relative;
   z-index: 10;
@@ -419,7 +419,7 @@ const handleImageLoad = (sessionId) => {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
   display: flex;
   align-items: center;
@@ -433,7 +433,8 @@ const handleImageLoad = (sessionId) => {
   height: 24px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #90caf9;
+  border: 1px solid var(--primary-color);
+  opacity: 0.5;
 }
 
 .user-info-tags {
@@ -466,65 +467,73 @@ const handleImageLoad = (sessionId) => {
 }
 
 .account-tag {
-  background: #e3f2fd;
-  border-color: #90caf9;
+  background: var(--bg-color-secondary);
+  border-color: var(--primary-color);
 }
 
 .membership-tag {
-  background: #e8f5e8;
-  color: #2e7d32;
-  border-color: #a5d6a7;
+  background: var(--success-color);
+  color: var(--bg-color);
+  border-color: var(--success-color);
+  opacity: 0.8;
 }
 
 .expire-tag {
-  background: #fff3e0;
-  color: #f57c00;
-  border-color: #ffcc02;
+  background: var(--warning-color);
+  color: var(--bg-color);
+  border-color: var(--warning-color);
+  opacity: 0.8;
   min-width: 140px;
 }
 
 .expire-tag.expired {
-  background: #ffebee;
-  color: #d32f2f;
-  border-color: #ef5350;
+  background: var(--danger-color);
+  color: var(--bg-color);
+  border-color: var(--danger-color);
+  opacity: 0.8;
 }
 
 .pay-money-tag {
-  background: #fff8e1;
-  color: #e65100;
-  border-color: #ffb74d;
+  background: var(--warning-color);
+  color: var(--bg-color);
+  border-color: var(--warning-color);
+  opacity: 0.9;
   font-weight: 600;
 }
 
 .platform-tag {
-  background: #f3e5f5;
-  color: #7b1fa2;
-  border-color: #ce93d8;
+  background: var(--primary-color);
+  color: var(--bg-color);
+  border-color: var(--primary-color);
+  opacity: 0.7;
 }
 
 .last-online-tag {
-  background: #e0f2f1;
-  color: #00695c;
-  border-color: #80cbc4;
+  background: var(--success-color);
+  color: var(--bg-color);
+  border-color: var(--success-color);
+  opacity: 0.6;
   min-width: 140px;
 }
 
 .online-status-tag.online {
-  background: #e8f5e8;
-  color: #2e7d32;
-  border-color: #81c784;
+  background: var(--success-color);
+  color: var(--bg-color);
+  border-color: var(--success-color);
+  opacity: 0.7;
 }
 
 .online-status-tag.offline {
-  background: #fafafa;
-  color: #757575;
-  border-color: #bdbdbd;
+  background: var(--bg-color-secondary);
+  color: var(--text-color-secondary);
+  border-color: var(--border-color-base);
 }
 
 .remarks-tag {
-  background: #f0f4ff;
-  color: #3f51b5;
-  border-color: #9fa8da;
+  background: var(--primary-color);
+  color: var(--bg-color);
+  border-color: var(--primary-color);
+  opacity: 0.1;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -551,7 +560,7 @@ const handleImageLoad = (sessionId) => {
 
 .action-btn {
   padding: 6px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color-base);
   background: white;
   border-radius: 4px;
   cursor: pointer;
@@ -560,15 +569,15 @@ const handleImageLoad = (sessionId) => {
 }
 
 .important-btn.active {
-  background: #ff9800;
+  background: var(--warning-color);
   color: white;
-  border-color: #ff9800;
+  border-color: var(--warning-color);
 }
 
 .end-btn {
-  background: #dc3545;
+  background: var(--danger-color);
   color: white;
-  border-color: #dc3545;
+  border-color: var(--danger-color);
 }
 
 .mobile-top-bar {
@@ -577,8 +586,8 @@ const handleImageLoad = (sessionId) => {
   gap: 12px;
   width: 100%;
   padding: 8px 12px;
-  background: #f8f9fa;
-  border-bottom: 1px solid #e0e0e0;
+  background: var(--bg-color-secondary);
+  border-bottom: 1px solid var(--border-color-light);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -586,7 +595,7 @@ const handleImageLoad = (sessionId) => {
 
 .mobile-back-btn {
   padding: 6px 12px;
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 20px;
@@ -598,14 +607,15 @@ const handleImageLoad = (sessionId) => {
 }
 
 .mobile-back-btn:hover {
-  background: #0056b3;
+  background: var(--primary-color);
+  opacity: 0.9;
 }
 
 .mobile-user-name {
   flex: 1;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-color-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -624,14 +634,14 @@ const handleImageLoad = (sessionId) => {
 
 .mobile-user-name .expand-icon {
   font-size: 10px;
-  color: #007bff;
+  color: var(--primary-color);
   margin-left: 6px;
   transition: transform 0.2s;
 }
 
 .mobile-user-details {
-  background: #f8f9fa;
-  border-top: 1px solid #e0e0e0;
+  background: var(--bg-color-secondary);
+  border-top: 1px solid var(--border-color-light);
   animation: slideDown 0.3s ease;
   position: relative;
   z-index: 99;
@@ -689,7 +699,7 @@ const handleImageLoad = (sessionId) => {
 
 .dialog h3 {
   margin: 0 0 16px 0;
-  color: #333;
+  color: var(--text-color-primary);
 }
 
 .form-group {
@@ -700,12 +710,12 @@ const handleImageLoad = (sessionId) => {
   display: block;
   margin-bottom: 6px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-color-primary);
 }
 
 .form-group textarea {
   width: 100%;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color-base);
   border-radius: 4px;
   padding: 8px;
   resize: vertical;
@@ -727,12 +737,12 @@ const handleImageLoad = (sessionId) => {
 }
 
 .cancel-btn {
-  background: #6c757d;
+  background: var(--info-color);
   color: white;
 }
 
 .confirm-btn {
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
 }
 

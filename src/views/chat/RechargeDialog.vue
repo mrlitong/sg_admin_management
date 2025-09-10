@@ -181,20 +181,20 @@ const handleSubmit = async () => {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-color-light);
 }
 
 .dialog-header h3 {
   margin: 0;
   font-size: 18px;
-  color: #333;
+  color: var(--text-color-primary);
 }
 
 .close-btn {
   background: none;
   border: none;
   font-size: 24px;
-  color: #999;
+  color: var(--text-color-secondary);
   cursor: pointer;
   padding: 0;
   width: 30px;
@@ -207,8 +207,8 @@ const handleSubmit = async () => {
 }
 
 .close-btn:hover {
-  background: #f5f5f5;
-  color: #333;
+  background: var(--bg-color-secondary);
+  color: var(--text-color-primary);
 }
 
 .recharge-form {
@@ -223,7 +223,7 @@ const handleSubmit = async () => {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-color-primary);
   font-size: 14px;
 }
 
@@ -231,7 +231,7 @@ const handleSubmit = async () => {
 .form-group select {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color-base);
   border-radius: 4px;
   font-size: 14px;
   transition: border-color 0.2s;
@@ -240,7 +240,7 @@ const handleSubmit = async () => {
 .form-group input:focus,
 .form-group select:focus {
   outline: none;
-  border-color: #007bff;
+  border-color: var(--primary-color);
 }
 
 .form-group input[type="number"] {
@@ -255,10 +255,10 @@ const handleSubmit = async () => {
 
 .readonly-field {
   padding: 10px 12px;
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background: var(--bg-color-secondary);
+  border: 1px solid var(--border-color-lighter);
   border-radius: 4px;
-  color: #495057;
+  color: var(--text-color-regular);
   font-size: 14px;
 }
 
@@ -268,7 +268,7 @@ const handleSubmit = async () => {
   gap: 10px;
   margin-top: 30px;
   padding-top: 20px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color-light);
 }
 
 .cancel-btn,
@@ -283,25 +283,27 @@ const handleSubmit = async () => {
 }
 
 .cancel-btn {
-  background: #6c757d;
+  background: var(--info-color);
   color: white;
 }
 
 .cancel-btn:hover {
-  background: #5a6268;
+  background: var(--info-color);
+  opacity: 0.9;
 }
 
 .submit-btn {
-  background: #28a745;
+  background: var(--success-color);
   color: white;
 }
 
 .submit-btn:hover {
-  background: #218838;
+  background: var(--success-color);
+  opacity: 0.9;
 }
 
 .submit-btn:disabled {
-  background: #6c757d;
+  background: var(--info-color);
   cursor: not-allowed;
 }
 

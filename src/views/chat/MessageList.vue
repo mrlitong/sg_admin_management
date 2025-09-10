@@ -92,15 +92,15 @@ defineExpose({
   align-items: center;
   justify-content: center;
   padding: 40px;
-  color: #666;
+  color: var(--text-color-regular);
   text-align: center;
 }
 
 .loading-spinner {
   width: 24px;
   height: 24px;
-  border: 2px solid #e0e0e0;
-  border-top: 2px solid #007bff;
+  border: 2px solid var(--border-color-base);
+  border-top: 2px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 8px;
@@ -138,19 +138,19 @@ defineExpose({
   max-width: 70%;
   padding: 10px 14px;
   border-radius: 12px;
-  background: #f1f1f1;
+  background: var(--bg-color-secondary);
   word-wrap: break-word;
 }
 
 .message-customer_service .message-bubble {
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
 }
 
 .message-system .message-bubble {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeaa7;
+  background: var(--bg-color-secondary); opacity: 0.9;
+  color: var(--text-color-primary);
+  border: 1px solid var(--border-color-light);
   text-align: center;
   font-size: 12px;
   max-width: 60%;
@@ -178,12 +178,12 @@ defineExpose({
 }
 
 .message-list::-webkit-scrollbar-thumb {
-  background: #ddd;
+  background: var(--border-color-base);
   border-radius: 3px;
 }
 
 .message-list::-webkit-scrollbar-thumb:hover {
-  background: #bbb;
+  background: var(--text-color-secondary);
 }
 
 /* 移动端样式 */
@@ -217,12 +217,12 @@ defineExpose({
   }
   
   .message-user .message-bubble {
-    background: #f5f5f5;
+    background: var(--bg-color-secondary);
     margin-right: auto;
   }
   
   .message-customer_service .message-bubble {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--primary-color);
     margin-left: auto;
   }
   

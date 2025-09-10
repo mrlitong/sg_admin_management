@@ -169,12 +169,13 @@ defineExpose({
 <style scoped>
 .input-area {
   padding: 16px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--border-color-light);
 }
 
 .connection-warning {
-  background: #fff3cd;
-  border: 1px solid #ffeaa7;
+  background: var(--warning-color);
+  border: 1px solid var(--warning-color);
+  opacity: 0.1;
   border-radius: 4px;
   padding: 8px 12px;
   margin-bottom: 12px;
@@ -182,12 +183,12 @@ defineExpose({
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
-  color: #856404;
+  color: var(--warning-color);
 }
 
 .reconnect-btn {
   padding: 4px 8px;
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -203,7 +204,7 @@ defineExpose({
 
 textarea {
   width: 100%;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color-base);
   border-radius: 6px;
   padding: 10px;
   resize: none;
@@ -213,12 +214,12 @@ textarea {
 }
 
 textarea:focus {
-  border-color: #007bff;
+  border-color: var(--primary-color);
 }
 
 textarea:disabled {
-  background: #f8f9fa;
-  color: #6c757d;
+  background: var(--bg-color-secondary);
+  color: var(--info-color);
 }
 
 .input-actions {
@@ -229,7 +230,7 @@ textarea:disabled {
 
 .clear-btn {
   padding: 8px 12px;
-  background: #6c757d;
+  background: var(--info-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -239,7 +240,7 @@ textarea:disabled {
 
 .recharge-btn {
   padding: 8px 12px;
-  background: #28a745;
+  background: var(--success-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -249,7 +250,7 @@ textarea:disabled {
 
 .send-btn {
   padding: 8px 16px;
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -261,7 +262,7 @@ textarea:disabled {
 .send-btn:disabled,
 .clear-btn:disabled,
 .recharge-btn:disabled {
-  background: #6c757d;
+  background: var(--info-color);
   cursor: not-allowed;
 }
 

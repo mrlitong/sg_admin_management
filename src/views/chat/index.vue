@@ -337,7 +337,7 @@ onUnmounted(async () => {
 .cs-panel {
   display: flex;
   height: calc(100vh - var(--header-height) - 40px); /* 减去顶部导航栏高度和main容器的padding */
-  background: #f5f5f5;
+  background: var(--bg-color-page);
   position: relative;
   overflow: hidden; /* 防止面板整体滚动 */
 }
@@ -349,7 +349,7 @@ onUnmounted(async () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(245, 245, 245, 0.95);
+  background: var(--bg-color-page);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -360,9 +360,9 @@ onUnmounted(async () => {
 .loading-container {
   text-align: center;
   padding: 40px;
-  background: white;
+  background: var(--card-bg);
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow-light);
   max-width: 400px;
   width: 90%;
 }
@@ -370,8 +370,8 @@ onUnmounted(async () => {
 .loading-spinner {
   width: 48px;
   height: 48px;
-  border: 4px solid #e0e0e0;
-  border-top: 4px solid #007bff;
+  border: 4px solid var(--border-color-light);
+  border-top: 4px solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 20px;
@@ -384,22 +384,22 @@ onUnmounted(async () => {
 
 .loading-text h3 {
   margin: 0 0 16px 0;
-  color: #333;
+  color: var(--text-color-primary);
   font-size: 18px;
   font-weight: 500;
 }
 
 .loading-text p {
   margin: 0;
-  color: #666;
+  color: var(--text-color-regular);
   font-size: 14px;
   line-height: 1.5;
 }
 
 .error-message {
-  color: #dc3545 !important;
-  background: #f8d7da;
-  border: 1px solid #f5c6cb;
+  color: var(--danger-color) !important;
+  background: rgba(245, 108, 108, 0.1);
+  border: 1px solid var(--danger-color);
   border-radius: 6px;
   padding: 12px;
   margin: 16px 0 0 0;
@@ -408,7 +408,7 @@ onUnmounted(async () => {
 .retry-btn {
   margin-left: 8px;
   padding: 4px 12px;
-  background: #007bff;
+  background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -418,16 +418,17 @@ onUnmounted(async () => {
 }
 
 .retry-btn:hover {
-  background: #0056b3;
+  background: var(--primary-color);
+  opacity: 0.9;
 }
 
 .error-toast {
   position: fixed;
   top: 20px;
   right: 20px;
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+  background: rgba(245, 108, 108, 0.9);
+  color: var(--danger-color);
+  border: 1px solid var(--danger-color);
   border-radius: 4px;
   padding: 12px 16px;
   max-width: 300px;
@@ -436,13 +437,13 @@ onUnmounted(async () => {
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow-base);
 }
 
 .close-error {
   background: none;
   border: none;
-  color: #721c24;
+  color: var(--danger-color);
   cursor: pointer;
   font-size: 16px;
   font-weight: bold;
@@ -466,7 +467,7 @@ onUnmounted(async () => {
     height: 100vh;
     z-index: 10;
     transition: transform 0.3s ease-in-out;
-    background: #fff;
+    background: var(--card-bg);
   }
   
   .cs-panel.mobile-view :deep(.main-chat) {
@@ -477,7 +478,7 @@ onUnmounted(async () => {
     height: 100vh;
     z-index: 20;
     transition: transform 0.3s ease-in-out;
-    background: #fff;
+    background: var(--card-bg);
   }
   
   /* 移动端加载提示 */
