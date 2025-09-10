@@ -462,7 +462,7 @@ onMounted(() => {
 <style scoped>
 .admin-list-container {
   padding: 20px;
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 4px;
 }
 
@@ -503,21 +503,21 @@ onMounted(() => {
 
 /* 管理员卡片样式 */
 .admin-card {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 16px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: var(--box-shadow-base);
   transition: all 0.3s;
-  border: 1px solid #f0f0f0;
+  border: 1px solid var(--border-color-lighter);
   -webkit-tap-highlight-color: transparent;
   user-select: none;
 }
 
 .admin-card:active {
   transform: scale(0.98);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  background: #fafafa;
+  box-shadow: var(--box-shadow-base);
+  background: var(--bg-color-secondary);
 }
 
 .card-header {
@@ -526,7 +526,7 @@ onMounted(() => {
   align-items: flex-start;
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color-lighter);
 }
 
 .card-info {
@@ -536,13 +536,13 @@ onMounted(() => {
 .admin-name {
   font-size: 16px;
   font-weight: 600;
-  color: #303133;
+  color: var(--text-color-primary);
   margin: 0 0 4px 0;
 }
 
 .admin-username {
   font-size: 13px;
-  color: #909399;
+  color: var(--text-color-secondary);
 }
 
 .card-body {
@@ -557,13 +557,13 @@ onMounted(() => {
 }
 
 .info-row .label {
-  color: #909399;
+  color: var(--text-color-secondary);
   min-width: 80px;
   flex-shrink: 0;
 }
 
 .info-row .value {
-  color: #606266;
+  color: var(--text-color-regular);
   flex: 1;
 }
 
@@ -572,7 +572,7 @@ onMounted(() => {
   justify-content: flex-end;
   gap: 8px;
   padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-color-lighter);
 }
 
 .card-footer .el-button {
@@ -584,7 +584,7 @@ onMounted(() => {
 @media (max-width: 767px) {
   .admin-list-container {
     padding: 12px;
-    background: #f5f5f5;
+    background: var(--bg-color-secondary);
     min-height: 100vh;
   }
   
@@ -602,7 +602,7 @@ onMounted(() => {
   :deep(.el-dialog) {
     .el-dialog__header {
       padding: 16px;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--border-color-lighter);
       font-size: 16px;
     }
     
@@ -612,7 +612,7 @@ onMounted(() => {
     
     .el-dialog__footer {
       padding: 12px 16px;
-      border-top: 1px solid #f0f0f0;
+      border-top: 1px solid var(--border-color-lighter);
     }
     
     .el-form-item {

@@ -334,7 +334,7 @@
     
     <!-- 默认模式下显示总数 -->
     <div class="pagination" v-else>
-      <span style="color: #606266; font-size: 14px;">共 {{ pagination.total }} 条数据</span>
+      <span class="data-count-text">共 {{ pagination.total }} 条数据</span>
     </div>
 
     <!-- 编辑对话框 -->
@@ -914,7 +914,7 @@ onMounted(() => {
 <style scoped>
 .user-data-container {
   padding: 20px;
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 4px;
 }
 
@@ -932,7 +932,7 @@ onMounted(() => {
 }
 
 .advanced-filter {
-  background: #f5f7fa;
+  background: var(--bg-color-secondary);
   padding: 20px;
   margin-bottom: 20px;
   border-radius: 4px;
@@ -944,11 +944,16 @@ onMounted(() => {
   justify-content: flex-end;
 }
 
+.data-count-text {
+  color: var(--text-color-regular);
+  font-size: 14px;
+}
+
 .result-summary {
   margin-bottom: 16px;
   padding: 12px 16px;
-  background-color: #ecf5ff;
-  border: 1px solid #d9ecff;
+  background-color: var(--bg-color-secondary);
+  border: 1px solid var(--border-color-light);
   border-radius: 4px;
   display: flex;
   align-items: center;
@@ -959,11 +964,11 @@ onMounted(() => {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: #606266;
+  color: var(--text-color-regular);
 }
 
 .result-summary strong {
-  color: #409eff;
+  color: var(--primary-color);
   font-size: 18px;
   margin: 0 4px;
   font-weight: 600;

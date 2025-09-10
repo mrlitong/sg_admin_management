@@ -1458,7 +1458,7 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .analytics-dashboard {
   padding: 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--bg-color-page);
   min-height: 100vh;
 
   .dashboard-header {
@@ -1467,9 +1467,9 @@ onUnmounted(() => {
     align-items: center;
     margin-bottom: 24px;
     padding: 24px;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--card-bg);
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--box-shadow-light);
 
     .header-left {
       .dashboard-title {
@@ -1477,7 +1477,7 @@ onUnmounted(() => {
         align-items: center;
         font-size: 28px;
         font-weight: 700;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0 0 8px 0;
 
         .title-icon {
@@ -1490,7 +1490,7 @@ onUnmounted(() => {
       }
 
       .dashboard-subtitle {
-        color: #909399;
+        color: var(--text-color-secondary);
         font-size: 14px;
         margin: 0;
       }
@@ -1507,10 +1507,10 @@ onUnmounted(() => {
     margin-bottom: 24px;
 
     .metric-card {
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--box-shadow-base);
       transition: all 0.3s ease;
       cursor: pointer;
       position: relative;
@@ -1548,7 +1548,7 @@ onUnmounted(() => {
 
       &:hover {
         transform: translateY(-4px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--box-shadow-light);
       }
 
       .metric-header {
@@ -1558,17 +1558,17 @@ onUnmounted(() => {
         margin-bottom: 12px;
 
         .metric-label {
-          color: #909399;
+          color: var(--text-color-secondary);
           font-size: 14px;
         }
 
         .info-icon {
-          color: #909399;
+          color: var(--text-color-secondary);
           cursor: help;
           transition: color 0.3s;
           
           &:hover {
-            color: #409eff;
+            color: var(--primary-color);
           }
         }
       }
@@ -1576,13 +1576,13 @@ onUnmounted(() => {
       .metric-value {
         font-size: 32px;
         font-weight: 700;
-        color: #303133;
+        color: var(--text-color-primary);
         line-height: 1.2;
         margin-bottom: 12px;
 
         .metric-unit {
           font-size: 14px;
-          color: #909399;
+          color: var(--text-color-secondary);
           font-weight: 400;
           margin-left: 4px;
         }
@@ -1594,20 +1594,20 @@ onUnmounted(() => {
         font-size: 12px;
 
         .trend-up {
-          color: #67c23a;
+          color: var(--success-color);
         }
 
         .trend-down {
-          color: #f56c6c;
+          color: var(--danger-color);
         }
 
         .positive {
-          color: #67c23a;
+          color: var(--success-color);
           margin-left: 4px;
         }
 
         .negative {
-          color: #f56c6c;
+          color: var(--danger-color);
           margin-left: 4px;
         }
       }
@@ -1624,10 +1624,10 @@ onUnmounted(() => {
     margin-bottom: 24px;
 
     .chart-card {
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--box-shadow-base);
       margin-bottom: 16px;
 
       .chart-header {
@@ -1639,18 +1639,18 @@ onUnmounted(() => {
         .chart-title {
           font-size: 18px;
           font-weight: 600;
-          color: #303133;
+          color: var(--text-color-primary);
           margin: 0;
           display: inline-flex;
           align-items: center;
           
           .info-icon {
-            color: #909399;
+            color: var(--text-color-secondary);
             cursor: help;
             transition: color 0.3s;
             
             &:hover {
-              color: #409eff;
+              color: var(--primary-color);
             }
           }
         }
@@ -1664,7 +1664,7 @@ onUnmounted(() => {
 
       .chart-legend {
         padding: 16px 0 0;
-        border-top: 1px solid #ebeef5;
+        border-top: 1px solid var(--border-color-lighter);
 
         .legend-item {
           display: flex;
@@ -1680,12 +1680,12 @@ onUnmounted(() => {
 
           .legend-label {
             flex: 1;
-            color: #606266;
+            color: var(--text-color-regular);
             font-size: 14px;
           }
 
           .legend-value {
-            color: #303133;
+            color: var(--text-color-primary);
             font-weight: 600;
           }
         }
@@ -1696,10 +1696,10 @@ onUnmounted(() => {
   // 预警区域
   .warning-section {
     margin-bottom: 24px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--box-shadow-base);
 
     .section-header {
       margin-bottom: 20px;
@@ -1709,22 +1709,22 @@ onUnmounted(() => {
         align-items: center;
         font-size: 20px;
         font-weight: 600;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0 0 16px 0;
 
         .el-icon {
           margin-right: 8px;
-          color: #e6a23c;
+          color: var(--warning-color);
         }
         
         .info-icon {
-          color: #909399;
+          color: var(--text-color-secondary);
           cursor: help;
           transition: color 0.3s;
           font-size: 16px;
           
           &:hover {
-            color: #409eff;
+            color: var(--primary-color);
           }
         }
       }
@@ -1739,13 +1739,13 @@ onUnmounted(() => {
         display: flex;
         align-items: center;
         padding: 16px;
-        background: #f5f7fa;
+        background: var(--bg-color-secondary);
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
 
         &:hover {
-          background: #e9ecef;
+          background: var(--bg-color-overlay);
           transform: translateX(4px);
         }
 
@@ -1760,12 +1760,12 @@ onUnmounted(() => {
           .warning-value {
             font-size: 24px;
             font-weight: 700;
-            color: #303133;
+            color: var(--text-color-primary);
           }
 
           .warning-label {
             font-size: 14px;
-            color: #909399;
+            color: var(--text-color-secondary);
             margin-top: 4px;
           }
         }
@@ -1780,7 +1780,7 @@ onUnmounted(() => {
     .section-header {
       margin-bottom: 20px;
       padding: 24px 24px 0;
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px 12px 0 0;
 
       .section-title {
@@ -1788,29 +1788,29 @@ onUnmounted(() => {
         align-items: center;
         font-size: 20px;
         font-weight: 600;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0 0 16px 0;
 
         .el-icon {
           margin-right: 8px;
-          color: #ffb800;
+          color: var(--warning-color);
         }
       }
     }
 
     .vip-card {
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px;
       padding: 20px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      box-shadow: var(--box-shadow-base);
 
       .vip-title {
         font-size: 16px;
         font-weight: 600;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0 0 16px 0;
         padding-bottom: 12px;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid var(--border-color-lighter);
       }
 
       .vip-user-item {
@@ -1821,7 +1821,7 @@ onUnmounted(() => {
         transition: background 0.3s ease;
 
         &:hover {
-          background: #f5f7fa;
+          background: var(--bg-color-secondary);
         }
 
         .user-avatar {
@@ -1829,7 +1829,7 @@ onUnmounted(() => {
           height: 40px;
           border-radius: 50%;
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
+          color: var(--bg-color);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1851,7 +1851,7 @@ onUnmounted(() => {
 
           .user-name {
             font-weight: 600;
-            color: #303133;
+            color: var(--text-color-primary);
             margin-bottom: 4px;
           }
 
@@ -1861,11 +1861,11 @@ onUnmounted(() => {
             gap: 8px;
 
             .user-payment {
-              color: #909399;
+              color: var(--text-color-secondary);
               font-size: 14px;
 
               &.highlight {
-                color: #ff6b6b;
+                color: var(--danger-color);
                 font-weight: 600;
               }
             }
@@ -1876,7 +1876,7 @@ onUnmounted(() => {
         .user-status,
         .user-login {
           .last-login {
-            color: #909399;
+            color: var(--text-color-secondary);
             font-size: 12px;
           }
         }
@@ -1887,10 +1887,10 @@ onUnmounted(() => {
   // 服务器监控区域
   .server-section {
     margin-bottom: 24px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--box-shadow-base);
 
     .section-header {
       margin-bottom: 20px;
@@ -1900,12 +1900,12 @@ onUnmounted(() => {
         align-items: center;
         font-size: 20px;
         font-weight: 600;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0;
 
         .el-icon {
           margin-right: 8px;
-          color: #409eff;
+          color: var(--primary-color);
         }
       }
     }
@@ -1917,7 +1917,7 @@ onUnmounted(() => {
 
       .server-card {
         padding: 16px;
-        background: #f5f7fa;
+        background: var(--bg-color-secondary);
         border-radius: 8px;
 
         .server-header {
@@ -1928,7 +1928,7 @@ onUnmounted(() => {
 
           .server-name {
             font-weight: 600;
-            color: #303133;
+            color: var(--text-color-primary);
           }
         }
 
@@ -1937,21 +1937,21 @@ onUnmounted(() => {
           justify-content: space-around;
           margin-top: 12px;
           padding-top: 12px;
-          border-top: 1px solid #e4e7ed;
+          border-top: 1px solid var(--border-color-light);
 
           .stat-item {
             text-align: center;
 
             .stat-label {
               display: block;
-              color: #909399;
+              color: var(--text-color-secondary);
               font-size: 12px;
               margin-bottom: 4px;
             }
 
             .stat-value {
               display: block;
-              color: #303133;
+              color: var(--text-color-primary);
               font-weight: 600;
               font-size: 16px;
             }
@@ -1964,10 +1964,10 @@ onUnmounted(() => {
   // 浏览器监控区域
   .browser-section {
     margin-bottom: 24px;
-    background: white;
+    background: var(--card-bg);
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--box-shadow-base);
     
     .section-header {
       display: flex;
@@ -1980,22 +1980,22 @@ onUnmounted(() => {
         align-items: center;
         font-size: 20px;
         font-weight: 600;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0;
         
         .el-icon {
           margin-right: 8px;
-          color: #409eff;
+          color: var(--primary-color);
         }
         
         .info-icon {
-          color: #909399;
+          color: var(--text-color-secondary);
           cursor: help;
           transition: color 0.3s;
           font-size: 16px;
           
           &:hover {
-            color: #409eff;
+            color: var(--primary-color);
           }
         }
       }
@@ -2005,7 +2005,7 @@ onUnmounted(() => {
       margin-bottom: 24px;
       
       .browser-stat-card {
-        background: #f5f7fa;
+        background: var(--bg-color-secondary);
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 16px;
@@ -2014,7 +2014,7 @@ onUnmounted(() => {
         
         &:hover {
           transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          box-shadow: var(--box-shadow-base);
         }
         
         &.healthy {
@@ -2032,7 +2032,7 @@ onUnmounted(() => {
           margin-bottom: 8px;
           
           .stat-label {
-            color: #909399;
+            color: var(--text-color-secondary);
             font-size: 13px;
           }
           
@@ -2040,21 +2040,21 @@ onUnmounted(() => {
             font-size: 18px;
             
             &.success {
-              color: #67c23a;
+              color: var(--success-color);
             }
             
             &.danger {
-              color: #f56c6c;
+              color: var(--danger-color);
             }
           }
           
           .info-icon {
-            color: #909399;
+            color: var(--text-color-secondary);
             font-size: 14px;
             cursor: help;
             
             &:hover {
-              color: #409eff;
+              color: var(--primary-color);
             }
           }
         }
@@ -2062,35 +2062,35 @@ onUnmounted(() => {
         .stat-value {
           font-size: 24px;
           font-weight: 600;
-          color: #303133;
+          color: var(--text-color-primary);
           margin-bottom: 4px;
           
           &.danger {
-            color: #f56c6c;
+            color: var(--danger-color);
           }
           
           &.warning {
-            color: #e6a23c;
+            color: var(--warning-color);
           }
           
           &.info {
-            color: #409eff;
+            color: var(--primary-color);
           }
           
           &.success {
-            color: #67c23a;
+            color: var(--success-color);
           }
           
           .stat-unit {
             font-size: 14px;
             font-weight: 400;
-            color: #909399;
+            color: var(--text-color-secondary);
             margin-left: 2px;
           }
         }
         
         .stat-meta {
-          color: #909399;
+          color: var(--text-color-secondary);
           font-size: 12px;
           margin-bottom: 8px;
         }
@@ -2107,14 +2107,14 @@ onUnmounted(() => {
       .subsection-title {
         font-size: 16px;
         font-weight: 600;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0 0 16px 0;
         padding-bottom: 8px;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid var(--border-color-lighter);
       }
       
       .browser-instance-card {
-        background: #f5f7fa;
+        background: var(--bg-color-secondary);
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 16px;
@@ -2127,7 +2127,7 @@ onUnmounted(() => {
           
           .instance-name {
             font-weight: 600;
-            color: #303133;
+            color: var(--text-color-primary);
             font-size: 14px;
           }
         }
@@ -2142,11 +2142,11 @@ onUnmounted(() => {
             font-size: 13px;
             
             .stat-label {
-              color: #909399;
+              color: var(--text-color-secondary);
             }
             
             .stat-value {
-              color: #303133;
+              color: var(--text-color-primary);
               font-weight: 500;
             }
           }
@@ -2158,14 +2158,14 @@ onUnmounted(() => {
       .subsection-title {
         font-size: 16px;
         font-weight: 600;
-        color: #303133;
+        color: var(--text-color-primary);
         margin: 0 0 16px 0;
         padding-bottom: 8px;
-        border-bottom: 1px solid #ebeef5;
+        border-bottom: 1px solid var(--border-color-lighter);
       }
       
       .performance-card {
-        background: #f5f7fa;
+        background: var(--bg-color-secondary);
         border-radius: 8px;
         padding: 16px;
         margin-bottom: 16px;
@@ -2173,7 +2173,7 @@ onUnmounted(() => {
         .card-title {
           font-size: 14px;
           font-weight: 600;
-          color: #303133;
+          color: var(--text-color-primary);
           margin: 0 0 12px 0;
         }
         
@@ -2187,33 +2187,33 @@ onUnmounted(() => {
             justify-content: space-between;
             align-items: center;
             padding: 8px;
-            background: white;
+            background: var(--card-bg);
             border-radius: 4px;
             
             .metric-label {
-              color: #909399;
+              color: var(--text-color-secondary);
               font-size: 12px;
             }
             
             .metric-value {
-              color: #303133;
+              color: var(--text-color-primary);
               font-weight: 600;
               font-size: 14px;
               
               &.danger {
-                color: #f56c6c;
+                color: var(--danger-color);
               }
               
               &.warning {
-                color: #e6a23c;
+                color: var(--warning-color);
               }
               
               &.info {
-                color: #409eff;
+                color: var(--primary-color);
               }
               
               &.success {
-                color: #67c23a;
+                color: var(--success-color);
               }
             }
           }

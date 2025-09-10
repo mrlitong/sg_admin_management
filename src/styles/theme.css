@@ -1,0 +1,376 @@
+/* 亮色主题变量 */
+:root {
+  /* 主色调 */
+  --primary-color: #409eff;
+  --success-color: #67c23a;
+  --warning-color: #e6a23c;
+  --danger-color: #f56c6c;
+  --info-color: #909399;
+  
+  /* 背景色 */
+  --bg-color: #ffffff;
+  --bg-color-page: #f5f7fa;
+  --bg-color-overlay: #ffffff;
+  --bg-color-secondary: #f5f7fa;
+  
+  /* 文字颜色 */
+  --text-color-primary: #303133;
+  --text-color-regular: #606266;
+  --text-color-secondary: #909399;
+  --text-color-placeholder: #c0c4cc;
+  
+  /* 边框颜色 */
+  --border-color-base: #dcdfe6;
+  --border-color-light: #e4e7ed;
+  --border-color-lighter: #ebeef5;
+  --border-color-extra-light: #f2f6fc;
+  
+  /* 阴影 */
+  --box-shadow-base: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
+  --box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  
+  /* 侧边栏 */
+  --sidebar-bg: #545c64;
+  --sidebar-text-color: #fff;
+  --sidebar-active-bg: #434a50;
+  
+  /* 表格 */
+  --table-header-bg: #f5f7fa;
+  --table-row-hover-bg: #f5f7fa;
+  
+  /* 输入框 */
+  --input-bg: #ffffff;
+  --input-border: #dcdfe6;
+  --input-hover-border: #c0c4cc;
+  --input-focus-border: #409eff;
+  
+  /* 卡片 */
+  --card-bg: #ffffff;
+  --card-border: #ebeef5;
+}
+
+/* 暗色主题变量 */
+html.dark {
+  /* 主色调 */
+  --primary-color: #409eff;
+  --success-color: #67c23a;
+  --warning-color: #e6a23c;
+  --danger-color: #f56c6c;
+  --info-color: #909399;
+  
+  /* 背景色 */
+  --bg-color: #141414;
+  --bg-color-page: #0a0a0a;
+  --bg-color-overlay: #1d1e1f;
+  --bg-color-secondary: #232324;
+  
+  /* 文字颜色 */
+  --text-color-primary: #E5EAF3;
+  --text-color-regular: #CFD3DC;
+  --text-color-secondary: #A3A6AD;
+  --text-color-placeholder: #8D9095;
+  
+  /* 边框颜色 */
+  --border-color-base: #4C4D4F;
+  --border-color-light: #414243;
+  --border-color-lighter: #363637;
+  --border-color-extra-light: #2B2B2C;
+  
+  /* 阴影 */
+  --box-shadow-base: 0 2px 4px rgba(0, 0, 0, .4), 0 0 6px rgba(0, 0, 0, .2);
+  --box-shadow-light: 0 2px 12px 0 rgba(0, 0, 0, 0.3);
+  
+  /* 侧边栏 */
+  --sidebar-bg: #1d1e1f;
+  --sidebar-text-color: #CFD3DC;
+  --sidebar-active-bg: #2a2b2c;
+  
+  /* 表格 */
+  --table-header-bg: #262627;
+  --table-row-hover-bg: #262627;
+  
+  /* 输入框 */
+  --input-bg: #1d1e1f;
+  --input-border: #4C4D4F;
+  --input-hover-border: #8D9095;
+  --input-focus-border: #409eff;
+  
+  /* 卡片 */
+  --card-bg: #1d1e1f;
+  --card-border: #363637;
+}
+
+/* 应用CSS变量到Element Plus组件 */
+html.dark {
+  color-scheme: dark;
+  
+  /* Element Plus覆盖 */
+  .el-button--default {
+    background-color: var(--bg-color-overlay);
+    border-color: var(--border-color-base);
+    color: var(--text-color-regular);
+  }
+  
+  .el-input__inner {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color-primary);
+  }
+  
+  .el-select__popper,
+  .el-dropdown__popper,
+  .el-popper {
+    background-color: var(--bg-color-overlay);
+    border-color: var(--border-color-base);
+  }
+  
+  .el-table {
+    background-color: var(--card-bg);
+    color: var(--text-color-primary);
+  }
+  
+  .el-table th.el-table__cell {
+    background-color: var(--table-header-bg);
+    color: var(--text-color-primary);
+  }
+  
+  .el-table tr {
+    background-color: var(--card-bg);
+  }
+  
+  .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
+    background-color: var(--table-row-hover-bg);
+  }
+  
+  .el-card {
+    background-color: var(--card-bg);
+    border-color: var(--card-border);
+    color: var(--text-color-primary);
+  }
+  
+  .el-dialog {
+    background-color: var(--bg-color-overlay) !important;
+    color: var(--text-color-primary);
+  }
+  
+  .el-dialog__header {
+    border-bottom-color: var(--border-color-light);
+  }
+  
+  .el-dialog__body {
+    color: var(--text-color-primary);
+    background-color: var(--bg-color-overlay) !important;
+  }
+  
+  .el-dialog__footer {
+    border-top-color: var(--border-color-light);
+    background-color: var(--bg-color-overlay) !important;
+  }
+  
+  .el-menu {
+    background-color: var(--sidebar-bg);
+    border-color: var(--border-color-base);
+  }
+  
+  .el-menu-item {
+    color: var(--sidebar-text-color);
+  }
+  
+  .el-menu-item:hover {
+    background-color: var(--sidebar-active-bg);
+  }
+  
+  .el-menu-item.is-active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--primary-color);
+  }
+  
+  .el-form-item__label {
+    color: var(--text-color-regular);
+  }
+  
+  .el-pagination {
+    color: var(--text-color-regular);
+  }
+  
+  .el-message-box {
+    background-color: var(--bg-color-overlay);
+    color: var(--text-color-primary);
+  }
+  
+  .el-notification {
+    background-color: var(--bg-color-overlay);
+    color: var(--text-color-primary);
+    border-color: var(--border-color-light);
+  }
+  
+  /* 自定义滚动条 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--bg-color-secondary);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--border-color-base);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-color-light);
+  }
+}
+
+/* 通用样式应用 */
+body {
+  background-color: var(--bg-color-page);
+  color: var(--text-color-primary);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.app-container {
+  background-color: var(--bg-color);
+  color: var(--text-color-primary);
+}
+
+/* 主题切换过渡动画 */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 暗色模式下的额外Element Plus组件样式 */
+html.dark {
+  /* 标签 */
+  .el-tag {
+    background-color: var(--bg-color-secondary);
+    border-color: var(--border-color-base);
+    color: var(--text-color-regular);
+  }
+  
+  /* 分页 */
+  .el-pagination.is-background .el-pager li:not(.is-disabled).is-active {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+  
+  .el-pagination.is-background .el-pager li {
+    background-color: var(--bg-color-overlay);
+    color: var(--text-color-regular);
+  }
+  
+  /* 下拉框选项 */
+  .el-select-dropdown__item {
+    color: var(--text-color-regular);
+  }
+  
+  .el-select-dropdown__item.hover,
+  .el-select-dropdown__item:hover {
+    background-color: var(--bg-color-secondary);
+  }
+  
+  /* 日期选择器 */
+  .el-date-picker__header {
+    border-bottom-color: var(--border-color-light);
+  }
+  
+  .el-date-table th {
+    color: var(--text-color-secondary);
+  }
+  
+  .el-date-table td.in-range div {
+    background-color: var(--bg-color-secondary);
+  }
+  
+  /* 开关 */
+  .el-switch__core {
+    background-color: var(--border-color-base);
+    border-color: var(--border-color-base);
+  }
+  
+  .el-switch.is-checked .el-switch__core {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  /* 输入框聚焦状态 */
+  .el-input__inner:focus {
+    border-color: var(--primary-color);
+  }
+  
+  /* 文本域 */
+  .el-textarea__inner {
+    background-color: var(--input-bg);
+    border-color: var(--input-border);
+    color: var(--text-color-primary);
+  }
+  
+  /* 标签页 */
+  .el-tabs__item {
+    color: var(--text-color-regular);
+  }
+  
+  .el-tabs__item.is-active {
+    color: var(--primary-color);
+  }
+  
+  .el-tabs__active-bar {
+    background-color: var(--primary-color);
+  }
+  
+  /* 统计数字 */
+  .el-statistic__content {
+    color: var(--text-color-primary);
+  }
+  
+  /* 加载中 */
+  .el-loading-mask {
+    background-color: rgba(0, 0, 0, 0.8);
+  }
+  
+  /* 对话框遮罩层 */
+  .el-overlay {
+    background-color: rgba(0, 0, 0, 0.7) !important;
+  }
+  
+  /* 对话框内容 */
+  .el-overlay-dialog {
+    background-color: transparent !important;
+  }
+  
+  /* 表格边框 */
+  .el-table--border .el-table__cell {
+    border-right-color: var(--border-color-lighter);
+  }
+  
+  .el-table--border:after,
+  .el-table--group:after,
+  .el-table:before {
+    background-color: var(--border-color-lighter);
+  }
+  
+  .el-table td.el-table__cell,
+  .el-table th.el-table__cell.is-leaf {
+    border-bottom-color: var(--border-color-lighter);
+  }
+  
+  /* 表单标签 */
+  .el-form-item__label {
+    color: var(--text-color-regular) !important;
+  }
+  
+  /* 数字输入框 */
+  .el-input-number__decrease,
+  .el-input-number__increase {
+    background-color: var(--bg-color-secondary);
+    border-color: var(--border-color-base);
+    color: var(--text-color-regular);
+  }
+  
+  .el-input-number__decrease:hover,
+  .el-input-number__increase:hover {
+    background-color: var(--bg-color-overlay);
+  }
+}

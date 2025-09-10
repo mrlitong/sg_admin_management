@@ -18,6 +18,14 @@
           <span class="user-info" v-if="!isMobile">
             {{ userInfo?.is_admin ? '管理员' : '客服' }}: {{ userInfo?.nickname || userInfo?.username }}
           </span>
+          <!-- 主题切换按钮 -->
+          <el-button
+            class="theme-toggle"
+            :icon="themeStore.isDark ? Sunny : Moon"
+            circle
+            @click="themeStore.toggleTheme()"
+            :title="themeStore.isDark ? '切换到亮色模式' : '切换到暗色模式'"
+          />
           <el-dropdown @command="handleCommand" :trigger="isMobile ? 'click' : 'hover'">
             <span class="el-dropdown-link">
               <el-icon><UserFilled /></el-icon>
@@ -50,9 +58,9 @@
           <el-menu
             :default-active="activeMenu"
             router
-            background-color="#304156"
-            text-color="#bfcbd9"
-            active-text-color="#409EFF"
+            :background-color="menuBgColor"
+            :text-color="menuTextColor"
+            :active-text-color="menuActiveTextColor"
             :collapse="sidebarCollapsed"
             :collapse-transition="false"
           >
@@ -122,16 +130,23 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { changePassword } from '../api/admin'
-import { UserFilled, ArrowDown, Document, User, ChatDotRound, DataAnalysis, Expand, Fold } from '@element-plus/icons-vue'
+import { UserFilled, ArrowDown, Document, User, ChatDotRound, DataAnalysis, Expand, Fold, Sunny, Moon } from '@element-plus/icons-vue'
 import { useResponsive, useDialogResponsive } from '../utils/responsive'
+import { useThemeStore } from '../stores/theme'
 import MobileTabBar from './MobileTabBar.vue'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
 
 // 响应式检测
 const { isMobile, isTablet, isDesktop } = useResponsive()
 const { dialogWidth } = useDialogResponsive()
+
+// 菜单颜色配置
+const menuBgColor = computed(() => themeStore.isDark ? '#1d1e1f' : '#304156')
+const menuTextColor = computed(() => themeStore.isDark ? '#CFD3DC' : '#bfcbd9')
+const menuActiveTextColor = computed(() => '#409EFF')
 
 // 侧边栏状态
 const sidebarCollapsed = ref(false)
@@ -253,13 +268,14 @@ onMounted(() => {
 }
 
 .header {
-  background-color: #304156;
-  color: #fff;
+  background-color: var(--sidebar-bg);
+  color: var(--sidebar-text-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   height: var(--header-height);
+  border-bottom: 1px solid var(--border-color-light);
 }
 
 .header-left {
@@ -292,6 +308,18 @@ onMounted(() => {
   gap: 20px;
 }
 
+.theme-toggle {
+  background: transparent;
+  border: none;
+  color: var(--sidebar-text-color);
+  transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+}
+
 .user-info {
   font-size: 14px;
 }
@@ -303,7 +331,7 @@ onMounted(() => {
 
 .el-dropdown-link {
   cursor: pointer;
-  color: #fff;
+  color: var(--sidebar-text-color);
   display: flex;
   align-items: center;
   padding: 8px;
@@ -322,9 +350,10 @@ onMounted(() => {
 }
 
 .aside {
-  background-color: #304156;
+  background-color: var(--sidebar-bg);
   transition: width 0.3s;
   overflow: hidden;
+  border-right: 1px solid var(--border-color-light);
 }
 
 .aside.collapsed {
@@ -332,7 +361,7 @@ onMounted(() => {
 }
 
 .main {
-  background-color: #f0f2f5;
+  background-color: var(--bg-color-page);
   padding: 20px;
   overflow-y: auto;
   height: 100%;
