@@ -40,7 +40,7 @@
               <div style="max-width: 350px">
                 <strong>统计维度：</strong>GROUP BY bucket（服务器编号）<br/>
                 <strong>负载率：</strong>在线用户数 ÷ 总用户数 × 100%<br/>
-                <strong>颜色标识：</strong>绿色(<60%) 黄色(60-80%) 红色(>80%)
+                <strong>颜色标识：</strong>红色(<30%) 黄色(30-60%) 绿色(≥60%)
               </div>
             </template>
             <el-icon class="info-icon" style="margin-left: 8px; cursor: help;"><InfoFilled /></el-icon>
@@ -1322,18 +1322,16 @@ const getLevelName = (level) => {
 
 // 获取负载类型
 const getLoadType = (rate) => {
-  if (rate >= 80) return 'danger'
-  if (rate >= 60) return 'warning'
-  if (rate >= 40) return 'success'
-  return 'info'
+  if (rate < 30) return 'danger'    // 低于30% 红色
+  if (rate < 60) return 'warning'   // 30-60% 黄色
+  return 'success'                  // 60%以上 绿色
 }
 
 // 获取负载颜色
 const getLoadColor = (rate) => {
-  if (rate >= 80) return '#f56c6c'
-  if (rate >= 60) return '#e6a23c'
-  if (rate >= 40) return '#67c23a'
-  return '#909399'
+  if (rate < 30) return '#f56c6c'   // 低于30% 红色
+  if (rate < 60) return '#e6a23c'   // 30-60% 黄色
+  return '#67c23a'                  // 60%以上 绿色
 }
 
 // 获取浏览器负载颜色
