@@ -120,6 +120,7 @@ import { ref, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { MoreFilled, Edit, Delete, Wallet } from '@element-plus/icons-vue'
 import dayjs from 'dayjs'
+import { getMembershipLabel, getMembershipTagType } from '../utils/constants'
 
 const props = defineProps({
   userData: {
@@ -161,27 +162,8 @@ const isExpiringSoon = computed(() => {
   return daysLeft <= 7 && daysLeft >= 0
 })
 
-// 获取会员等级标签类型
-const getMembershipTagType = (level) => {
-  const typeMap = {
-    '-1': 'info',
-    '0': 'success',
-    '1': 'warning',
-    '2': 'danger'
-  }
-  return typeMap[level] || 'info'
-}
-
-// 获取会员等级标签
-const getMembershipLabel = (level) => {
-  const labelMap = {
-    '-1': '未开通',
-    '0': '高级会员',
-    '1': '钻石会员',
-    '2': '终极会员'
-  }
-  return labelMap[level] || '未知'
-}
+// 使用从 constants.js 导入的函数
+// getMembershipTagType 和 getMembershipLabel 已经从 constants.js 导入
 
 // 格式化日期
 const formatDate = (date) => {
@@ -264,7 +246,7 @@ const handleToggleChange = async (value) => {
 
 <style scoped>
 .mobile-card {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 12px;
@@ -285,7 +267,7 @@ const handleToggleChange = async (value) => {
   align-items: flex-start;
   margin-bottom: 12px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-color-lighter);
 }
 
 .card-title {
@@ -298,7 +280,7 @@ const handleToggleChange = async (value) => {
 .account {
   font-size: 16px;
   font-weight: 600;
-  color: #303133;
+  color: var(--text-color-primary);
 }
 
 /* 卡片内容 */
@@ -318,31 +300,31 @@ const handleToggleChange = async (value) => {
 }
 
 .info-label {
-  color: #909399;
+  color: var(--text-color-regular);
   min-width: 70px;
   flex-shrink: 0;
 }
 
 .info-value {
-  color: #606266;
+  color: var(--text-color-secondary);
   flex: 1;
   word-break: break-all;
 }
 
 .info-value.text-primary {
-  color: #409EFF;
+  color: var(--primary-color);
   font-weight: 600;
 }
 
 .info-value.text-danger {
-  color: #F56C6C;
+  color: var(--danger-color);
 }
 
 /* 卡片底部 */
 .card-footer {
   margin-top: 8px;
   padding-top: 8px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-color-lighter);
 }
 
 .footer-actions {
@@ -353,7 +335,7 @@ const handleToggleChange = async (value) => {
 
 .last-online {
   font-size: 12px;
-  color: #909399;
+  color: var(--text-color-regular);
 }
 
 /* 文本省略 */
@@ -396,8 +378,8 @@ const handleToggleChange = async (value) => {
 
 /* 选中状态 */
 .mobile-card.selected {
-  border: 2px solid #409EFF;
-  background: #ecf5ff;
+  border: 2px solid var(--primary-color);
+  background: var(--primary-color-light-9);
 }
 
 /* 加载状态 */

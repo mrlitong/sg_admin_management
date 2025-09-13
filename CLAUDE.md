@@ -285,6 +285,8 @@ VITE_WS_URL=wss://api.example.com/ws
 
 ### 构建配置
 - 开发模式: `npm run dev`
+  - 访问地址: http://localhost:5173/
+  - 网络地址: http://192.168.0.2:5173/ (局域网访问)
 - 生产构建: `npm run build`
 - 预览模式: `npm run preview`
 

@@ -746,10 +746,22 @@ const handleSave = async () => {
     flex-direction: column;
     height: 100vh;
     margin: 0 !important;
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    z-index: 3000 !important; /* 确保在最顶层 */
+  }
+
+  /* 遮罩层也要提高z-index */
+  :deep(.el-overlay) {
+    z-index: 2999 !important;
   }
 
   :deep(.el-dialog.is-fullscreen .el-dialog__header) {
-    padding: 12px 16px;
+    padding: 16px;
+    padding-top: calc(60px + env(safe-area-inset-top, 0)); /* 增大顶部间距，避免被顶部banner遮挡 */
     border-bottom: 1px solid var(--el-border-color-lighter);
     flex-shrink: 0;
     position: sticky;
@@ -762,13 +774,19 @@ const handleSave = async () => {
     flex: 1;
     overflow-y: auto;
     padding: 8px 12px;
-    padding-bottom: 20px !important;
+    padding-top: 20px; /* 增加顶部内边距 */
+    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0)) !important; /* 增大底部间距，确保内容不被遮挡 */
     -webkit-overflow-scrolling: touch;
+    /* 确保滚动区域高度正确 */
+    max-height: calc(100vh - 120px); /* 调整最大高度，给顶部留出更多空间 */
+    height: 100%;
   }
 
   /* 移动端表单样式 */
   .mobile-form {
     padding: 0;
+    padding-top: 10px; /* 增加顶部内边距 */
+    padding-bottom: 100px !important; /* 为整个表单添加底部内边距，避免被导航栏遮挡 */
   }
 
   /* 移动端区块样式 */
@@ -776,12 +794,17 @@ const handleSave = async () => {
     background: var(--el-bg-color);
     border-radius: 8px;
     padding: 8px 12px !important;
-    margin-bottom: 8px !important;
+    margin-bottom: 12px !important; /* 增加区块间距 */
     border: 1px solid var(--el-border-color-lighter);
   }
 
+  /* 第一个区块增加顶部间距 */
+  .mobile-section:first-child {
+    margin-top: 20px !important;
+  }
+
   .mobile-section:last-child {
-    margin-bottom: 8px !important;
+    margin-bottom: 80px !important; /* 最后一个区块增加更大的底部间距 */
   }
 
   /* 移动端标题样式 */
@@ -863,8 +886,10 @@ const handleSave = async () => {
     top: 0;
     background: var(--el-bg-color);
     z-index: 100;
-    padding: 8px 0;
-    margin-bottom: 8px;
+    padding: 12px;
+    padding-top: calc(20px + env(safe-area-inset-top, 0)); /* 增大顶部间距 */
+    margin-bottom: 12px;
+    margin-top: 10px; /* 增加顶部外边距 */
     border-bottom: 1px solid var(--el-border-color-lighter);
     display: flex;
     gap: 8px;
