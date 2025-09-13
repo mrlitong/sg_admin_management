@@ -456,6 +456,7 @@ onUnmounted(async () => {
     height: calc(100vh - var(--mobile-header-height) - var(--tabbar-height) - 24px); /* 减去移动端导航栏、TabBar高度和padding */
     overflow: hidden;
     position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 0); /* 适配iPhone底部安全区域 */
   }
   
   /* 移动端视图切换 */

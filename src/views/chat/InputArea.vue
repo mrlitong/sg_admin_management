@@ -170,6 +170,8 @@ defineExpose({
 .input-area {
   padding: 16px;
   border-top: 1px solid var(--border-color-light);
+  background: var(--card-bg);
+  position: relative;
 }
 
 .connection-warning {
@@ -199,7 +201,8 @@ defineExpose({
 .input-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  position: relative;
 }
 
 textarea {
@@ -269,16 +272,29 @@ textarea:disabled {
 /* 移动端样式 */
 @media (max-width: 768px) {
   .input-area {
-    padding: 8px;
+    padding: 12px;
+    padding-bottom: calc(150px + env(safe-area-inset-bottom, 20px)) !important; /* 激进增加底部间距 */
+    background: var(--card-bg);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    border-top: 2px solid var(--border-color-light);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   }
   
   textarea {
     font-size: 16px; /* 防止移动端自动缩放 */
     min-height: 60px;
+    max-height: 100px; /* 限制最大高度 */
+    margin-bottom: 15px; /* 增加与按钮的间距 */
   }
   
   .input-actions {
-    gap: 6px;
+    gap: 8px;
+    margin-bottom: 30px !important; /* 大幅增加底部间距 */
+    padding-bottom: 20px;
   }
   
   .clear-btn,

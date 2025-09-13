@@ -190,6 +190,7 @@ defineExpose({
 @media (max-width: 768px) {
   .message-list {
     padding: 12px;
+    padding-bottom: calc(250px + env(safe-area-inset-bottom, 20px)) !important; /* 激进增加底部空间 */
     gap: 8px;
     /* 优化滚动性能 */
     -webkit-overflow-scrolling: touch;

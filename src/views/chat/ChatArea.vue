@@ -345,9 +345,15 @@ defineExpose({
   .main-chat.mobile-hidden {
     transform: translateX(100%);
   }
-  
+
   .main-chat.mobile-full {
     transform: translateX(0);
+  }
+
+  /* 确保聊天容器底部不被遮挡 */
+  .chat-container {
+    padding-bottom: calc(200px + env(safe-area-inset-bottom, 20px)) !important; /* 激进增加底部空间 */
+    margin-bottom: 100px !important; /* 额外的底部外边距 */
   }
   
   .quick-replies {
