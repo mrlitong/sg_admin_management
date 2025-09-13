@@ -8,17 +8,30 @@
     @close="handleClose"
     class="user-edit-dialog"
   >
-    <el-form 
-      ref="formRef" 
-      :model="formData" 
-      :rules="formRules" 
-      :label-width="isMobile ? '80px' : '85px'"
-      :label-position="isMobile ? 'top' : 'right'"
-      :size="isMobile ? 'default' : 'small'"
+    <!-- 顶部操作按钮 -->
+    <div class="top-actions" :class="{ 'mobile-top-actions': isMobile }">
+      <el-button @click="handleClose" :size="isMobile ? 'small' : 'small'">
+        <el-icon><Close /></el-icon>
+        <span v-if="!isMobile">取消</span>
+      </el-button>
+      <el-button type="primary" @click="handleSave" :size="isMobile ? 'small' : 'small'">
+        <el-icon><Check /></el-icon>
+        <span v-if="!isMobile">保存</span>
+      </el-button>
+    </div>
+
+    <el-form
+      ref="formRef"
+      :model="formData"
+      :rules="formRules"
+      :label-width="isMobile ? '70px' : '85px'"
+      :label-position="isMobile ? 'left' : 'right'"
+      :size="isMobile ? 'small' : 'small'"
+      :class="{ 'mobile-form': isMobile }"
     >
       <!-- 基本信息区域 -->
-      <div class="form-section">
-        <h4 v-if="!isMobile" class="section-title">基本信息</h4>
+      <div class="form-section" :class="{ 'mobile-section': isMobile }">
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">基本信息</h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
           <el-col :xs="24" :sm="12" :md="6" :lg="6">
@@ -27,7 +40,7 @@
                 v-model="formData.account" 
                 placeholder="账号"
                 :disabled="!!userData"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -36,7 +49,7 @@
               <el-input 
                 v-model="formData.password" 
                 placeholder="密码"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -45,7 +58,7 @@
               <el-input 
                 v-model="formData.real_account" 
                 placeholder="关联账户"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -54,7 +67,7 @@
               <el-input 
                 v-model="formData.main_account" 
                 placeholder="主账户"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -66,7 +79,7 @@
               <el-input 
                 v-model="formData.contact" 
                 placeholder="微信号"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -75,7 +88,7 @@
               <el-select 
                 v-model="formData.game_platform" 
                 placeholder="游戏版本"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
                 style="width: 100%"
               >
                 <el-option 
@@ -91,7 +104,7 @@
             <el-form-item label="校验">
               <el-button 
                 type="primary" 
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
                 @click="validateAccount"
                 :loading="validating"
                 style="width: 100%"
@@ -104,8 +117,8 @@
       </div>
 
       <!-- 游戏信息区域 -->
-      <div class="form-section">
-        <h4 v-if="!isMobile" class="section-title">游戏信息</h4>
+      <div class="form-section" :class="{ 'mobile-section': isMobile }">
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">游戏信息</h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
           <el-col :xs="24" :sm="12" :md="6" :lg="4">
@@ -113,7 +126,7 @@
               <el-input 
                 v-model="formData.server_name" 
                 placeholder="区名"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -122,7 +135,7 @@
               <el-input 
                 v-model="formData.server_info" 
                 placeholder="4_5"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               >
                 <template #prepend>h</template>
               </el-input>
@@ -133,7 +146,7 @@
               <el-input 
                 v-model="formData.server_zone" 
                 placeholder="区号"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -142,7 +155,7 @@
               <el-input 
                 v-model="formData.websocket_url" 
                 placeholder="服务器地址"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -151,7 +164,7 @@
               <el-input 
                 v-model="formData.game_web_url" 
                 placeholder="游戏链接"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -159,8 +172,8 @@
       </div>
 
       <!-- 会员与系统设置区域 -->
-      <div class="form-section">
-        <h4 v-if="!isMobile" class="section-title">会员与系统</h4>
+      <div class="form-section" :class="{ 'mobile-section': isMobile }">
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">会员与系统</h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
           <el-col :xs="24" :sm="12" :md="6" :lg="5">
@@ -168,7 +181,7 @@
               <el-select 
                 v-model="formData.membership_level" 
                 placeholder="会员级别"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
                 style="width: 100%"
               >
                 <el-option 
@@ -187,7 +200,7 @@
                 :min="0"
                 placeholder="金额"
                 style="width: 100%"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
                 :controls="false"
               />
             </el-form-item>
@@ -201,7 +214,7 @@
                 placeholder="自动"
                 style="width: 100%"
                 disabled
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
                 :controls="false"
               />
             </el-form-item>
@@ -212,7 +225,7 @@
                 v-model="formData.is_open" 
                 :active-value="1" 
                 :inactive-value="0"
-                :size="isMobile ? 'default' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -222,7 +235,7 @@
                 v-model="formData.dingding" 
                 :active-value="1" 
                 :inactive-value="0"
-                :size="isMobile ? 'default' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -242,7 +255,7 @@
               <el-input 
                 v-model="formData.banner" 
                 placeholder="横幅通知内容"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -251,7 +264,7 @@
               <el-input 
                 v-model="formData.remarks" 
                 placeholder="备注信息"
-                :size="isMobile ? 'large' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -259,8 +272,8 @@
       </div>
 
       <!-- 扩展数据区域 -->
-      <div class="form-section" style="border-bottom: none;">
-        <h4 v-if="!isMobile" class="section-title">扩展数据</h4>
+      <div class="form-section" :class="{ 'mobile-section': isMobile }" style="border-bottom: none;">
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">扩展数据</h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
           <el-col :xs="24" :sm="24" :md="8" :lg="8">
@@ -270,7 +283,7 @@
                 type="textarea" 
                 :rows="isMobile ? 3 : 4"
                 placeholder="用户登录数据"
-                :size="isMobile ? 'default' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -282,7 +295,7 @@
                 :rows="isMobile ? 3 : 4"
                 placeholder="JSON格式"
                 @blur="handleGameInfoChange"
-                :size="isMobile ? 'default' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
@@ -294,26 +307,20 @@
                 :rows="isMobile ? 3 : 4"
                 placeholder="JSON格式"
                 @blur="handleUserSettingChange"
-                :size="isMobile ? 'default' : 'small'"
+                :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
         </el-row>
       </div>
     </el-form>
-
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button @click="handleClose" :size="isMobile ? 'default' : 'small'">取消</el-button>
-        <el-button type="primary" @click="handleSave" :size="isMobile ? 'default' : 'small'">保存</el-button>
-      </span>
-    </template>
   </el-dialog>
 </template>
 
 <script setup>
 import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { Close, Check } from '@element-plus/icons-vue'
 import { MEMBERSHIP_LEVELS, GAME_PLATFORMS } from '../utils/constants'
 import { useResponsive, useDialogResponsive } from '../utils/responsive'
 import request from '../utils/request'
@@ -586,6 +593,28 @@ const handleSave = async () => {
 </script>
 
 <style scoped>
+/* 顶部操作按钮样式 */
+.top-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 12px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  position: sticky;
+  top: 0;
+  background: var(--el-bg-color);
+  z-index: 10;
+}
+
+.top-actions .el-button {
+  min-width: 80px;
+}
+
+.top-actions .el-button .el-icon {
+  margin-right: 4px;
+}
+
 .form-section {
   margin-bottom: 8px;
   padding: 6px 0;
@@ -605,9 +634,10 @@ const handleSave = async () => {
 }
 
 :deep(.el-dialog__body) {
-  max-height: 85vh;
+  max-height: calc(85vh - 60px);
   overflow-y: auto;
   padding: 12px 16px;
+  padding-top: 0;
 }
 
 /* 紧凑布局 */
@@ -632,16 +662,13 @@ const handleSave = async () => {
   }
   
   :deep(.el-dialog__body) {
-    max-height: 88vh;
+    max-height: calc(88vh - 50px);
     padding: 10px 16px;
+    padding-top: 0;
   }
-  
+
   :deep(.el-dialog__header) {
     padding: 12px 16px;
-  }
-  
-  :deep(.el-dialog__footer) {
-    padding: 8px 16px;
   }
   
   .form-section {
@@ -707,7 +734,7 @@ const handleSave = async () => {
 /* 超大屏幕优化 */
 @media (min-width: 1920px) {
   :deep(.el-dialog__body) {
-    max-height: 90vh;
+    max-height: calc(90vh - 50px);
   }
 }
 
@@ -718,78 +745,159 @@ const handleSave = async () => {
     display: flex;
     flex-direction: column;
     height: 100vh;
+    margin: 0 !important;
   }
-  
+
   :deep(.el-dialog.is-fullscreen .el-dialog__header) {
-    padding: 16px;
-    border-bottom: 1px solid #e4e7ed;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
     flex-shrink: 0;
     position: sticky;
     top: 0;
-    background: white;
+    background: var(--el-bg-color);
     z-index: 100;
   }
-  
+
   :deep(.el-dialog.is-fullscreen .el-dialog__body) {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
-    padding-bottom: 90px !important; /* 为底部按钮留出更多空间 */
+    padding: 8px 12px;
+    padding-bottom: 20px !important;
     -webkit-overflow-scrolling: touch;
   }
-  
-  :deep(.el-dialog.is-fullscreen .el-dialog__footer) {
-    border-top: 1px solid #e4e7ed;
-    position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    width: 100% !important;
-    background: white !important;
-    z-index: 2000 !important;
-    padding: 12px 16px !important;
-    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15) !important;
-    display: flex !important;
-    justify-content: flex-end !important;
-    gap: 12px !important;
+
+  /* 移动端表单样式 */
+  .mobile-form {
+    padding: 0;
   }
-  
-  /* 确保按钮容器也正确显示 */
-  .dialog-footer {
+
+  /* 移动端区块样式 */
+  .mobile-section {
+    background: var(--el-bg-color);
+    border-radius: 8px;
+    padding: 8px 12px !important;
+    margin-bottom: 8px !important;
+    border: 1px solid var(--el-border-color-lighter);
+  }
+
+  .mobile-section:last-child {
+    margin-bottom: 8px !important;
+  }
+
+  /* 移动端标题样式 */
+  .mobile-title {
+    font-size: 13px !important;
+    font-weight: 600;
+    color: var(--el-color-primary);
+    margin: 0 0 8px 0 !important;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
+  }
+
+  /* 移动端表单项 */
+  :deep(.mobile-form .el-form-item) {
+    margin-bottom: 12px !important;
     display: flex;
-    gap: 12px;
-    width: 100%;
-    justify-content: flex-end;
+    align-items: center;
   }
-  
-  .form-section {
-    margin-bottom: 20px;
-    padding: 12px 0;
+
+  :deep(.mobile-form .el-form-item:last-child) {
+    margin-bottom: 0 !important;
   }
-  
-  .form-section:last-child {
-    margin-bottom: 20px; /* 确保最后一个section也有底部间距 */
+
+  :deep(.mobile-form .el-form-item__label) {
+    width: 70px !important;
+    padding-right: 8px !important;
+    font-size: 13px !important;
+    color: #606266;
+    line-height: 32px !important;
+    flex-shrink: 0;
   }
-  
-  :deep(.el-form-item) {
-    margin-bottom: 18px;
+
+  :deep(.mobile-form .el-form-item__content) {
+    flex: 1;
+    margin-left: 0 !important;
   }
-  
-  :deep(.el-form-item__label) {
-    padding-bottom: 4px;
+
+  /* 输入框样式 */
+  :deep(.mobile-form .el-input--small .el-input__inner),
+  :deep(.mobile-form .el-input--small .el-input__wrapper) {
+    height: 32px !important;
+    font-size: 14px !important;
+  }
+
+  :deep(.mobile-form .el-select--small) {
+    width: 100% !important;
+  }
+
+  :deep(.mobile-form .el-input-number--small) {
+    width: 100% !important;
+  }
+
+  :deep(.mobile-form .el-input-number--small .el-input__inner) {
+    height: 32px !important;
+  }
+
+  /* 文本域样式 */
+  :deep(.mobile-form .el-textarea__inner) {
+    font-size: 13px !important;
+    padding: 6px 8px !important;
+    min-height: 60px !important;
+  }
+
+  /* 开关样式 */
+  :deep(.mobile-form .el-switch) {
+    height: 20px !important;
+  }
+
+  /* 按钮样式 */
+  :deep(.mobile-form .el-button--small) {
+    height: 32px !important;
+    padding: 0 12px !important;
+    font-size: 14px !important;
+  }
+
+  /* 移动端顶部按钮样式 */
+  .mobile-top-actions {
+    position: sticky;
+    top: 0;
+    background: var(--el-bg-color);
+    z-index: 100;
+    padding: 8px 0;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--el-border-color-lighter);
+    display: flex;
+    gap: 8px;
+  }
+
+  .mobile-top-actions .el-button {
+    flex: 1;
+    height: 36px;
+  }
+
+  /* 移动端列布局优化 */
+  :deep(.el-col-xs-24) {
+    padding: 0 !important;
+  }
+
+  /* 隐藏部分不必要的装饰元素 */
+  :deep(.el-input-group__prepend) {
+    padding: 0 8px !important;
+    font-size: 13px !important;
   }
 }
 
 /* 平板端样式 */
 @media (min-width: 768px) and (max-width: 1023px) {
   :deep(.el-dialog__body) {
-    max-height: 80vh;
+    max-height: calc(80vh - 55px);
+    padding-top: 0;
   }
-  
+
   .form-section {
     padding: 8px 0;
   }
-  
+
   :deep(.el-form-item) {
     margin-bottom: 12px;
   }
