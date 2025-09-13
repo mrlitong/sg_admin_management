@@ -121,21 +121,23 @@
         <h4 :class="['section-title', { 'mobile-title': isMobile }]">游戏信息</h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+          <el-col :xs="24" :sm="12" :md="6" :lg="5">
             <el-form-item label="区名" prop="server_name">
-              <el-input 
-                v-model="formData.server_name" 
+              <el-input
+                v-model="formData.server_name"
                 placeholder="区名"
                 :size="isMobile ? 'small' : 'small'"
+                style="min-width: 120px"
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+          <el-col :xs="24" :sm="12" :md="6" :lg="5">
             <el-form-item label="区服" prop="server_info">
-              <el-input 
-                v-model="formData.server_info" 
+              <el-input
+                v-model="formData.server_info"
                 placeholder="4_5"
                 :size="isMobile ? 'small' : 'small'"
+                style="min-width: 140px"
               >
                 <template #prepend>h</template>
               </el-input>
@@ -143,23 +145,24 @@
           </el-col>
           <el-col :xs="24" :sm="12" :md="6" :lg="4">
             <el-form-item label="区号" prop="server_zone">
-              <el-input 
-                v-model="formData.server_zone" 
+              <el-input
+                v-model="formData.server_zone"
                 placeholder="区号"
                 :size="isMobile ? 'small' : 'small'"
+                style="min-width: 100px"
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+          <el-col :xs="24" :sm="12" :md="6" :lg="5">
             <el-form-item label="WebSocket" prop="websocket_url">
-              <el-input 
-                v-model="formData.websocket_url" 
+              <el-input
+                v-model="formData.websocket_url"
                 placeholder="服务器地址"
                 :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6">
+          <el-col :xs="24" :sm="12" :md="12" :lg="5">
             <el-form-item label="游戏链接" prop="game_web_url">
               <el-input 
                 v-model="formData.game_web_url" 
@@ -176,27 +179,27 @@
         <h4 :class="['section-title', { 'mobile-title': isMobile }]">会员与系统</h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="6" :lg="5">
+          <el-col :xs="24" :sm="12" :md="8" :lg="4">
             <el-form-item label="会员级别" prop="membership_level">
-              <el-select 
-                v-model="formData.membership_level" 
+              <el-select
+                v-model="formData.membership_level"
                 placeholder="会员级别"
                 :size="isMobile ? 'small' : 'small'"
                 style="width: 100%"
               >
-                <el-option 
-                  v-for="(info, value) in MEMBERSHIP_LEVELS" 
-                  :key="value" 
-                  :label="info.label" 
-                  :value="Number(value)" 
+                <el-option
+                  v-for="(info, value) in MEMBERSHIP_LEVELS"
+                  :key="value"
+                  :label="info.label"
+                  :value="Number(value)"
                 />
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+          <el-col :xs="24" :sm="12" :md="8" :lg="4">
             <el-form-item label="充值金额" prop="membership_pay_money">
-              <el-input-number 
-                v-model="formData.membership_pay_money" 
+              <el-input-number
+                v-model="formData.membership_pay_money"
                 :min="0"
                 placeholder="金额"
                 style="width: 100%"
@@ -205,41 +208,38 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="3">
+          <el-col :xs="24" :sm="12" :md="8" :lg="3">
             <el-form-item label="分桶号" prop="bucket">
-              <el-input-number 
-                v-model="formData.bucket" 
-                :min="0"
-                :max="255"
+              <el-input
+                :model-value="formData.bucket !== null && formData.bucket !== undefined ? String(formData.bucket) : ''"
                 placeholder="自动"
                 style="width: 100%"
                 disabled
                 :size="isMobile ? 'small' : 'small'"
-                :controls="false"
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="3">
+          <el-col :xs="24" :sm="12" :md="8" :lg="3">
             <el-form-item label="开启状态" prop="is_open">
-              <el-switch 
-                v-model="formData.is_open" 
-                :active-value="1" 
+              <el-switch
+                v-model="formData.is_open"
+                :active-value="1"
                 :inactive-value="0"
                 :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="3">
+          <el-col :xs="24" :sm="12" :md="8" :lg="3">
             <el-form-item label="钉钉通知" prop="dingding">
-              <el-switch 
-                v-model="formData.dingding" 
-                :active-value="1" 
+              <el-switch
+                v-model="formData.dingding"
+                :active-value="1"
                 :inactive-value="0"
                 :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6">
+          <el-col :xs="24" :sm="12" :md="8" :lg="5">
             <el-form-item label="到期时间" prop="membership_expire_date">
               <el-text :size="isMobile ? 'default' : 'small'" v-if="formData.membership_expire_date">
                 {{ formatExpireDate(formData.membership_expire_date) }}
@@ -361,7 +361,7 @@ const formData = reactive({
   game_info: null,
   user_setting: null,
   dingding: 1,
-  bucket: null,
+  bucket: 0,
   banner: '',
   is_open: 1
 })
@@ -404,6 +404,10 @@ watch(() => props.userData, (newVal) => {
       // 原始数据也要保存处理后的值
       originalData.value.server_info = formData.server_info
     }
+    // 特别处理bucket字段 - 确保它不是null
+    if (formData.bucket === null || formData.bucket === undefined) {
+      formData.bucket = 0
+    }
     // 处理JSON字段
     gameInfoText.value = newVal.game_info ? JSON.stringify(newVal.game_info, null, 2) : ''
     userSettingText.value = newVal.user_setting ? JSON.stringify(newVal.user_setting, null, 2) : ''
@@ -417,7 +421,9 @@ watch(() => props.userData, (newVal) => {
         formData[key] = 0
       } else if (key === 'dingding' || key === 'is_open') {
         formData[key] = 1
-      } else if (key === 'bucket' || key === 'game_info' || key === 'user_setting') {
+      } else if (key === 'bucket') {
+        formData[key] = 0
+      } else if (key === 'game_info' || key === 'user_setting') {
         formData[key] = null
       } else {
         formData[key] = ''
@@ -647,12 +653,22 @@ const handleSave = async () => {
 
 /* 区服输入框的前缀样式 */
 :deep(.el-input-group__prepend) {
-  background-color: #f5f7fa;
-  color: #909399;
+  background-color: var(--el-fill-color-light);
+  color: var(--el-text-color-regular);
   font-weight: 600;
   padding: 0 10px;
   min-width: 20px;
   text-align: center;
+}
+
+/* 暗色模式下禁用输入框的样式 */
+:deep(.el-input.is-disabled .el-input__wrapper) {
+  background-color: var(--el-disabled-bg-color);
+}
+
+:deep(.el-input.is-disabled .el-input__inner) {
+  color: var(--el-disabled-text-color);
+  background-color: transparent;
 }
 
 /* PC端超紧凑样式 */
@@ -660,7 +676,7 @@ const handleSave = async () => {
   .user-edit-dialog :deep(.el-dialog) {
     margin-top: 5vh !important;
   }
-  
+
   :deep(.el-dialog__body) {
     max-height: calc(88vh - 50px);
     padding: 10px 16px;
@@ -670,62 +686,62 @@ const handleSave = async () => {
   :deep(.el-dialog__header) {
     padding: 12px 16px;
   }
-  
+
   .form-section {
     padding: 4px 0;
     margin-bottom: 6px;
   }
-  
+
   .section-title {
     font-size: 11px;
     margin-bottom: 6px;
   }
-  
+
   :deep(.el-form-item) {
     margin-bottom: 8px;
   }
-  
+
   :deep(.el-form-item__label) {
     font-size: 12px;
     padding-right: 8px;
   }
-  
+
   :deep(.el-input--small) {
     font-size: 12px;
   }
-  
+
   :deep(.el-input--small .el-input__inner) {
     height: 28px;
     line-height: 28px;
   }
-  
+
   :deep(.el-select--small) {
     font-size: 12px;
   }
-  
+
   :deep(.el-textarea__inner) {
     font-size: 12px;
     padding: 3px 7px;
   }
-  
+
   :deep(.el-input-number--small) {
     width: 100%;
   }
-  
+
   :deep(.el-input-number--small .el-input__inner) {
     height: 28px;
     line-height: 28px;
   }
-  
+
   :deep(.el-button--small) {
     padding: 5px 11px;
     font-size: 12px;
   }
-  
+
   :deep(.el-switch--small) {
     height: 16px;
   }
-  
+
   :deep(.el-text) {
     font-size: 12px;
   }
