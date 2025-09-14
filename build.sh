@@ -57,10 +57,6 @@ git commit -m "chore: bump version to $NEW_VERSION" 2>/dev/null || true
 # 创建新tag
 git tag -f "v$NEW_VERSION" || log "警告: 无法创建Git标签"
 
-# 安装依赖（如果package.json有变化）
-log "检查并安装依赖..."
-npm install || handle_error "安装依赖失败"
-
 # 清理旧的构建文件
 log "清理之前的构建文件..."
 if [ -d "dist" ]; then
@@ -69,7 +65,7 @@ fi
 
 # 构建项目
 log "构建后台管理系统..."
-npm run build || handle_error "项目构建失败，请检查构建错误"
+npm run build || handle_error "项目构建失败，请检查是否缺少依赖或存在构建错误"
 
 # 检查构建结果
 if [ ! -d "dist" ] || [ -z "$(ls -A dist 2>/dev/null)" ]; then
