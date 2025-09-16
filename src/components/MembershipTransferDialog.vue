@@ -218,14 +218,14 @@ const validateSourceAccount = async () => {
     sourceInfo.value = null
     return
   }
-  
+
   try {
     const res = await getUserDetail(formData.source_account)
     if (res.code === 0 && res.data) {
       const user = res.data
       const expireDate = user.membership_expire_date
       const now = new Date()
-      
+
       if (user.membership_level < 0 || !expireDate) {
         sourceInfo.value = {
           valid: false,
@@ -257,9 +257,17 @@ const validateSourceAccount = async () => {
       }
     }
   } catch (error) {
-    sourceInfo.value = {
-      valid: false,
-      message: '验证失败：' + error.message
+    // 特殊处理404错误
+    if (error.response && error.response.status === 404) {
+      sourceInfo.value = {
+        valid: false,
+        message: '账号不存在'
+      }
+    } else {
+      sourceInfo.value = {
+        valid: false,
+        message: '验证失败：网络错误或服务异常'
+      }
     }
   }
 }
@@ -269,7 +277,7 @@ const validateTargetAccount = async () => {
     targetInfo.value = null
     return
   }
-  
+
   if (formData.target_account === formData.source_account) {
     targetInfo.value = {
       valid: false,
@@ -277,7 +285,7 @@ const validateTargetAccount = async () => {
     }
     return
   }
-  
+
   try {
     const res = await getUserDetail(formData.target_account)
     if (res.code === 0 && res.data) {
@@ -296,9 +304,17 @@ const validateTargetAccount = async () => {
       }
     }
   } catch (error) {
-    targetInfo.value = {
-      valid: false,
-      message: '验证失败：' + error.message
+    // 特殊处理404错误
+    if (error.response && error.response.status === 404) {
+      targetInfo.value = {
+        valid: false,
+        message: '账号不存在'
+      }
+    } else {
+      targetInfo.value = {
+        valid: false,
+        message: '验证失败：网络错误或服务异常'
+      }
     }
   }
 }

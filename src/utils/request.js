@@ -70,7 +70,8 @@ request.interceptors.response.use(
           ElMessage.error('没有权限访问该资源')
           break
         case 404:
-          ElMessage.error('请求的资源不存在')
+          // 不显示404错误弹窗，让具体的业务代码处理
+          // ElMessage.error('请求的资源不存在')
           break
         case 500:
           ElMessage.error('服务器错误，请稍后重试')
