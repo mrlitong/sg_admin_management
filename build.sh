@@ -2,7 +2,7 @@
 
 # 设置变量
 PROJECT_DIR="/root/code/sg_admin_management"
-TARGET_DIR="/root/sg_web/admin"
+TARGET_DIR="/root/sg_web/"
 
 # 切换到项目目录
 cd "$PROJECT_DIR" || exit 1
