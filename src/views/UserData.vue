@@ -1,18 +1,8 @@
 <template>
-  <Suspense :key="$route.path">
-    <template #default>
-      <component :is="ResponsiveUserDataComponent" />
-    </template>
-    <template #fallback>
-      <div style="padding: 20px; text-align: center;">
-        加载中...
-      </div>
-    </template>
-  </Suspense>
+  <component :is="ResponsiveUserDataComponent" :key="$route.path" />
 </template>
 
 <script setup>
-import { Suspense } from 'vue'
 import { useRoute } from 'vue-router'
 import { createAsyncResponsiveComponent } from '../utils/responsiveComponent'
 

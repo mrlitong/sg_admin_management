@@ -1,4 +1,4 @@
-import { defineComponent, h, Suspense, ref } from 'vue'
+import { defineComponent, h, Suspense, ref, watch } from 'vue'
 import { useResponsive } from './responsive'
 import { ElLoading } from 'element-plus'
 
@@ -105,25 +105,78 @@ export function createAsyncResponsiveComponent(options) {
   return defineComponent({
     name: 'AsyncResponsiveComponent',
 
-    async setup(props, { attrs, slots }) {
+    setup(props, { attrs, slots }) {
       const { isMobile, isTablet, isDesktop } = useResponsive()
+      const loadedComponents = ref({})
+      const currentComponent = ref(null)
+      const loading = ref(true)
+      const error = ref(null)
 
-      // 根据设备类型动态加载组件
-      let componentLoader = desktop
+      // 加载组件的函数
+      const loadComponent = async () => {
+        loading.value = true
+        error.value = null
 
-      if (isMobile.value) {
-        componentLoader = mobile
-      } else if (isTablet.value && tablet) {
-        componentLoader = tablet
+        try {
+          // 根据设备类型选择加载器
+          let componentLoader = desktop
+          let cacheKey = 'desktop'
+
+          if (isMobile.value) {
+            componentLoader = mobile
+            cacheKey = 'mobile'
+          } else if (isTablet.value && tablet) {
+            componentLoader = tablet
+            cacheKey = 'tablet'
+          }
+
+          // 检查缓存
+          if (!loadedComponents.value[cacheKey]) {
+            const Component = await componentLoader()
+            loadedComponents.value[cacheKey] = Component.default || Component
+          }
+
+          currentComponent.value = loadedComponents.value[cacheKey]
+        } catch (err) {
+          error.value = err
+          console.error('Failed to load responsive component:', err)
+        } finally {
+          loading.value = false
+        }
       }
 
-      // 加载组件
-      const Component = await componentLoader()
+      // 初始加载
+      loadComponent()
 
-      return () => h(Component.default || Component, {
-        ...attrs,
-        ...props
-      }, slots)
+      // 监听响应式变化，重新加载组件
+      watch([isMobile, isTablet], () => {
+        loadComponent()
+      })
+
+      return () => {
+        if (loading.value) {
+          return h('div', {
+            style: 'padding: 20px; text-align: center;'
+          }, '加载中...')
+        }
+
+        if (error.value) {
+          return h('div', {
+            style: 'padding: 20px; color: red; text-align: center;'
+          }, `加载失败: ${error.value.message}`)
+        }
+
+        if (!currentComponent.value) {
+          return h('div', {
+            style: 'padding: 20px; text-align: center;'
+          }, '组件未找到')
+        }
+
+        return h(currentComponent.value, {
+          ...attrs,
+          ...props
+        }, slots)
+      }
     }
   })
 }
