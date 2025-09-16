@@ -52,17 +52,8 @@
         @send-message="sendMessage"
         @clear-history="clearHistory"
         @reconnect="reconnect"
-        @open-recharge="openRechargeDialog"
       />
     </div>
-    
-    <!-- 充值弹窗 -->
-    <RechargeDialog
-      :visible="showRechargeDialog"
-      :user-account="currentSession?.account || `游客${currentSession?.guest_id}`"
-      @close="closeRechargeDialog"
-      @submit="handleRechargeSubmit"
-    />
   </div>
 </template>
 
@@ -73,7 +64,6 @@ import { customerServiceAPI } from '@/utils/api';
 import UserInfoBar from './UserInfoBar.vue';
 import MessageList from './MessageList.vue';
 import InputArea from './InputArea.vue';
-import RechargeDialog from './RechargeDialog.vue';
 
 const props = defineProps({
   currentSessionId: {
@@ -119,8 +109,6 @@ const emit = defineEmits([
 const chatStore = useChatStore();
 const messageListRef = ref(null);
 const inputAreaRef = ref(null);
-const showRechargeDialog = ref(false);
-
 // 快捷回复
 const quickReplies = [
   { id: 1, label: '问候语', content: '您好，很高兴为您服务，请问有什么可以帮助您的？' },
@@ -216,45 +204,6 @@ const clearHistory = async () => {
 // 重连
 const reconnect = () => {
   chatStore.reconnectWebSocket();
-};
-
-// 打开充值弹窗
-const openRechargeDialog = () => {
-  showRechargeDialog.value = true;
-};
-
-// 关闭充值弹窗
-const closeRechargeDialog = () => {
-  showRechargeDialog.value = false;
-};
-
-// 处理充值提交
-const handleRechargeSubmit = async (rechargeData) => {
-  try {
-    console.log('提交充值数据:', rechargeData);
-    
-    // 调用充值API
-    const response = await customerServiceAPI.rechargeUser({
-      account: rechargeData.account,
-      amount: rechargeData.amount,
-      duration: rechargeData.duration,
-      service_agent: rechargeData.serviceAgent
-    });
-    
-    if (response.code === 0) {
-      alert('充值成功！');
-      closeRechargeDialog();
-      
-      // 发送系统消息通知充值成功
-      const systemMessage = `系统通知：用户 ${rechargeData.account} 充值成功！金额：¥${rechargeData.amount}，时长：${rechargeData.duration}天，充值客服：${rechargeData.serviceAgent}`;
-      await chatStore.sendMessage(systemMessage, true); // true 表示系统消息
-    } else {
-      alert(`充值失败: ${response.msg || '未知错误'}`);
-    }
-  } catch (error) {
-    console.error('充值失败:', error);
-    alert(`充值失败: ${error.message || '网络错误'}`);
-  }
 };
 
 // 暴露方法给父组件

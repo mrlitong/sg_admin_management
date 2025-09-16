@@ -60,7 +60,16 @@
       </el-form-item>
       
       <el-form-item label="当前到期时间">
-        <el-text>{{ formatDate(userData.membership_expire_date) }}</el-text>
+        <div style="display: flex; align-items: center; flex-wrap: wrap;">
+          <el-text>{{ formatDate(userData.membership_expire_date) }}</el-text>
+          <template v-if="calculatedExpireDate">
+            <span style="margin: 0 8px; color: #909399;">→</span>
+            <el-text type="success">{{ formatDate(calculatedExpireDate) }}</el-text>
+            <span style="margin-left: 8px; color: #67c23a; font-size: 12px;">
+              (延长{{ addedDays }}天)
+            </span>
+          </template>
+        </div>
       </el-form-item>
       
       <el-form-item label="充值金额" prop="amount">
@@ -101,11 +110,17 @@
             @change="handleQuickSelect"
             :size="isMobile ? 'large' : 'default'"
           >
-            <el-option label="天卡(1天)" :value="1" />
+            <el-option label="1天卡" :value="1" />
+            <el-option label="3天卡" :value="3" />
             <el-option label="周卡(7天)" :value="7" />
+            <el-option label="推荐赠送(20天)" :value="20" />
             <el-option label="月卡(30天)" :value="30" />
+            <el-option label="月卡优惠(45天)" :value="45" />
             <el-option label="季卡(90天)" :value="90" />
-            <el-option label="年卡(365天)" :value="365" />
+            <el-option label="半年卡(180天)" :value="180" />
+            <el-option label="半年卡优惠(200天)" :value="200" />
+            <el-option label="年卡(360天)" :value="360" />
+            <el-option label="年卡优惠(480天)" :value="480" />
             <el-option label="永久(到2100年)" :value="'permanent'" />
           </el-select>
         </div>
@@ -137,16 +152,6 @@
             @change="handleDirectDateChange"
             :size="isMobile ? 'large' : 'default'"
           />
-        </div>
-        
-        <!-- 显示计算后的到期时间 -->
-        <div v-if="calculatedExpireDate" style="margin-top: 8px; padding: 8px; background: #f0f9ff; border-radius: 4px;">
-          <div style="color: #1890ff; font-size: 14px; font-weight: 500;">
-            新到期时间：{{ formatDate(calculatedExpireDate) }}
-          </div>
-          <div v-if="addedDays > 0" style="color: #52c41a; font-size: 12px; margin-top: 4px;">
-            延长天数：{{ addedDays }} 天
-          </div>
         </div>
       </el-form-item>
       

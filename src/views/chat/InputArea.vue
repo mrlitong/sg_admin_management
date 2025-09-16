@@ -23,14 +23,7 @@
         >
           {{ isLoading ? '清理中...' : '清理记录' }}
         </button>
-        <button 
-          @click="openRecharge" 
-          class="recharge-btn"
-          :disabled="!currentSessionId"
-        >
-          充值
-        </button>
-        <button 
+<button 
           @click="sendMessage" 
           :disabled="!inputMessage.trim() || isSending"
           class="send-btn"
@@ -64,7 +57,7 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(['send-message', 'clear-history', 'reconnect', 'open-recharge']);
+const emit = defineEmits(['send-message', 'clear-history', 'reconnect']);
 
 const inputMessage = ref('');
 const textareaRef = ref(null);
@@ -143,11 +136,6 @@ const clearHistory = async () => {
 // 重连
 const reconnect = () => {
   emit('reconnect');
-};
-
-// 打开充值弹窗
-const openRecharge = () => {
-  emit('open-recharge');
 };
 
 // 暴露方法给父组件
