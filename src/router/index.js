@@ -40,6 +40,12 @@ const routes = [
         name: 'AnalyticsDashboard',
         component: () => import('../views/AnalyticsDashboard.vue'),
         meta: { title: '数据分析中心' }
+      },
+      {
+        path: 'responsive-test',
+        name: 'ResponsiveTest',
+        component: () => import('../views/ResponsiveTest.vue'),
+        meta: { title: '响应式测试' }
       }
     ]
   }

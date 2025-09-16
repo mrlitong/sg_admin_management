@@ -3,7 +3,7 @@
  * 提供设备检测、断点管理、响应式hooks等功能
  */
 
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, h } from 'vue'
 
 // 响应式断点定义
 export const BREAKPOINTS = {
@@ -264,24 +264,24 @@ export function useTouchSwipe(callback) {
   let touchStartY = 0
   let touchEndX = 0
   let touchEndY = 0
-  
+
   const minSwipeDistance = 50
-  
+
   const handleTouchStart = (e) => {
     touchStartX = e.touches[0].clientX
     touchStartY = e.touches[0].clientY
   }
-  
+
   const handleTouchEnd = (e) => {
     touchEndX = e.changedTouches[0].clientX
     touchEndY = e.changedTouches[0].clientY
     handleSwipe()
   }
-  
+
   const handleSwipe = () => {
     const deltaX = touchEndX - touchStartX
     const deltaY = touchEndY - touchStartY
-    
+
     // 水平滑动
     if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
       if (deltaX > 0) {
@@ -290,7 +290,7 @@ export function useTouchSwipe(callback) {
         callback('left')
       }
     }
-    
+
     // 垂直滑动
     if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > minSwipeDistance) {
       if (deltaY > 0) {
@@ -300,9 +300,75 @@ export function useTouchSwipe(callback) {
       }
     }
   }
-  
+
   return {
     handleTouchStart,
     handleTouchEnd
+  }
+}
+
+/**
+ * 创建异步响应式组件工厂
+ * 根据设备类型动态加载对应的组件
+ */
+export function createAsyncResponsiveComponent(options) {
+  const {
+    desktopComponent,
+    mobileComponent,
+    loadingComponent = null,
+    errorComponent = null,
+    delay = 200,
+    timeout = 30000
+  } = options
+
+  return {
+    name: 'ResponsiveComponent',
+
+    setup() {
+      const { isMobile } = useResponsive()
+      return { isMobile }
+    },
+
+    render() {
+      // 根据设备类型返回对应的异步组件
+      const AsyncComponent = this.isMobile
+        ? mobileComponent
+        : desktopComponent
+
+      return h(AsyncComponent)
+    },
+
+    // 配置异步组件选项
+    __asyncResolved: false,
+    __asyncFactory: () => {
+      const { isMobile } = useResponsive()
+      return isMobile.value ? mobileComponent() : desktopComponent()
+    },
+
+    // 异步组件配置
+    loading: loadingComponent,
+    error: errorComponent,
+    delay,
+    timeout
+  }
+}
+
+/**
+ * 简化版本的响应式组件工厂
+ * 直接传入组件构造函数
+ */
+export function createResponsiveComponent(desktopComponent, mobileComponent) {
+  return {
+    name: 'ResponsiveComponent',
+
+    setup() {
+      const { isMobile } = useResponsive()
+      return { isMobile }
+    },
+
+    render() {
+      const Component = this.isMobile ? mobileComponent : desktopComponent
+      return h(Component)
+    }
   }
 }
