@@ -1,5 +1,14 @@
 <template>
   <div class="login-container" :class="{ 'mobile-view': isMobile }">
+    <!-- 主题切换按钮 -->
+    <el-button
+      class="theme-toggle-btn"
+      :icon="themeStore.isDark ? Sunny : Moon"
+      circle
+      @click="themeStore.toggleTheme()"
+      :title="themeStore.isDark ? '切换到亮色模式' : '切换到暗色模式'"
+    />
+
     <div class="login-wrapper">
       <!-- Logo区域 -->
       <div class="login-logo">
@@ -42,7 +51,7 @@
           
           <el-form-item>
             <div class="login-options">
-              <el-checkbox v-model="loginForm.rememberMe">记住我7天</el-checkbox>
+              <el-checkbox v-model="loginForm.rememberMe">记住我30天</el-checkbox>
             </div>
           </el-form-item>
           
@@ -73,8 +82,9 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { ElMessage } from 'element-plus'
-import { User, Lock } from '@element-plus/icons-vue'
+import { User, Lock, Sunny, Moon } from '@element-plus/icons-vue'
 import { useResponsive } from '../utils/responsive'
+import { useThemeStore } from '../stores/theme'
 
 const router = useRouter()
 const route = useRoute()
@@ -82,6 +92,9 @@ const authStore = useAuthStore()
 
 // 响应式检测
 const { isMobile, isTablet } = useResponsive()
+
+// 主题管理
+const themeStore = useThemeStore()
 
 const loginFormRef = ref()
 const loading = ref(false)
@@ -130,6 +143,9 @@ const handleLogin = async () => {
 }
 
 onMounted(() => {
+  // 应用保存的主题设置
+  themeStore.applyTheme()
+
   // 如果已经登录，直接跳转
   if (authStore.isAuthenticated) {
     router.push('/')
@@ -143,10 +159,38 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  /* 亮色模式背景渐变 */
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 20px;
   position: relative;
   overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+/* 暗色模式背景渐变 */
+html.dark .login-container {
+  background: linear-gradient(135deg, #2d3561 0%, #3d2f4f 100%);
+}
+
+/* 主题切换按钮 */
+.theme-toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: #667eea !important;
+}
+
+html.dark .theme-toggle-btn {
+  background: rgba(45, 53, 97, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #a8b2ff !important;
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1);
 }
 
 .login-wrapper {
@@ -179,19 +223,28 @@ onMounted(() => {
   margin: 0;
 }
 
+html.dark .logo-text {
+  color: rgba(255, 255, 255, 0.95);
+}
+
 /* 登录框样式 */
 .login-box {
-  background: #fff;
+  background: var(--card-bg);
   border-radius: 12px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   padding: 32px;
   width: 100%;
   animation: fadeInUp 0.8s ease;
+  border: 1px solid var(--border-color-lighter);
+}
+
+html.dark .login-box {
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .login-title {
   text-align: center;
-  color: #333;
+  color: var(--text-color-primary);
   margin-bottom: 24px;
   font-size: 20px;
   font-weight: 500;
@@ -222,26 +275,42 @@ onMounted(() => {
   margin-top: 12px;
 }
 
+html.dark .login-footer {
+  color: rgba(255, 255, 255, 0.7);
+}
+
 .login-footer p {
   margin: 0;
 }
 
 /* 输入框样式优化 */
 :deep(.el-input__wrapper) {
-  box-shadow: 0 0 0 1px #dcdfe6 inset;
+  background-color: var(--input-bg);
+  box-shadow: 0 0 0 1px var(--input-border) inset;
   border-radius: 6px;
 }
 
 :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px #c0c4cc inset;
+  box-shadow: 0 0 0 1px var(--input-hover-border) inset;
 }
 
 :deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 2px #409eff inset;
+  box-shadow: 0 0 0 2px var(--input-focus-border) inset;
 }
 
 :deep(.el-input__inner) {
   font-size: 15px;
+  color: var(--text-color-primary);
+  background-color: transparent;
+}
+
+:deep(.el-input__prefix) {
+  color: var(--text-color-secondary);
+}
+
+/* 复选框文字颜色 */
+:deep(.el-checkbox__label) {
+  color: var(--text-color-regular);
 }
 
 /* 动画 */
@@ -277,6 +346,10 @@ onMounted(() => {
     left: 0;
     right: 0;
     bottom: 0;
+  }
+
+  html.dark .login-container.mobile-view {
+    background: linear-gradient(135deg, #2d3561 0%, #3d2f4f 100%);
   }
   
   .login-wrapper {
@@ -430,23 +503,4 @@ onMounted(() => {
   }
 }
 
-/* 深色模式支持（可选） */
-@media (prefers-color-scheme: dark) {
-  .login-box {
-    background: #1f1f1f;
-  }
-  
-  .login-title {
-    color: #fff;
-  }
-  
-  :deep(.el-input__wrapper) {
-    background-color: #2b2b2b;
-    box-shadow: 0 0 0 1px #444 inset;
-  }
-  
-  :deep(.el-input__inner) {
-    color: #fff;
-  }
-}
 </style>

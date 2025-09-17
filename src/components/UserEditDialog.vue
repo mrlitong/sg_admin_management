@@ -31,10 +31,13 @@
     >
       <!-- 基本信息区域 -->
       <div class="form-section" :class="{ 'mobile-section': isMobile }">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">基本信息</h4>
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
+          <el-icon style="margin-right: 4px;"><User /></el-icon>
+          基本信息
+        </h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="账号" prop="account">
               <el-input 
                 v-model="formData.account" 
@@ -44,7 +47,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="密码" prop="password">
               <el-input 
                 v-model="formData.password" 
@@ -53,7 +56,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="关联账户" prop="real_account">
               <el-input 
                 v-model="formData.real_account" 
@@ -62,7 +65,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="主账户" prop="main_account">
               <el-input 
                 v-model="formData.main_account" 
@@ -74,7 +77,7 @@
         </el-row>
 
         <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="联系方式" prop="contact">
               <el-input 
                 v-model="formData.contact" 
@@ -83,19 +86,20 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="6">
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
             <el-form-item label="游戏版本" prop="game_platform">
-              <el-select 
-                v-model="formData.game_platform" 
+              <el-select
+                v-model="formData.game_platform"
                 placeholder="游戏版本"
                 :size="isMobile ? 'small' : 'small'"
-                style="width: 100%"
+                style="width: 100%; min-width: 180px;"
+                popper-class="game-platform-dropdown"
               >
-                <el-option 
-                  v-for="(label, value) in GAME_PLATFORMS" 
-                  :key="value" 
-                  :label="label" 
-                  :value="Number(value)" 
+                <el-option
+                  v-for="(label, value) in GAME_PLATFORMS"
+                  :key="value"
+                  :label="label"
+                  :value="Number(value)"
                 />
               </el-select>
             </el-form-item>
@@ -118,10 +122,13 @@
 
       <!-- 游戏信息区域 -->
       <div class="form-section" :class="{ 'mobile-section': isMobile }">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">游戏信息</h4>
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
+          <el-icon style="margin-right: 4px;"><Trophy /></el-icon>
+          游戏信息
+        </h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="6" :lg="5">
+          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
             <el-form-item label="区名" prop="server_name">
               <el-input
                 v-model="formData.server_name"
@@ -131,7 +138,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="5">
+          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
             <el-form-item label="区服" prop="server_info">
               <el-input
                 v-model="formData.server_info"
@@ -143,7 +150,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="4">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-form-item label="区号" prop="server_zone">
               <el-input
                 v-model="formData.server_zone"
@@ -153,22 +160,34 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="5">
+          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
             <el-form-item label="WebSocket" prop="websocket_url">
-              <el-input
-                v-model="formData.websocket_url"
-                placeholder="服务器地址"
-                :size="isMobile ? 'small' : 'small'"
-              />
+              <el-tooltip
+                :content="formData.websocket_url || '服务器地址'"
+                placement="top"
+                :disabled="!formData.websocket_url || formData.websocket_url.length < 30"
+              >
+                <el-input
+                  v-model="formData.websocket_url"
+                  placeholder="服务器地址"
+                  :size="isMobile ? 'small' : 'small'"
+                />
+              </el-tooltip>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="5">
+          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="5">
             <el-form-item label="游戏链接" prop="game_web_url">
-              <el-input 
-                v-model="formData.game_web_url" 
-                placeholder="游戏链接"
-                :size="isMobile ? 'small' : 'small'"
-              />
+              <el-tooltip
+                :content="formData.game_web_url || '游戏链接'"
+                placement="top"
+                :disabled="!formData.game_web_url || formData.game_web_url.length < 30"
+              >
+                <el-input
+                  v-model="formData.game_web_url"
+                  placeholder="游戏链接"
+                  :size="isMobile ? 'small' : 'small'"
+                />
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
@@ -176,10 +195,13 @@
 
       <!-- 会员与系统设置区域 -->
       <div class="form-section" :class="{ 'mobile-section': isMobile }">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">会员与系统</h4>
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
+          <el-icon style="margin-right: 4px;"><Star /></el-icon>
+          会员与系统
+        </h4>
         
         <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="8" :lg="4">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-form-item label="会员级别" prop="membership_level">
               <el-select
                 v-model="formData.membership_level"
@@ -196,7 +218,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="4">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
             <el-form-item label="充值金额" prop="membership_pay_money">
               <el-input-number
                 v-model="formData.membership_pay_money"
@@ -208,7 +230,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="3">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="3">
             <el-form-item label="分桶号" prop="bucket">
               <el-input
                 :model-value="formData.bucket !== null && formData.bucket !== undefined ? String(formData.bucket) : ''"
@@ -219,7 +241,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="3">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="3">
             <el-form-item label="开启状态" prop="is_open">
               <el-switch
                 v-model="formData.is_open"
@@ -229,7 +251,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="3">
+          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="3">
             <el-form-item label="钉钉通知" prop="dingding">
               <el-switch
                 v-model="formData.dingding"
@@ -239,33 +261,47 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="5">
+          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
             <el-form-item label="到期时间" prop="membership_expire_date">
-              <el-text :size="isMobile ? 'default' : 'small'" v-if="formData.membership_expire_date">
-                {{ formatExpireDate(formData.membership_expire_date) }}
-              </el-text>
-              <el-text :size="isMobile ? 'default' : 'small'" v-else type="info">无</el-text>
+              <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <el-text :size="isMobile ? 'default' : 'small'" v-if="formData.membership_expire_date">
+                  {{ formatExpireDate(formData.membership_expire_date) }}
+                </el-text>
+                <el-text :size="isMobile ? 'default' : 'small'" v-else type="info">无</el-text>
+              </div>
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="24" :md="10" :lg="8">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
             <el-form-item label="横幅通知" prop="banner">
-              <el-input 
-                v-model="formData.banner" 
-                placeholder="横幅通知内容"
-                :size="isMobile ? 'small' : 'small'"
-              />
+              <el-tooltip
+                :content="formData.banner || '横幅通知内容'"
+                placement="top"
+                :disabled="!formData.banner || formData.banner.length < 20"
+              >
+                <el-input
+                  v-model="formData.banner"
+                  placeholder="横幅通知内容"
+                  :size="isMobile ? 'small' : 'small'"
+                />
+              </el-tooltip>
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="14" :lg="16">
+          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="16">
             <el-form-item label="备注" prop="remarks">
-              <el-input 
-                v-model="formData.remarks" 
-                placeholder="备注信息"
-                :size="isMobile ? 'small' : 'small'"
-              />
+              <el-tooltip
+                :content="formData.remarks || '备注信息'"
+                placement="top"
+                :disabled="!formData.remarks || formData.remarks.length < 20"
+              >
+                <el-input
+                  v-model="formData.remarks"
+                  placeholder="备注信息"
+                  :size="isMobile ? 'small' : 'small'"
+                />
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
@@ -273,25 +309,67 @@
 
       <!-- 扩展数据区域 -->
       <div class="form-section" :class="{ 'mobile-section': isMobile }" style="border-bottom: none;">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">扩展数据</h4>
-        
-        <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
+          <el-icon style="margin-right: 4px;"><DataAnalysis /></el-icon>
+          扩展数据
+        </h4>
+
+        <el-tabs v-if="!isMobile && !isTablet" type="border-card" class="extension-tabs">
+          <el-tab-pane label="登录数据">
+            <el-form-item label="" prop="user_login_data">
+              <el-input
+                v-model="formData.user_login_data"
+                type="textarea"
+                :rows="6"
+                placeholder="用户登录数据"
+                :size="'small'"
+              />
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="游戏信息 (JSON)">
+            <el-form-item label="" prop="game_info">
+              <el-input
+                v-model="gameInfoText"
+                type="textarea"
+                :rows="6"
+                placeholder="JSON格式的游戏信息"
+                @blur="handleGameInfoChange"
+                :size="'small'"
+              />
+            </el-form-item>
+          </el-tab-pane>
+          <el-tab-pane label="用户设置 (JSON)">
+            <el-form-item label="" prop="user_setting">
+              <el-input
+                v-model="userSettingText"
+                type="textarea"
+                :rows="6"
+                placeholder="JSON格式的用户设置"
+                @blur="handleUserSettingChange"
+                :size="'small'"
+              />
+            </el-form-item>
+          </el-tab-pane>
+        </el-tabs>
+
+        <!-- 平板和移动端仍然使用原有布局 -->
+        <el-row v-else :gutter="isMobile ? 0 : 10">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
             <el-form-item label="登录数据" prop="user_login_data">
-              <el-input 
-                v-model="formData.user_login_data" 
-                type="textarea" 
+              <el-input
+                v-model="formData.user_login_data"
+                type="textarea"
                 :rows="isMobile ? 3 : 4"
                 placeholder="用户登录数据"
                 :size="isMobile ? 'small' : 'small'"
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
             <el-form-item label="游戏信息" prop="game_info">
-              <el-input 
-                v-model="gameInfoText" 
-                type="textarea" 
+              <el-input
+                v-model="gameInfoText"
+                type="textarea"
                 :rows="isMobile ? 3 : 4"
                 placeholder="JSON格式"
                 @blur="handleGameInfoChange"
@@ -299,11 +377,11 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :lg="8">
+          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
             <el-form-item label="用户设置" prop="user_setting">
-              <el-input 
-                v-model="userSettingText" 
-                type="textarea" 
+              <el-input
+                v-model="userSettingText"
+                type="textarea"
                 :rows="isMobile ? 3 : 4"
                 placeholder="JSON格式"
                 @blur="handleUserSettingChange"
@@ -320,7 +398,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Close, Check } from '@element-plus/icons-vue'
+import { Close, Check, User, Trophy, Star, DataAnalysis } from '@element-plus/icons-vue'
 import { MEMBERSHIP_LEVELS, GAME_PLATFORMS } from '../utils/constants'
 import { useResponsive, useDialogResponsive } from '../utils/responsive'
 import request from '../utils/request'
@@ -606,10 +684,10 @@ const handleSave = async () => {
   gap: 12px;
   padding: 12px 0;
   margin-bottom: 16px;
-  border-bottom: 1px solid var(--el-border-color-lighter);
+  border-bottom: 1px solid var(--border-color-lighter);
   position: sticky;
   top: 0;
-  background: var(--el-bg-color);
+  background: var(--bg-color);
   z-index: 10;
 }
 
@@ -622,9 +700,19 @@ const handleSave = async () => {
 }
 
 .form-section {
-  margin-bottom: 8px;
-  padding: 6px 0;
-  border-bottom: 1px solid #e4e7ed;
+  margin-bottom: 12px;
+  padding: 12px 16px;
+  background: var(--bg-color-overlay);
+  border: 1px solid var(--border-color-lighter);
+  border-radius: 6px;
+  box-shadow: var(--box-shadow-base);
+  transition: all 0.3s ease;
+  overflow: hidden; /* 防止内容溢出 */
+}
+
+.form-section:hover {
+  box-shadow: var(--box-shadow-light);
+  border-color: var(--primary-color);
 }
 
 .form-section:last-child {
@@ -632,23 +720,103 @@ const handleSave = async () => {
 }
 
 .section-title {
-  margin: 0 0 8px 0;
-  padding: 0;
-  font-size: 12px;
+  margin: 0 0 12px 0;
+  padding: 6px 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: #303133;
+  color: var(--primary-color);
+  background: linear-gradient(90deg, var(--primary-color) 0%, transparent 100%);
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: left bottom;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+}
+
+html.dark .section-title {
+  color: var(--primary-color);
 }
 
 :deep(.el-dialog__body) {
   max-height: calc(85vh - 60px);
   overflow-y: auto;
-  padding: 12px 16px;
+  padding: 12px 24px;
   padding-top: 0;
+  padding-right: 28px; /* 增加右侧内边距，避免内容贴边 */
+  background: var(--bg-color-page);
 }
 
 /* 紧凑布局 */
 :deep(.el-form-item) {
   margin-bottom: 10px;
+}
+
+/* 输入框hover效果 */
+:deep(.el-input__wrapper):hover {
+  box-shadow: 0 0 0 1px var(--primary-color) inset;
+}
+
+/* focus状态优化 */
+:deep(.el-input__wrapper.is-focus) {
+  box-shadow: 0 0 0 2px var(--primary-color) inset;
+}
+
+/* 禁用状态优化 */
+:deep(.el-input.is-disabled .el-input__wrapper) {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* 按钮悬浮效果 */
+.top-actions .el-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 开关美化 */
+:deep(.el-switch.is-checked .el-switch__core) {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+/* 扩展数据Tabs样式 */
+.extension-tabs {
+  border: none;
+  box-shadow: none;
+}
+
+:deep(.extension-tabs .el-tabs__content) {
+  padding: 12px;
+  background: var(--bg-color);
+  border-radius: 4px;
+}
+
+:deep(.extension-tabs .el-tabs__item) {
+  font-size: 12px;
+  height: 36px;
+  line-height: 36px;
+}
+
+:deep(.extension-tabs .el-tabs__item.is-active) {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+:deep(.extension-tabs .el-textarea__inner) {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* 游戏版本下拉框特殊样式 */
+.game-platform-dropdown {
+  min-width: 200px !important;
+}
+
+.game-platform-dropdown .el-select-dropdown__item {
+  white-space: nowrap;
+  padding-right: 20px;
 }
 
 /* 区服输入框的前缀样式 */
@@ -671,8 +839,174 @@ const handleSave = async () => {
   background-color: transparent;
 }
 
-/* PC端超紧凑样式 */
-@media (min-width: 1024px) {
+/* 小屏幕特别优化（13-16寸屏幕） */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .user-edit-dialog :deep(.el-dialog) {
+    margin-top: 3vh !important;
+    width: 98% !important;
+    max-width: 1340px !important;
+  }
+
+  :deep(.el-dialog__body) {
+    max-height: calc(92vh - 50px);
+    padding: 8px 16px;
+    padding-right: 20px;
+  }
+
+  .form-section {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .section-title {
+    font-size: 12px;
+    margin-bottom: 8px;
+    padding: 6px 10px;
+    background: linear-gradient(90deg, var(--primary-color) 0%, transparent 50%);
+    color: #fff;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    font-weight: 500;
+  }
+
+  html.dark .section-title {
+    background: linear-gradient(90deg, var(--primary-color) 0%, transparent 60%);
+  }
+
+  /* 关键字段最小宽度保证 */
+  :deep(.el-col-lg-6),
+  :deep(.el-col-lg-5),
+  :deep(.el-col-lg-4),
+  :deep(.el-col-lg-3) {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+
+  :deep(.el-col-lg-6) .el-input,
+  :deep(.el-col-lg-5) .el-input,
+  :deep(.el-col-lg-4) .el-input,
+  :deep(.el-col-lg-3) .el-input {
+    min-width: auto !important;
+  }
+
+  /* 账号、密码、关联账户、主账户 */
+  :deep(.el-form-item[prop="account"] .el-input),
+  :deep(.el-form-item[prop="password"] .el-input) {
+    min-width: 150px !important;
+  }
+
+  :deep(.el-form-item[prop="real_account"] .el-input),
+  :deep(.el-form-item[prop="main_account"] .el-input) {
+    min-width: 140px !important;
+  }
+
+  /* 联系方式、游戏版本 */
+  :deep(.el-form-item[prop="contact"] .el-input) {
+    min-width: 140px !important;
+  }
+
+  /* 游戏版本需要更宽以显示完整内容 */
+  :deep(.el-form-item[prop="game_platform"] .el-select) {
+    min-width: 180px !important;
+  }
+
+  /* 游戏版本下拉框选项宽度 */
+  :deep(.el-select-dropdown) {
+    min-width: 200px !important;
+  }
+
+  /* 区名、区服、区号 */
+  :deep(.el-form-item[prop="server_name"] .el-input) {
+    min-width: 120px !important;
+  }
+
+  :deep(.el-form-item[prop="server_info"] .el-input) {
+    min-width: 140px !important;
+  }
+
+  :deep(.el-form-item[prop="server_zone"] .el-input) {
+    min-width: 100px !important;
+  }
+
+  /* 会员级别、充值金额、分桶号 */
+  :deep(.el-form-item[prop="membership_level"] .el-select) {
+    min-width: 130px !important;
+  }
+
+  :deep(.el-form-item[prop="membership_pay_money"] .el-input-number) {
+    min-width: 120px !important;
+  }
+
+  :deep(.el-form-item[prop="bucket"] .el-input) {
+    min-width: 100px !important;
+  }
+
+  /* 可截断字段使用省略号 */
+  :deep(.el-form-item[prop="websocket_url"] .el-input__inner),
+  :deep(.el-form-item[prop="game_web_url"] .el-input__inner),
+  :deep(.el-form-item[prop="banner"] .el-input__inner),
+  :deep(.el-form-item[prop="remarks"] .el-input__inner) {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  :deep(.el-form-item__label) {
+    font-size: 11px;
+    padding-right: 6px;
+    color: var(--text-color-regular);
+    font-weight: 500;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  /* 到期时间字段特殊处理 */
+  :deep(.el-form-item[prop="membership_expire_date"]) {
+    min-width: 200px !important;
+  }
+
+  :deep(.el-form-item[prop="membership_expire_date"] .el-form-item__content) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  :deep(.el-input--small) {
+    font-size: 11px;
+  }
+
+  :deep(.el-input--small .el-input__inner) {
+    height: 26px;
+    line-height: 26px;
+  }
+
+  :deep(.el-form-item) {
+    margin-bottom: 6px;
+  }
+}
+
+/* 防止内容溢出 */
+:deep(.el-row) {
+  margin-left: -5px !important;
+  margin-right: -5px !important;
+}
+
+:deep(.el-col) {
+  padding-left: 5px !important;
+  padding-right: 5px !important;
+}
+
+/* 确保到期时间不换行 */
+:deep(.el-form-item[prop="membership_expire_date"] .el-text) {
+  white-space: nowrap;
+  display: inline-block;
+}
+
+/* PC端标准样式 */
+@media (min-width: 1367px) {
   .user-edit-dialog :deep(.el-dialog) {
     margin-top: 5vh !important;
   }
@@ -752,6 +1086,19 @@ const handleSave = async () => {
   :deep(.el-dialog__body) {
     max-height: calc(90vh - 50px);
   }
+
+  .form-section {
+    padding: 16px 20px;
+  }
+
+  :deep(.el-form-item__label) {
+    font-size: 13px;
+  }
+
+  :deep(.el-input--small .el-input__inner) {
+    font-size: 13px;
+    height: 32px;
+  }
 }
 
 /* 移动端样式优化 */
@@ -827,10 +1174,10 @@ const handleSave = async () => {
   .mobile-title {
     font-size: 13px !important;
     font-weight: 600;
-    color: var(--el-color-primary);
+    color: var(--primary-color);
     margin: 0 0 8px 0 !important;
     padding-bottom: 6px;
-    border-bottom: 1px solid var(--el-border-color-lighter);
+    border-bottom: 1px solid var(--border-color-lighter);
   }
 
   /* 移动端表单项 */
@@ -848,7 +1195,7 @@ const handleSave = async () => {
     width: 70px !important;
     padding-right: 8px !important;
     font-size: 13px !important;
-    color: #606266;
+    color: var(--text-color-regular);
     line-height: 32px !important;
     flex-shrink: 0;
   }

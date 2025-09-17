@@ -236,6 +236,105 @@ body {
   color: var(--text-color-primary);
 }
 
+/* Tooltip全局样式 - 亮色和暗色模式都适用 */
+.el-popper.is-light,
+.el-popper[effect="light"],
+.el-popper:not([effect]) {
+  background: var(--bg-color) !important;
+  color: var(--text-color-primary) !important;
+  border: 1px solid var(--border-color-base) !important;
+}
+
+/* Tooltip内容样式 */
+.el-popper.is-light .el-popper__content,
+.el-popper[effect="light"] .el-popper__content,
+.el-popper:not([effect]) .el-popper__content {
+  color: var(--text-color-primary) !important;
+}
+
+/* Select下拉框样式 - 确保在两种模式下都正确显示 */
+.el-select-dropdown {
+  background: var(--bg-color-overlay) !important;
+  border: 1px solid var(--border-color-base) !important;
+}
+
+.el-select-dropdown__item {
+  color: var(--text-color-regular) !important;
+}
+
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+  background-color: var(--bg-color-secondary) !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+/* Dropdown下拉菜单样式 */
+.el-dropdown__popper {
+  background: var(--bg-color-overlay) !important;
+  border: 1px solid var(--border-color-base) !important;
+}
+
+.el-dropdown-menu__item {
+  color: var(--text-color-regular) !important;
+}
+
+.el-dropdown-menu__item:hover {
+  background-color: var(--bg-color-secondary) !important;
+  color: var(--primary-color) !important;
+}
+
+/* DatePicker/DateTimePicker 样式 */
+.el-picker__popper {
+  background: var(--bg-color-overlay) !important;
+  border: 1px solid var(--border-color-base) !important;
+  color: var(--text-color-primary) !important;
+}
+
+.el-picker-panel {
+  background: var(--bg-color-overlay) !important;
+  border: 1px solid var(--border-color-base) !important;
+  color: var(--text-color-primary) !important;
+}
+
+.el-picker-panel__body-wrapper .el-picker-panel__body {
+  background: var(--bg-color-overlay) !important;
+}
+
+.el-picker-panel__footer {
+  background: var(--bg-color-overlay) !important;
+  border-top: 1px solid var(--border-color-light) !important;
+}
+
+.el-date-table td.available:hover {
+  background-color: var(--bg-color-secondary) !important;
+}
+
+.el-date-table td.current:not(.disabled) {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+.el-date-picker__header-label {
+  color: var(--text-color-primary) !important;
+}
+
+.el-picker-panel__icon-btn {
+  color: var(--text-color-regular) !important;
+}
+
+.el-picker-panel__icon-btn:hover {
+  color: var(--primary-color) !important;
+}
+
+/* 日期范围选择器的分隔符 */
+.el-date-range-picker__content.is-left,
+.el-date-range-picker__content.is-right {
+  border-color: var(--border-color-light) !important;
+}
+
 /* 主题切换过渡动画 */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -372,5 +471,122 @@ html.dark {
   .el-input-number__decrease:hover,
   .el-input-number__increase:hover {
     background-color: var(--bg-color-overlay);
+  }
+
+  /* Tooltip样式 - Element Plus v2 */
+  .el-popper.is-dark,
+  .el-popper[effect="dark"] {
+    background: var(--bg-color-overlay) !important;
+    color: var(--text-color-primary) !important;
+    border: 1px solid var(--border-color-base) !important;
+  }
+
+  /* Tooltip内容样式 */
+  .el-popper.is-dark .el-popper__content,
+  .el-popper[effect="dark"] .el-popper__content {
+    color: var(--text-color-primary) !important;
+  }
+
+  /* 兼容旧版本的类名 */
+  .el-tooltip__popper {
+    background: var(--bg-color-overlay) !important;
+    color: var(--text-color-primary) !important;
+    border: 1px solid var(--border-color-base) !important;
+  }
+
+  .el-tooltip__popper.is-dark {
+    background: var(--bg-color-overlay) !important;
+    color: var(--text-color-primary) !important;
+  }
+
+  /* 箭头样式 */
+  .el-popper .el-popper__arrow::before {
+    border-color: var(--border-color-base) !important;
+  }
+
+  .el-popper[data-popper-placement^="top"] .el-popper__arrow::before {
+    border-top-color: var(--border-color-base) !important;
+  }
+
+  .el-popper[data-popper-placement^="bottom"] .el-popper__arrow::before {
+    border-bottom-color: var(--border-color-base) !important;
+  }
+
+  .el-popper[data-popper-placement^="left"] .el-popper__arrow::before {
+    border-left-color: var(--border-color-base) !important;
+  }
+
+  .el-popper[data-popper-placement^="right"] .el-popper__arrow::before {
+    border-right-color: var(--border-color-base) !important;
+  }
+
+  /* Popover样式 */
+  .el-popover.el-popper {
+    background: var(--bg-color-overlay) !important;
+    color: var(--text-color-primary) !important;
+    border: 1px solid var(--border-color-base) !important;
+  }
+
+  .el-popover__title {
+    color: var(--text-color-primary) !important;
+    border-bottom-color: var(--border-color-light) !important;
+  }
+
+  /* Popconfirm样式 */
+  .el-popconfirm__main {
+    color: var(--text-color-primary) !important;
+  }
+
+  .el-popconfirm__icon {
+    color: var(--warning-color) !important;
+  }
+
+  /* ColorPicker样式 */
+  .el-color-picker__panel {
+    background-color: var(--bg-color-overlay) !important;
+    border-color: var(--border-color-base) !important;
+  }
+
+  /* Cascader样式 */
+  .el-cascader-panel {
+    background-color: var(--bg-color-overlay) !important;
+    border-color: var(--border-color-base) !important;
+    color: var(--text-color-primary) !important;
+  }
+
+  .el-cascader-node:hover,
+  .el-cascader-node.in-active-path {
+    background-color: var(--bg-color-secondary) !important;
+  }
+
+  /* TimePicker/DateTimePicker样式 */
+  .el-time-panel {
+    background-color: var(--bg-color-overlay) !important;
+    border-color: var(--border-color-base) !important;
+    color: var(--text-color-primary) !important;
+  }
+
+  .el-time-spinner__item:hover:not(.disabled):not(.active) {
+    background: var(--bg-color-secondary) !important;
+  }
+
+  .el-time-panel__footer {
+    border-top-color: var(--border-color-light) !important;
+  }
+
+  /* Autocomplete样式 */
+  .el-autocomplete-suggestion {
+    background-color: var(--bg-color-overlay) !important;
+    border-color: var(--border-color-base) !important;
+  }
+
+  .el-autocomplete-suggestion li:hover {
+    background-color: var(--bg-color-secondary) !important;
+  }
+
+  /* 确保所有浮层组件在最顶层显示 */
+  .el-popper,
+  .el-tooltip__popper {
+    z-index: 9999 !important;
   }
 }
