@@ -218,9 +218,19 @@
           {{ formatDate(row.register_date) }}
         </template>
       </el-table-column>
-      <el-table-column prop="server_name" label="区名" min-width="100" show-overflow-tooltip />
-      <el-table-column prop="server_info" label="区服" min-width="100" show-overflow-tooltip />
-      <el-table-column prop="server_zone" label="区号" width="80" show-overflow-tooltip />
+      <el-table-column prop="last_login_time" label="最后登录时间" min-width="160" show-overflow-tooltip sortable="custom">
+        <template #default="{ row }">
+          {{ formatDate(row.last_login_time) }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="auxiliary_online" label="在线状态" width="85" show-overflow-tooltip>
+        <template #default="{ row }">
+          <el-tag :type="row.auxiliary_online ? 'success' : 'info'">
+            {{ row.auxiliary_online ? '在线' : '离线' }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="remarks" label="备注" min-width="150" show-overflow-tooltip />
       <el-table-column prop="membership_pay_money" label="充值金额" width="100" show-overflow-tooltip sortable="custom">
         <template #default="{ row }">
           ¥{{ row.membership_pay_money || 0 }}
@@ -243,25 +253,15 @@
           {{ getGamePlatformName(row.game_platform) }}
         </template>
       </el-table-column>
-      <el-table-column prop="remarks" label="备注" min-width="150" show-overflow-tooltip />
-      <el-table-column prop="auxiliary_online" label="在线状态" width="85" show-overflow-tooltip>
-        <template #default="{ row }">
-          <el-tag :type="row.auxiliary_online ? 'success' : 'info'">
-            {{ row.auxiliary_online ? '在线' : '离线' }}
-          </el-tag>
-        </template>
-      </el-table-column>
+      <el-table-column prop="server_name" label="区名" min-width="100" show-overflow-tooltip />
+      <el-table-column prop="server_info" label="区服" min-width="100" show-overflow-tooltip />
+      <el-table-column v-if="expandColumns" prop="server_zone" label="区号" width="80" show-overflow-tooltip />
       <el-table-column v-if="expandColumns" prop="real_account" label="真实账号" min-width="200" show-overflow-tooltip />
       <el-table-column v-if="expandColumns" prop="main_account" label="主账号" min-width="200" show-overflow-tooltip />
       <el-table-column v-if="expandColumns" prop="contact" label="联系方式" min-width="200" show-overflow-tooltip />
       <el-table-column v-if="expandColumns" prop="last_online_time" label="最后在线时间" min-width="160" show-overflow-tooltip sortable="custom">
         <template #default="{ row }">
           {{ formatDate(row.last_online_time) }}
-        </template>
-      </el-table-column>
-      <el-table-column v-if="expandColumns" prop="last_login_time" label="最后登录时间" min-width="160" show-overflow-tooltip sortable="custom">
-        <template #default="{ row }">
-          {{ formatDate(row.last_login_time) }}
         </template>
       </el-table-column>
       <el-table-column v-if="expandColumns" prop="is_open" label="开启状态" width="90" show-overflow-tooltip>
