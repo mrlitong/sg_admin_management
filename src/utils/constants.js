@@ -5,7 +5,7 @@ export const MEMBERSHIP_LEVELS = {
   '1': { label: '基础会员', type: 'success' },
   '2': { label: '高级会员', type: 'warning' },
   '3': { label: '钻石会员', type: 'danger' },
-  '4': { label: '至尊会员', type: 'primary' }
+  '4': { label: '至尊会员', type: 'warning', isVipGold: true }
 }
 
 // 游戏平台映射
@@ -28,7 +28,11 @@ export function getMembershipLabel(level) {
 
 // 获取会员等级标签类型
 export function getMembershipTagType(level) {
-  return MEMBERSHIP_LEVELS[String(level)]?.type || 'info'
+  const membership = MEMBERSHIP_LEVELS[String(level)]
+  if (membership?.isVipGold) {
+    return 'warning vip-gold'  // 使用warning作为基础类型，添加vip-gold自定义类
+  }
+  return membership?.type || 'info'
 }
 
 // 获取游戏平台名称

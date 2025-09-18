@@ -47,6 +47,11 @@
   /* 卡片 */
   --card-bg: #ffffff;
   --card-border: #ebeef5;
+
+  /* 至尊会员金色 */
+  --vip-gold-color: #DAA520;
+  --vip-gold-bg: #FFF8DC;
+  --vip-gold-border: #DAA520;
 }
 
 /* 暗色主题变量 */
@@ -98,6 +103,11 @@ html.dark {
   /* 卡片 */
   --card-bg: #1d1e1f;
   --card-border: #363637;
+
+  /* 至尊会员金色 - 暗色模式 */
+  --vip-gold-color: #FFD700;
+  --vip-gold-bg: #3A3520;
+  --vip-gold-border: #FFD700;
 }
 
 /* 应用CSS变量到Element Plus组件 */
@@ -335,6 +345,19 @@ body {
   border-color: var(--border-color-light) !important;
 }
 
+/* 自定义至尊会员金色标签样式 */
+.el-tag.vip-gold {
+  background-color: var(--vip-gold-bg) !important;
+  color: var(--vip-gold-color) !important;
+  font-weight: 600;
+  /* 使用与其他标签相同的边框样式 */
+  border: 1px solid transparent !important;
+}
+
+.el-tag.vip-gold.is-hit {
+  border-color: var(--vip-gold-color) !important;
+}
+
 /* 主题切换过渡动画 */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -342,8 +365,8 @@ body {
 
 /* 暗色模式下的额外Element Plus组件样式 */
 html.dark {
-  /* 标签 */
-  .el-tag {
+  /* 标签 - 保持Element Plus默认的类型颜色，只调整无类型标签的样式 */
+  .el-tag:not(.el-tag--success):not(.el-tag--warning):not(.el-tag--danger):not(.el-tag--primary):not(.el-tag--info) {
     background-color: var(--bg-color-secondary);
     border-color: var(--border-color-base);
     color: var(--text-color-regular);
