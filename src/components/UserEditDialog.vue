@@ -1,22 +1,22 @@
 <template>
-  <el-dialog 
-    :model-value="modelValue" 
+  <el-dialog
+    :model-value="modelValue"
     :title="userData ? '编辑用户' : '新增用户'"
-    :width="dialogWidth"
+    width="90%"
     :fullscreen="isMobile"
     :close-on-click-modal="!isMobile"
     @close="handleClose"
     class="user-edit-dialog"
   >
     <!-- 顶部操作按钮 -->
-    <div class="top-actions" :class="{ 'mobile-top-actions': isMobile }">
-      <el-button @click="handleClose" :size="isMobile ? 'small' : 'small'">
+    <div class="dialog-header">
+      <el-button @click="handleClose" :size="isMobile ? 'small' : 'default'">
         <el-icon><Close /></el-icon>
-        <span v-if="!isMobile">取消</span>
+        取消
       </el-button>
-      <el-button type="primary" @click="handleSave" :size="isMobile ? 'small' : 'small'">
+      <el-button type="primary" @click="handleSave" :size="isMobile ? 'small' : 'default'" class="save-button">
         <el-icon><Check /></el-icon>
-        <span v-if="!isMobile">保存</span>
+        保存
       </el-button>
     </div>
 
@@ -24,372 +24,262 @@
       ref="formRef"
       :model="formData"
       :rules="formRules"
-      :label-width="isMobile ? '70px' : '85px'"
-      :label-position="isMobile ? 'left' : 'right'"
-      :size="isMobile ? 'small' : 'small'"
+      label-width="100px"
+      label-position="right"
+      class="user-edit-form"
       :class="{ 'mobile-form': isMobile }"
     >
-      <!-- 基本信息区域 -->
-      <div class="form-section" :class="{ 'mobile-section': isMobile }">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
-          <el-icon style="margin-right: 4px;"><User /></el-icon>
+      <!-- 基本信息 -->
+      <div class="form-group">
+        <h3 class="group-title">
+          <el-icon><User /></el-icon>
           基本信息
-        </h4>
-        
-        <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
-            <el-form-item label="账号" prop="account">
-              <el-input 
-                v-model="formData.account" 
-                placeholder="账号"
-                :disabled="!!userData"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
-            <el-form-item label="密码" prop="password">
-              <el-input 
-                v-model="formData.password" 
-                placeholder="密码"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
-            <el-form-item label="关联账户" prop="real_account">
-              <el-input 
-                v-model="formData.real_account" 
-                placeholder="关联账户"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
-            <el-form-item label="主账户" prop="main_account">
-              <el-input 
-                v-model="formData.main_account" 
-                placeholder="主账户"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+        </h3>
+        <div class="form-grid">
+          <el-form-item label="账号" prop="account">
+            <el-input
+              v-model="formData.account"
+              placeholder="请输入账号"
+              :disabled="!!userData"
+            />
+          </el-form-item>
 
-        <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
-            <el-form-item label="联系方式" prop="contact">
-              <el-input 
-                v-model="formData.contact" 
-                placeholder="微信号"
-                :size="isMobile ? 'small' : 'small'"
+          <el-form-item label="密码" prop="password">
+            <el-input
+              v-model="formData.password"
+              placeholder="请输入密码"
+              type="password"
+              show-password
+            />
+          </el-form-item>
+
+          <el-form-item label="关联账户" prop="real_account">
+            <el-input
+              v-model="formData.real_account"
+              placeholder="请输入关联账户"
+            />
+          </el-form-item>
+
+          <el-form-item label="主账户" prop="main_account">
+            <el-input
+              v-model="formData.main_account"
+              placeholder="请输入主账户"
+            />
+          </el-form-item>
+
+          <el-form-item label="联系方式" prop="contact">
+            <el-input
+              v-model="formData.contact"
+              placeholder="微信号/手机号"
+            />
+          </el-form-item>
+
+          <el-form-item label="游戏版本" prop="game_platform">
+            <el-select
+              v-model="formData.game_platform"
+              placeholder="请选择游戏版本"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(label, value) in GAME_PLATFORMS"
+                :key="value"
+                :label="label"
+                :value="Number(value)"
               />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="6">
-            <el-form-item label="游戏版本" prop="game_platform">
-              <el-select
-                v-model="formData.game_platform"
-                placeholder="游戏版本"
-                :size="isMobile ? 'small' : 'small'"
-                style="width: 100%; min-width: 180px;"
-                popper-class="game-platform-dropdown"
-              >
-                <el-option
-                  v-for="(label, value) in GAME_PLATFORMS"
-                  :key="value"
-                  :label="label"
-                  :value="Number(value)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="6" :lg="6" v-if="formData.game_platform === 0">
-            <el-form-item label="校验">
-              <el-button 
-                type="primary" 
-                :size="isMobile ? 'small' : 'small'"
-                @click="validateAccount"
-                :loading="validating"
-                style="width: 100%"
-              >
-                校验账号
-              </el-button>
-            </el-form-item>
-          </el-col>
-        </el-row>
+            </el-select>
+          </el-form-item>
+
+          <el-form-item label="账号校验" v-if="formData.game_platform === 0">
+            <el-button
+              type="primary"
+              @click="validateAccount"
+              :loading="validating"
+            >
+              校验账号密码
+            </el-button>
+          </el-form-item>
+        </div>
       </div>
 
-      <!-- 游戏信息区域 -->
-      <div class="form-section" :class="{ 'mobile-section': isMobile }">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
-          <el-icon style="margin-right: 4px;"><Trophy /></el-icon>
+      <!-- 游戏信息 -->
+      <div class="form-group">
+        <h3 class="group-title">
+          <el-icon><Trophy /></el-icon>
           游戏信息
-        </h4>
-        
-        <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
-            <el-form-item label="区名" prop="server_name">
-              <el-input
-                v-model="formData.server_name"
-                placeholder="区名"
-                :size="isMobile ? 'small' : 'small'"
-                style="min-width: 120px"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
-            <el-form-item label="区服" prop="server_info">
-              <el-input
-                v-model="formData.server_info"
-                placeholder="4_5"
-                :size="isMobile ? 'small' : 'small'"
-                style="min-width: 140px"
-              >
-                <template #prepend>h</template>
-              </el-input>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-            <el-form-item label="区号" prop="server_zone">
-              <el-input
-                v-model="formData.server_zone"
-                placeholder="区号"
-                :size="isMobile ? 'small' : 'small'"
-                style="min-width: 100px"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
-            <el-form-item label="WebSocket" prop="websocket_url">
-              <el-tooltip
-                :content="formData.websocket_url || '服务器地址'"
-                placement="top"
-                :disabled="!formData.websocket_url || formData.websocket_url.length < 30"
-              >
-                <el-input
-                  v-model="formData.websocket_url"
-                  placeholder="服务器地址"
-                  :size="isMobile ? 'small' : 'small'"
-                />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="6" :xl="5">
-            <el-form-item label="游戏链接" prop="game_web_url">
-              <el-tooltip
-                :content="formData.game_web_url || '游戏链接'"
-                placement="top"
-                :disabled="!formData.game_web_url || formData.game_web_url.length < 30"
-              >
-                <el-input
-                  v-model="formData.game_web_url"
-                  placeholder="游戏链接"
-                  :size="isMobile ? 'small' : 'small'"
-                />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        </h3>
+        <div class="form-grid">
+          <el-form-item label="区名" prop="server_name">
+            <el-input
+              v-model="formData.server_name"
+              placeholder="请输入区名"
+            />
+          </el-form-item>
+
+          <el-form-item label="区服" prop="server_info">
+            <el-input
+              v-model="formData.server_info"
+              placeholder="例如：4_5"
+            >
+              <template #prepend>h</template>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="区号" prop="server_zone">
+            <el-input
+              v-model="formData.server_zone"
+              placeholder="请输入区号"
+            />
+          </el-form-item>
+
+          <div></div> <!-- 空占位，保持网格对齐 -->
+
+          <el-form-item label="服务器地址" prop="websocket_url" class="full-width">
+            <el-input
+              v-model="formData.websocket_url"
+              placeholder="服务器地址"
+            />
+          </el-form-item>
+
+          <el-form-item label="游戏链接" prop="game_web_url" class="full-width">
+            <el-input
+              v-model="formData.game_web_url"
+              placeholder="游戏Web链接地址"
+            />
+          </el-form-item>
+        </div>
       </div>
 
-      <!-- 会员与系统设置区域 -->
-      <div class="form-section" :class="{ 'mobile-section': isMobile }">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
-          <el-icon style="margin-right: 4px;"><Star /></el-icon>
-          会员与系统
-        </h4>
-        
-        <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-            <el-form-item label="会员级别" prop="membership_level">
-              <el-select
-                v-model="formData.membership_level"
-                placeholder="会员级别"
-                :size="isMobile ? 'small' : 'small'"
-                style="width: 100%"
-              >
-                <el-option
-                  v-for="(info, value) in MEMBERSHIP_LEVELS"
-                  :key="value"
-                  :label="info.label"
-                  :value="Number(value)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4">
-            <el-form-item label="充值金额" prop="membership_pay_money">
-              <el-input-number
-                v-model="formData.membership_pay_money"
-                :min="0"
-                placeholder="金额"
-                style="width: 100%"
-                :size="isMobile ? 'small' : 'small'"
-                :controls="false"
+      <!-- 会员信息 -->
+      <div class="form-group">
+        <h3 class="group-title">
+          <el-icon><Star /></el-icon>
+          会员信息
+        </h3>
+        <div class="form-grid">
+          <el-form-item label="会员级别" prop="membership_level">
+            <el-select
+              v-model="formData.membership_level"
+              placeholder="请选择会员级别"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(info, value) in MEMBERSHIP_LEVELS"
+                :key="value"
+                :label="info.label"
+                :value="Number(value)"
               />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="3">
-            <el-form-item label="分桶号" prop="bucket">
-              <el-input
-                :model-value="formData.bucket !== null && formData.bucket !== undefined ? String(formData.bucket) : ''"
-                placeholder="自动"
-                style="width: 100%"
-                disabled
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="3">
-            <el-form-item label="开启状态" prop="is_open">
-              <el-switch
-                v-model="formData.is_open"
-                :active-value="1"
-                :inactive-value="0"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="3">
-            <el-form-item label="钉钉通知" prop="dingding">
-              <el-switch
-                v-model="formData.dingding"
-                :active-value="1"
-                :inactive-value="0"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="12" :md="12" :lg="8" :xl="6">
-            <el-form-item label="到期时间" prop="membership_expire_date">
-              <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                <el-text :size="isMobile ? 'default' : 'small'" v-if="formData.membership_expire_date">
-                  {{ formatExpireDate(formData.membership_expire_date) }}
-                </el-text>
-                <el-text :size="isMobile ? 'default' : 'small'" v-else type="info">无</el-text>
-              </div>
-            </el-form-item>
-          </el-col>
-        </el-row>
+            </el-select>
+          </el-form-item>
 
-        <el-row :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="8">
-            <el-form-item label="横幅通知" prop="banner">
-              <el-tooltip
-                :content="formData.banner || '横幅通知内容'"
-                placement="top"
-                :disabled="!formData.banner || formData.banner.length < 20"
-              >
-                <el-input
-                  v-model="formData.banner"
-                  placeholder="横幅通知内容"
-                  :size="isMobile ? 'small' : 'small'"
-                />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="16">
-            <el-form-item label="备注" prop="remarks">
-              <el-tooltip
-                :content="formData.remarks || '备注信息'"
-                placement="top"
-                :disabled="!formData.remarks || formData.remarks.length < 20"
-              >
-                <el-input
-                  v-model="formData.remarks"
-                  placeholder="备注信息"
-                  :size="isMobile ? 'small' : 'small'"
-                />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
+          <el-form-item label="充值金额" prop="membership_pay_money">
+            <el-input-number
+              v-model="formData.membership_pay_money"
+              :min="0"
+              placeholder="充值金额"
+              style="width: 100%"
+              :controls="false"
+            />
+          </el-form-item>
+
+          <el-form-item label="分桶号" prop="bucket">
+            <el-input
+              :model-value="formData.bucket !== null && formData.bucket !== undefined ? String(formData.bucket) : ''"
+              placeholder="系统自动分配"
+              disabled
+              style="width: 100%"
+            />
+          </el-form-item>
+
+          <el-form-item label="到期时间" prop="membership_expire_date">
+            <div class="expire-time">
+              <span v-if="formData.membership_expire_date">
+                {{ formatExpireDate(formData.membership_expire_date) }}
+              </span>
+              <span v-else class="no-expire">无到期时间</span>
+            </div>
+          </el-form-item>
+        </div>
       </div>
 
-      <!-- 扩展数据区域 -->
-      <div class="form-section" :class="{ 'mobile-section': isMobile }" style="border-bottom: none;">
-        <h4 :class="['section-title', { 'mobile-title': isMobile }]">
-          <el-icon style="margin-right: 4px;"><DataAnalysis /></el-icon>
+      <!-- 系统设置 -->
+      <div class="form-group">
+        <h3 class="group-title">
+          <el-icon><Setting /></el-icon>
+          系统设置
+        </h3>
+        <div class="form-grid">
+          <el-form-item label="开启状态" prop="is_open">
+            <el-switch
+              v-model="formData.is_open"
+              :active-value="1"
+              :inactive-value="0"
+              active-text="开启"
+              inactive-text="关闭"
+            />
+          </el-form-item>
+
+          <el-form-item label="钉钉通知" prop="dingding">
+            <el-switch
+              v-model="formData.dingding"
+              :active-value="1"
+              :inactive-value="0"
+              active-text="开启"
+              inactive-text="关闭"
+            />
+          </el-form-item>
+
+          <el-form-item label="横幅通知" prop="banner" class="full-width">
+            <el-input
+              v-model="formData.banner"
+              placeholder="横幅通知内容"
+            />
+          </el-form-item>
+
+          <el-form-item label="备注信息" prop="remarks" class="full-width">
+            <el-input
+              v-model="formData.remarks"
+              placeholder="备注信息"
+            />
+          </el-form-item>
+        </div>
+      </div>
+
+      <!-- 扩展数据 -->
+      <div class="form-group" v-if="!isMobile">
+        <h3 class="group-title">
+          <el-icon><DataAnalysis /></el-icon>
           扩展数据
-        </h4>
+        </h3>
+        <div class="form-grid extended-data">
+          <el-form-item label="登录数据" prop="user_login_data">
+            <el-input
+              v-model="formData.user_login_data"
+              type="textarea"
+              :rows="4"
+              placeholder="用户登录相关数据"
+            />
+          </el-form-item>
 
-        <el-tabs v-if="!isMobile && !isTablet" type="border-card" class="extension-tabs">
-          <el-tab-pane label="登录数据">
-            <el-form-item label="" prop="user_login_data">
-              <el-input
-                v-model="formData.user_login_data"
-                type="textarea"
-                :rows="6"
-                placeholder="用户登录数据"
-                :size="'small'"
-              />
-            </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="游戏信息 (JSON)">
-            <el-form-item label="" prop="game_info">
-              <el-input
-                v-model="gameInfoText"
-                type="textarea"
-                :rows="6"
-                placeholder="JSON格式的游戏信息"
-                @blur="handleGameInfoChange"
-                :size="'small'"
-              />
-            </el-form-item>
-          </el-tab-pane>
-          <el-tab-pane label="用户设置 (JSON)">
-            <el-form-item label="" prop="user_setting">
-              <el-input
-                v-model="userSettingText"
-                type="textarea"
-                :rows="6"
-                placeholder="JSON格式的用户设置"
-                @blur="handleUserSettingChange"
-                :size="'small'"
-              />
-            </el-form-item>
-          </el-tab-pane>
-        </el-tabs>
+          <el-form-item label="游戏信息" prop="game_info">
+            <el-input
+              v-model="gameInfoText"
+              type="textarea"
+              :rows="4"
+              placeholder="JSON格式的游戏信息"
+              @blur="handleGameInfoChange"
+            />
+          </el-form-item>
 
-        <!-- 平板和移动端仍然使用原有布局 -->
-        <el-row v-else :gutter="isMobile ? 0 : 10">
-          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-            <el-form-item label="登录数据" prop="user_login_data">
-              <el-input
-                v-model="formData.user_login_data"
-                type="textarea"
-                :rows="isMobile ? 3 : 4"
-                placeholder="用户登录数据"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-            <el-form-item label="游戏信息" prop="game_info">
-              <el-input
-                v-model="gameInfoText"
-                type="textarea"
-                :rows="isMobile ? 3 : 4"
-                placeholder="JSON格式"
-                @blur="handleGameInfoChange"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-          <el-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
-            <el-form-item label="用户设置" prop="user_setting">
-              <el-input
-                v-model="userSettingText"
-                type="textarea"
-                :rows="isMobile ? 3 : 4"
-                placeholder="JSON格式"
-                @blur="handleUserSettingChange"
-                :size="isMobile ? 'small' : 'small'"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
+          <el-form-item label="用户设置" prop="user_setting">
+            <el-input
+              v-model="userSettingText"
+              type="textarea"
+              :rows="4"
+              placeholder="JSON格式的用户设置"
+              @blur="handleUserSettingChange"
+            />
+          </el-form-item>
+        </div>
       </div>
     </el-form>
   </el-dialog>
@@ -398,9 +288,9 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Close, Check, User, Trophy, Star, DataAnalysis } from '@element-plus/icons-vue'
+import { Close, Check, User, Trophy, Star, Setting, DataAnalysis } from '@element-plus/icons-vue'
 import { MEMBERSHIP_LEVELS, GAME_PLATFORMS } from '../utils/constants'
-import { useResponsive, useDialogResponsive } from '../utils/responsive'
+import { useResponsive } from '../utils/responsive'
 import request from '../utils/request'
 
 const props = defineProps({
@@ -411,12 +301,11 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'save'])
 
 // 响应式配置
-const { isMobile, isTablet } = useResponsive()
-const { dialogWidth } = useDialogResponsive()
+const { isMobile } = useResponsive()
 
 const formRef = ref()
-const originalData = ref(null) // 保存原始数据用于对比
-const validating = ref(false) // 校验状态
+const originalData = ref(null)
+const validating = ref(false)
 
 const formData = reactive({
   account: '',
@@ -456,7 +345,6 @@ const formRules = {
   ]
 }
 
-
 // 格式化日期显示
 const formatExpireDate = (date) => {
   if (!date) return ''
@@ -474,18 +362,19 @@ const formatExpireDate = (date) => {
 watch(() => props.userData, (newVal) => {
   if (newVal) {
     Object.assign(formData, newVal)
-    // 保存原始数据的深拷贝
     originalData.value = JSON.parse(JSON.stringify(newVal))
+
     // 处理区服字段 - 去掉 h 前缀
     if (newVal.server_info && newVal.server_info.startsWith('h')) {
       formData.server_info = newVal.server_info.substring(1)
-      // 原始数据也要保存处理后的值
       originalData.value.server_info = formData.server_info
     }
-    // 特别处理bucket字段 - 确保它不是null
+
+    // 特别处理bucket字段
     if (formData.bucket === null || formData.bucket === undefined) {
       formData.bucket = 0
     }
+
     // 处理JSON字段
     gameInfoText.value = newVal.game_info ? JSON.stringify(newVal.game_info, null, 2) : ''
     userSettingText.value = newVal.user_setting ? JSON.stringify(newVal.user_setting, null, 2) : ''
@@ -538,30 +427,29 @@ const handleUserSettingChange = () => {
 
 // 账号密码校验
 const validateAccount = async () => {
-  // 检查必要字段
   if (!formData.account) {
     ElMessage.warning('请先输入账号')
     return
   }
-  
+
   if (!formData.password) {
     ElMessage.warning('请先输入密码')
     return
   }
-  
+
   if (formData.game_platform === -1 || formData.game_platform === undefined) {
     ElMessage.warning('请先选择游戏版本')
     return
   }
-  
+
   validating.value = true
-  
+
   try {
     const response = await request.post('/validate_account', {
       game_platform: formData.game_platform,
       account: formData.account
     })
-    
+
     if (response.code === 0) {
       ElMessage.success(response.message || '账号密码验证成功')
     } else {
@@ -579,18 +467,16 @@ const handleClose = () => {
   emit('update:modelValue', false)
 }
 
-// 对比两个值是否相等（处理JSON对象的情况）
+// 对比两个值是否相等
 const isEqual = (val1, val2) => {
-  // 处理null和undefined
   if (val1 === val2) return true
   if (val1 === null || val2 === null) return false
   if (val1 === undefined || val2 === undefined) return false
-  
-  // 处理对象和数组
+
   if (typeof val1 === 'object' && typeof val2 === 'object') {
     return JSON.stringify(val1) === JSON.stringify(val2)
   }
-  
+
   return val1 === val2
 }
 
@@ -611,49 +497,42 @@ const handleSave = async () => {
     return
   }
 
-  // 如果是编辑模式，只发送改变的字段
   let saveData = {}
-  
+
   if (originalData.value) {
     // 编辑模式：对比每个字段，只保留改变的
     const currentData = { ...formData }
-    
+
     // 处理区服字段
     if (currentData.server_info && currentData.server_info.trim()) {
       if (!currentData.server_info.startsWith('h')) {
         currentData.server_info = 'h' + currentData.server_info
       }
     }
-    
+
     // 对比每个字段
     for (const key in currentData) {
-      // 跳过account字段（主键不应该被修改）
       if (key === 'account') continue
-      
-      // 处理server_info的特殊情况（原始数据可能有h前缀）
+
       if (key === 'server_info') {
         const originalServerInfo = originalData.value.server_info || ''
         const currentServerInfo = currentData.server_info || ''
-        // 统一格式后比较
         const normalizedOriginal = originalServerInfo.startsWith('h') ? originalServerInfo : ('h' + originalServerInfo)
         const normalizedCurrent = currentServerInfo.startsWith('h') ? currentServerInfo : ('h' + currentServerInfo)
         if (normalizedOriginal !== normalizedCurrent) {
           saveData[key] = currentData[key]
         }
-      } 
-      // 特殊处理密码字段：空字符串不发送
+      }
       else if (key === 'password') {
         if (currentData[key] && currentData[key] !== originalData.value[key]) {
           saveData[key] = currentData[key]
         }
       }
-      // 其他字段正常对比
       else if (!isEqual(currentData[key], originalData.value[key])) {
         saveData[key] = currentData[key]
       }
     }
-    
-    // 如果没有任何改变
+
     if (Object.keys(saveData).length === 0) {
       ElMessage.info('没有任何修改')
       return
@@ -661,7 +540,7 @@ const handleSave = async () => {
   } else {
     // 新增模式：发送所有字段
     saveData = { ...formData }
-    
+
     // 处理区服字段
     if (saveData.server_info && saveData.server_info.trim()) {
       if (!saveData.server_info.startsWith('h')) {
@@ -677,617 +556,503 @@ const handleSave = async () => {
 </script>
 
 <style scoped>
-/* 顶部操作按钮样式 */
-.top-actions {
+/* 对话框样式 */
+.user-edit-dialog :deep(.el-dialog) {
+  max-width: 1400px;
+  min-width: 800px;
+  background: var(--el-bg-color-overlay) !important;
+}
+
+.user-edit-dialog :deep(.el-dialog__body) {
+  padding: 0 24px 24px 24px;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--el-bg-color-overlay) !important;
+}
+
+/* 顶部操作栏 */
+.dialog-header {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  padding: 12px 0;
-  margin-bottom: 16px;
-  border-bottom: 1px solid var(--border-color-lighter);
+  padding: 16px 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--el-border-color-light);
   position: sticky;
   top: 0;
-  background: var(--bg-color);
+  background: var(--el-bg-color-overlay);
   z-index: 10;
 }
 
-.top-actions .el-button {
-  min-width: 80px;
-}
-
-.top-actions .el-button .el-icon {
-  margin-right: 4px;
-}
-
-.form-section {
-  margin-bottom: 12px;
-  padding: 12px 16px;
-  background: var(--bg-color-overlay);
-  border: 1px solid var(--border-color-lighter);
-  border-radius: 6px;
-  box-shadow: var(--box-shadow-base);
-  transition: all 0.3s ease;
-  overflow: hidden; /* 防止内容溢出 */
-}
-
-.form-section:hover {
-  box-shadow: var(--box-shadow-light);
-  border-color: var(--primary-color);
-}
-
-.form-section:last-child {
-  border-bottom: none;
-}
-
-.section-title {
-  margin: 0 0 12px 0;
-  padding: 6px 12px;
-  font-size: 13px;
+/* 保存按钮突出样式 */
+.save-button {
   font-weight: 600;
-  color: var(--primary-color);
-  background: linear-gradient(90deg, var(--primary-color) 0%, transparent 100%);
-  background-size: 100% 2px;
-  background-repeat: no-repeat;
-  background-position: left bottom;
-  display: inline-flex;
-  align-items: center;
-  position: relative;
+  padding: 0 20px !important;
+  box-shadow: 0 2px 4px rgba(64, 158, 255, 0.2);
+  transition: all 0.3s ease;
 }
 
-html.dark .section-title {
-  color: var(--primary-color);
-}
-
-:deep(.el-dialog__body) {
-  max-height: calc(85vh - 60px);
-  overflow-y: auto;
-  padding: 12px 24px;
-  padding-top: 0;
-  padding-right: 28px; /* 增加右侧内边距，避免内容贴边 */
-  background: var(--bg-color-page);
-}
-
-/* 紧凑布局 */
-:deep(.el-form-item) {
-  margin-bottom: 10px;
-}
-
-/* 输入框hover效果 */
-:deep(.el-input__wrapper):hover {
-  box-shadow: 0 0 0 1px var(--primary-color) inset;
-}
-
-/* focus状态优化 */
-:deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 2px var(--primary-color) inset;
-}
-
-/* 禁用状态优化 */
-:deep(.el-input.is-disabled .el-input__wrapper) {
-  cursor: not-allowed;
-  opacity: 0.7;
-}
-
-/* 按钮悬浮效果 */
-.top-actions .el-button:hover {
+.save-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.3);
 }
 
-/* 开关美化 */
-:deep(.el-switch.is-checked .el-switch__core) {
-  background-color: var(--success-color);
-  border-color: var(--success-color);
+.save-button:active {
+  transform: translateY(0);
 }
 
-/* 扩展数据Tabs样式 */
-.extension-tabs {
-  border: none;
-  box-shadow: none;
+/* 表单整体样式 */
+.user-edit-form {
+  --form-input-height: 40px;
+  --form-label-width: 100px;
 }
 
-:deep(.extension-tabs .el-tabs__content) {
-  padding: 12px;
-  background: var(--bg-color);
-  border-radius: 4px;
+/* 表单分组 */
+.form-group {
+  margin-bottom: 32px;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 8px;
+  padding: 20px;
+  transition: all 0.3s ease;
 }
 
-:deep(.extension-tabs .el-tabs__item) {
-  font-size: 12px;
-  height: 36px;
-  line-height: 36px;
+.form-group:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-color: var(--el-color-primary-light-7);
 }
 
-:deep(.extension-tabs .el-tabs__item.is-active) {
-  color: var(--primary-color);
+.group-title {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--el-color-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--el-border-color-light);
+}
+
+/* 网格布局 */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px 16px;
+  align-items: start;
+}
+
+.form-grid .full-width {
+  grid-column: span 2;
+}
+
+.form-grid.extended-data {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* 统一表单元素样式 */
+.user-edit-form :deep(.el-input),
+.user-edit-form :deep(.el-select),
+.user-edit-form :deep(.el-input-number) {
+  width: 100%;
+}
+
+.user-edit-form :deep(.el-input__wrapper),
+.user-edit-form :deep(.el-select__wrapper),
+.user-edit-form :deep(.el-input-number__wrapper) {
+  height: var(--form-input-height);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--el-border-color-base);
+}
+
+/* 亮色模式输入框悬停和聚焦效果 */
+.user-edit-form :deep(.el-input__wrapper):hover,
+.user-edit-form :deep(.el-select__wrapper):hover,
+.user-edit-form :deep(.el-input-number__wrapper):hover {
+  border-color: var(--el-color-primary-light-5);
+}
+
+.user-edit-form :deep(.el-input__wrapper):focus-within,
+.user-edit-form :deep(.el-select__wrapper):focus-within,
+.user-edit-form :deep(.el-input-number__wrapper):focus-within {
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+}
+
+.user-edit-form :deep(.el-input__inner),
+.user-edit-form :deep(.el-input-number__inner) {
+  height: var(--form-input-height);
+  line-height: var(--form-input-height);
+  font-size: 14px;
+}
+
+.user-edit-form :deep(.el-textarea__inner) {
+  font-size: 14px;
+  line-height: 1.6;
+  border-radius: 6px;
+  border: 1px solid var(--el-border-color-base);
+  transition: border-color 0.3s ease;
+}
+
+.user-edit-form :deep(.el-textarea__inner):hover {
+  border-color: var(--el-color-primary-light-5);
+}
+
+.user-edit-form :deep(.el-textarea__inner):focus {
+  border-color: var(--el-color-primary);
+  box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.1);
+}
+
+/* 表单项样式 */
+.user-edit-form :deep(.el-form-item) {
+  margin-bottom: 0;
+}
+
+.user-edit-form :deep(.el-form-item__label) {
+  font-size: 14px;
   font-weight: 500;
+  color: var(--el-text-color-regular);
+  line-height: var(--form-input-height);
+  padding-right: 12px;
 }
 
-:deep(.extension-tabs .el-textarea__inner) {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 12px;
-  line-height: 1.5;
+.user-edit-form :deep(.el-form-item__content) {
+  display: flex;
+  align-items: center;
 }
 
-/* 游戏版本下拉框特殊样式 */
-.game-platform-dropdown {
-  min-width: 200px !important;
+/* 开关样式 */
+.user-edit-form :deep(.el-switch) {
+  height: 24px;
 }
 
-.game-platform-dropdown .el-select-dropdown__item {
-  white-space: nowrap;
-  padding-right: 20px;
+/* 到期时间显示 */
+.expire-time {
+  height: var(--form-input-height);
+  line-height: var(--form-input-height);
+  padding: 0 12px;
+  background: var(--el-bg-color-page);
+  border: 1px solid var(--el-border-color-base);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--el-text-color-regular);
+  width: 100%;
+  transition: border-color 0.3s ease;
 }
 
-/* 区服输入框的前缀样式 */
-:deep(.el-input-group__prepend) {
-  background-color: var(--el-fill-color-light);
+.no-expire {
+  color: var(--el-text-color-placeholder);
+}
+
+/* 输入框前缀 */
+.user-edit-form :deep(.el-input-group__prepend) {
+  background: var(--el-bg-color-page);
+  border-color: var(--el-border-color);
   color: var(--el-text-color-regular);
   font-weight: 600;
-  padding: 0 10px;
-  min-width: 20px;
-  text-align: center;
+  padding: 0 12px;
 }
 
-/* 暗色模式下禁用输入框的样式 */
-:deep(.el-input.is-disabled .el-input__wrapper) {
-  background-color: var(--el-disabled-bg-color);
+/* 禁用状态 */
+.user-edit-form :deep(.el-input.is-disabled .el-input__wrapper) {
+  background: var(--el-bg-color-page);
+  border-color: var(--el-border-color-lighter);
+  opacity: 0.6;
 }
 
-:deep(.el-input.is-disabled .el-input__inner) {
-  color: var(--el-disabled-text-color);
-  background-color: transparent;
+.user-edit-form :deep(.el-input.is-disabled .el-input__inner) {
+  color: var(--el-text-color-placeholder);
 }
 
-/* 小屏幕特别优化（13-16寸屏幕） */
-@media (min-width: 1024px) and (max-width: 1366px) {
-  .user-edit-dialog :deep(.el-dialog) {
-    margin-top: 3vh !important;
-    width: 98% !important;
-    max-width: 1340px !important;
+/* 移动端适配 */
+.mobile-form .form-grid {
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.mobile-form .group-title {
+  font-size: 14px;
+}
+
+.mobile-form :deep(.el-form-item__label) {
+  width: 80px !important;
+  font-size: 13px;
+}
+
+.mobile-form :deep(.el-input__wrapper),
+.mobile-form :deep(.el-select__wrapper),
+.mobile-form :deep(.el-input-number__wrapper) {
+  height: 36px;
+}
+
+.mobile-form :deep(.el-input__inner),
+.mobile-form :deep(.el-input-number__inner) {
+  height: 36px;
+  line-height: 36px;
+  font-size: 14px;
+}
+
+/* 通用样式重置 - 消除所有可能的装饰符号 */
+.user-edit-dialog {
+  /* 移除所有表单元素的伪元素 */
+  :deep(*::before),
+  :deep(*::after) {
+    content: none !important;
+    display: none !important;
   }
 
-  :deep(.el-dialog__body) {
-    max-height: calc(92vh - 50px);
-    padding: 8px 16px;
-    padding-right: 20px;
+  /* 重置所有输入框的默认样式 */
+  :deep(input),
+  :deep(textarea),
+  :deep(select) {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* 暗色主题统一样式 */
+html.dark .user-edit-dialog {
+  /* 暗色主题下保存按钮特殊样式 */
+  .save-button {
+    background: linear-gradient(135deg, #409eff 0%, #337ecc 100%) !important;
+    border-color: #337ecc !important;
+    box-shadow: 0 2px 6px rgba(64, 158, 255, 0.4) !important;
   }
 
-  .form-section {
-    padding: 8px 12px;
-    margin-bottom: 8px;
-    margin-left: 0;
-    margin-right: 0;
+  .save-button:hover {
+    background: linear-gradient(135deg, #66b1ff 0%, #409eff 100%) !important;
+    border-color: #409eff !important;
+    box-shadow: 0 4px 12px rgba(64, 158, 255, 0.5) !important;
   }
 
-  .section-title {
-    font-size: 12px;
-    margin-bottom: 8px;
-    padding: 6px 10px;
-    background: linear-gradient(90deg, var(--primary-color) 0%, transparent 50%);
-    color: #fff;
-    border-radius: 4px;
-    display: inline-flex;
-    align-items: center;
-    font-weight: 500;
+  .save-button:active {
+    background: linear-gradient(135deg, #337ecc 0%, #2968b2 100%) !important;
+  }
+  /* 确保所有输入框在暗色主题下背景统一 */
+  :deep(.el-input__wrapper) {
+    background-color: #1a1b1c !important;
+    border: 1px solid #555555 !important; /* 增强边框可见性 */
+    outline: none !important;
+    box-shadow: none !important;
+    transition: border-color 0.3s ease !important;
+    position: relative;
+    overflow: hidden; /* 裁剪内部元素，防止溢出 */
   }
 
-  html.dark .section-title {
-    background: linear-gradient(90deg, var(--primary-color) 0%, transparent 60%);
+  /* 修复内层input背景覆盖边框的问题 */
+  :deep(.el-input__inner) {
+    background-color: transparent !important; /* 内层透明，只用外层背景 */
+    border: none !important;
+    padding: 0 11px !important; /* 稍微减少padding，避免触碰边界 */
   }
 
-  /* 关键字段最小宽度保证 */
-  :deep(.el-col-lg-6),
-  :deep(.el-col-lg-5),
-  :deep(.el-col-lg-4),
-  :deep(.el-col-lg-3) {
-    padding-left: 4px !important;
-    padding-right: 4px !important;
+  :deep(.el-input__wrapper):hover {
+    border-color: #737373 !important; /* 悬停时更明显 */
   }
 
-  :deep(.el-col-lg-6) .el-input,
-  :deep(.el-col-lg-5) .el-input,
-  :deep(.el-col-lg-4) .el-input,
-  :deep(.el-col-lg-3) .el-input {
-    min-width: auto !important;
+  :deep(.el-input__wrapper):focus-within {
+    border-color: var(--input-focus-border) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) !important; /* 添加聚焦光晕 */
   }
 
-  /* 账号、密码、关联账户、主账户 */
-  :deep(.el-form-item[prop="account"] .el-input),
-  :deep(.el-form-item[prop="password"] .el-input) {
-    min-width: 150px !important;
-  }
-
-  :deep(.el-form-item[prop="real_account"] .el-input),
-  :deep(.el-form-item[prop="main_account"] .el-input) {
-    min-width: 140px !important;
-  }
-
-  /* 联系方式、游戏版本 */
-  :deep(.el-form-item[prop="contact"] .el-input) {
-    min-width: 140px !important;
-  }
-
-  /* 游戏版本需要更宽以显示完整内容 */
-  :deep(.el-form-item[prop="game_platform"] .el-select) {
-    min-width: 180px !important;
-  }
-
-  /* 游戏版本下拉框选项宽度 */
-  :deep(.el-select-dropdown) {
-    min-width: 200px !important;
-  }
-
-  /* 区名、区服、区号 */
-  :deep(.el-form-item[prop="server_name"] .el-input) {
-    min-width: 120px !important;
-  }
-
-  :deep(.el-form-item[prop="server_info"] .el-input) {
-    min-width: 140px !important;
-  }
-
-  :deep(.el-form-item[prop="server_zone"] .el-input) {
-    min-width: 100px !important;
-  }
-
-  /* 会员级别、充值金额、分桶号 */
-  :deep(.el-form-item[prop="membership_level"] .el-select) {
-    min-width: 130px !important;
-  }
-
-  :deep(.el-form-item[prop="membership_pay_money"] .el-input-number) {
-    min-width: 120px !important;
-  }
-
-  :deep(.el-form-item[prop="bucket"] .el-input) {
-    min-width: 100px !important;
-  }
-
-  /* 可截断字段使用省略号 */
-  :deep(.el-form-item[prop="websocket_url"] .el-input__inner),
-  :deep(.el-form-item[prop="game_web_url"] .el-input__inner),
-  :deep(.el-form-item[prop="banner"] .el-input__inner),
-  :deep(.el-form-item[prop="remarks"] .el-input__inner) {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  :deep(.el-select .el-input__wrapper) {
+    background-color: #1a1b1c !important;
+    border: 1px solid #555555 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: border-color 0.3s ease !important;
+    position: relative;
     overflow: hidden;
   }
 
-  :deep(.el-form-item__label) {
-    font-size: 11px;
-    padding-right: 6px;
-    color: var(--text-color-regular);
-    font-weight: 500;
-    flex-shrink: 0;
-    white-space: nowrap;
+  /* 修复select内层背景问题 */
+  :deep(.el-select .el-input__inner) {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 11px !important;
   }
 
-  /* 到期时间字段特殊处理 */
-  :deep(.el-form-item[prop="membership_expire_date"]) {
-    min-width: 200px !important;
+  :deep(.el-select .el-input__wrapper):hover {
+    border-color: #737373 !important;
   }
 
-  :deep(.el-form-item[prop="membership_expire_date"] .el-form-item__content) {
-    white-space: nowrap;
+  :deep(.el-select .el-input__wrapper):focus-within {
+    border-color: var(--input-focus-border) !important;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) !important;
+  }
+
+  :deep(.el-input-number .el-input__wrapper) {
+    background-color: #1a1b1c !important;
+    border: 1px solid #555555 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: border-color 0.3s ease !important;
+    position: relative;
     overflow: hidden;
-    text-overflow: ellipsis;
   }
 
-  :deep(.el-input--small) {
-    font-size: 11px;
+  /* 修复数字输入框内层背景问题 */
+  :deep(.el-input-number .el-input__inner) {
+    background-color: transparent !important;
+    border: none !important;
+    padding: 0 50px !important; /* 数字输入框需要给按钮留空间 */
   }
 
-  :deep(.el-input--small .el-input__inner) {
-    height: 26px;
-    line-height: 26px;
+  :deep(.el-input-number .el-input__wrapper):hover {
+    border-color: #737373 !important;
   }
 
-  :deep(.el-form-item) {
-    margin-bottom: 6px;
-  }
-}
-
-/* 防止内容溢出 */
-:deep(.el-row) {
-  margin-left: -5px !important;
-  margin-right: -5px !important;
-}
-
-:deep(.el-col) {
-  padding-left: 5px !important;
-  padding-right: 5px !important;
-}
-
-/* 确保到期时间不换行 */
-:deep(.el-form-item[prop="membership_expire_date"] .el-text) {
-  white-space: nowrap;
-  display: inline-block;
-}
-
-/* PC端标准样式 */
-@media (min-width: 1367px) {
-  .user-edit-dialog :deep(.el-dialog) {
-    margin-top: 5vh !important;
+  :deep(.el-input-number .el-input__wrapper):focus-within {
+    border-color: var(--input-focus-border) !important;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) !important;
   }
 
-  :deep(.el-dialog__body) {
-    max-height: calc(88vh - 50px);
-    padding: 10px 16px;
-    padding-top: 0;
+  :deep(.el-textarea .el-textarea__inner) {
+    background-color: #1a1b1c !important;
+    border: 1px solid #555555 !important;
+    color: var(--text-color-primary) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: border-color 0.3s ease !important;
   }
 
-  :deep(.el-dialog__header) {
-    padding: 12px 16px;
+  :deep(.el-textarea .el-textarea__inner):hover {
+    border-color: #737373 !important;
   }
 
-  .form-section {
-    padding: 4px 0;
-    margin-bottom: 6px;
+  :deep(.el-textarea .el-textarea__inner):focus {
+    border-color: var(--input-focus-border) !important;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) !important;
   }
 
-  .section-title {
-    font-size: 11px;
-    margin-bottom: 6px;
+  /* 移除所有可能的伪元素和异常样式 */
+  :deep(.el-input__wrapper::before),
+  :deep(.el-input__wrapper::after),
+  :deep(.el-input__inner::before),
+  :deep(.el-input__inner::after),
+  :deep(.el-select__wrapper::before),
+  :deep(.el-select__wrapper::after),
+  :deep(.el-input-number__wrapper::before),
+  :deep(.el-input-number__wrapper::after) {
+    display: none !important;
+    content: none !important;
   }
 
-  :deep(.el-form-item) {
-    margin-bottom: 8px;
+  /* 确保所有wrapper使用border-box */
+  :deep(.el-input__wrapper),
+  :deep(.el-select__wrapper),
+  :deep(.el-input-number__wrapper) {
+    box-sizing: border-box !important;
   }
 
-  :deep(.el-form-item__label) {
-    font-size: 12px;
-    padding-right: 8px;
+  /* 移除浏览器默认的输入框装饰 */
+  :deep(.el-input__inner),
+  :deep(.el-textarea__inner),
+  :deep(.el-input-number__inner) {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    border-radius: 6px !important;
   }
 
-  :deep(.el-input--small) {
-    font-size: 12px;
+  /* 移除选择框的默认样式 */
+  :deep(.el-select__wrapper) {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+    outline: none !important;
+    box-shadow: none !important;
   }
 
-  :deep(.el-input--small .el-input__inner) {
-    height: 28px;
-    line-height: 28px;
+  /* 表单分组背景统一 */
+  .form-group {
+    background: #242526 !important; /* 稍亮的背景色，增加层次感 */
+    border: 1px solid #444444 !important; /* 明显的边框线 */
   }
 
-  :deep(.el-select--small) {
-    font-size: 12px;
+  .form-group:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    border-color: #555555 !important;
   }
 
-  :deep(.el-textarea__inner) {
-    font-size: 12px;
-    padding: 3px 7px;
+  /* 分组标题样式优化 */
+  .group-title {
+    border-bottom: 2px solid #444444 !important; /* 加粗分割线 */
   }
 
-  :deep(.el-input-number--small) {
-    width: 100%;
+  /* 到期时间显示框 */
+  .expire-time {
+    background: #1a1b1c !important;
+    border: 1px solid #555555 !important;
+    color: var(--text-color-regular) !important;
   }
 
-  :deep(.el-input-number--small .el-input__inner) {
-    height: 28px;
-    line-height: 28px;
-  }
-
-  :deep(.el-button--small) {
-    padding: 5px 11px;
-    font-size: 12px;
-  }
-
-  :deep(.el-switch--small) {
-    height: 16px;
-  }
-
-  :deep(.el-text) {
-    font-size: 12px;
-  }
-}
-
-/* 超大屏幕优化 */
-@media (min-width: 1920px) {
-  :deep(.el-dialog__body) {
-    max-height: calc(90vh - 50px);
-  }
-
-  .form-section {
-    padding: 16px 20px;
-  }
-
-  :deep(.el-form-item__label) {
-    font-size: 13px;
-  }
-
-  :deep(.el-input--small .el-input__inner) {
-    font-size: 13px;
-    height: 32px;
-  }
-}
-
-/* 移动端样式优化 */
-@media (max-width: 767px) {
-  /* 全屏对话框的特殊处理 */
-  :deep(.el-dialog.is-fullscreen) {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    margin: 0 !important;
-    position: fixed !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    bottom: 0 !important;
-    z-index: 3000 !important; /* 确保在最顶层 */
-  }
-
-  /* 遮罩层也要提高z-index */
-  :deep(.el-overlay) {
-    z-index: 2999 !important;
-  }
-
-  :deep(.el-dialog.is-fullscreen .el-dialog__header) {
-    padding: 16px;
-    padding-top: calc(60px + env(safe-area-inset-top, 0)); /* 增大顶部间距，避免被顶部banner遮挡 */
-    border-bottom: 1px solid var(--el-border-color-lighter);
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    background: var(--el-bg-color);
-    z-index: 100;
-  }
-
-  :deep(.el-dialog.is-fullscreen .el-dialog__body) {
-    flex: 1;
-    overflow-y: auto;
-    padding: 8px 12px;
-    padding-top: 20px; /* 增加顶部内边距 */
-    padding-bottom: calc(120px + env(safe-area-inset-bottom, 0)) !important; /* 增大底部间距，确保内容不被遮挡 */
-    -webkit-overflow-scrolling: touch;
-    /* 确保滚动区域高度正确 */
-    max-height: calc(100vh - 120px); /* 调整最大高度，给顶部留出更多空间 */
-    height: 100%;
-  }
-
-  /* 移动端表单样式 */
-  .mobile-form {
-    padding: 0;
-    padding-top: 10px; /* 增加顶部内边距 */
-    padding-bottom: 100px !important; /* 为整个表单添加底部内边距，避免被导航栏遮挡 */
-  }
-
-  /* 移动端区块样式 */
-  .mobile-section {
-    background: var(--el-bg-color);
-    border-radius: 8px;
-    padding: 8px 12px !important;
-    margin-bottom: 12px !important; /* 增加区块间距 */
-    border: 1px solid var(--el-border-color-lighter);
-  }
-
-  /* 第一个区块增加顶部间距 */
-  .mobile-section:first-child {
-    margin-top: 20px !important;
-  }
-
-  .mobile-section:last-child {
-    margin-bottom: 80px !important; /* 最后一个区块增加更大的底部间距 */
-  }
-
-  /* 移动端标题样式 */
-  .mobile-title {
-    font-size: 13px !important;
-    font-weight: 600;
-    color: var(--primary-color);
-    margin: 0 0 8px 0 !important;
-    padding-bottom: 6px;
-    border-bottom: 1px solid var(--border-color-lighter);
-  }
-
-  /* 移动端表单项 */
-  :deep(.mobile-form .el-form-item) {
-    margin-bottom: 12px !important;
-    display: flex;
-    align-items: center;
-  }
-
-  :deep(.mobile-form .el-form-item:last-child) {
-    margin-bottom: 0 !important;
-  }
-
-  :deep(.mobile-form .el-form-item__label) {
-    width: 70px !important;
-    padding-right: 8px !important;
-    font-size: 13px !important;
-    color: var(--text-color-regular);
-    line-height: 32px !important;
-    flex-shrink: 0;
-  }
-
-  :deep(.mobile-form .el-form-item__content) {
-    flex: 1;
-    margin-left: 0 !important;
-  }
-
-  /* 输入框样式 */
-  :deep(.mobile-form .el-input--small .el-input__inner),
-  :deep(.mobile-form .el-input--small .el-input__wrapper) {
-    height: 32px !important;
-    font-size: 14px !important;
-  }
-
-  :deep(.mobile-form .el-select--small) {
-    width: 100% !important;
-  }
-
-  :deep(.mobile-form .el-input-number--small) {
-    width: 100% !important;
-  }
-
-  :deep(.mobile-form .el-input-number--small .el-input__inner) {
-    height: 32px !important;
-  }
-
-  /* 文本域样式 */
-  :deep(.mobile-form .el-textarea__inner) {
-    font-size: 13px !important;
-    padding: 6px 8px !important;
-    min-height: 60px !important;
-  }
-
-  /* 开关样式 */
-  :deep(.mobile-form .el-switch) {
-    height: 20px !important;
-  }
-
-  /* 按钮样式 */
-  :deep(.mobile-form .el-button--small) {
-    height: 32px !important;
-    padding: 0 12px !important;
-    font-size: 14px !important;
-  }
-
-  /* 移动端顶部按钮样式 */
-  .mobile-top-actions {
-    position: sticky;
-    top: 0;
-    background: var(--el-bg-color);
-    z-index: 100;
-    padding: 12px;
-    padding-top: calc(20px + env(safe-area-inset-top, 0)); /* 增大顶部间距 */
-    margin-bottom: 12px;
-    margin-top: 10px; /* 增加顶部外边距 */
-    border-bottom: 1px solid var(--el-border-color-lighter);
-    display: flex;
-    gap: 8px;
-  }
-
-  .mobile-top-actions .el-button {
-    flex: 1;
-    height: 36px;
-  }
-
-  /* 移动端列布局优化 */
-  :deep(.el-col-xs-24) {
-    padding: 0 !important;
-  }
-
-  /* 隐藏部分不必要的装饰元素 */
+  /* 输入框前缀 */
   :deep(.el-input-group__prepend) {
-    padding: 0 8px !important;
-    font-size: 13px !important;
+    background: #2a2b2c !important;
+    border: 1px solid #555555 !important;
+    color: var(--text-color-regular) !important;
+  }
+
+  /* 禁用状态输入框 - 特殊处理 */
+  :deep(.el-input.is-disabled .el-input__wrapper) {
+    background: #151617 !important; /* 更暗的背景 */
+    border: 1px solid #404040 !important; /* 边框稍微明显一点 */
+    opacity: 1 !important; /* 不使用透明度，避免边框变淡 */
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* 禁用状态的内层也要透明 */
+  :deep(.el-input.is-disabled .el-input__inner) {
+    background-color: transparent !important;
+    border: none !important;
+    color: #888888 !important; /* 文字颜色调整 */
+    -webkit-text-fill-color: #888888 !important; /* 确保文字颜色生效 */
+  }
+
+  /* placeholder 文字颜色优化 */
+  :deep(.el-input__inner::placeholder) {
+    color: #6a6a6a !important;
+  }
+
+  :deep(.el-textarea__inner::placeholder) {
+    color: #6a6a6a !important;
+  }
+
+  /* 对话框头部分割线加强 */
+  .dialog-header {
+    border-bottom: 2px solid #444444 !important;
   }
 }
 
-/* 平板端样式 */
-@media (min-width: 768px) and (max-width: 1023px) {
-  :deep(.el-dialog__body) {
-    max-height: calc(80vh - 55px);
-    padding-top: 0;
+/* 响应式适配 */
+@media (max-width: 1200px) {
+  .form-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .user-edit-dialog :deep(.el-dialog) {
+    min-width: auto;
   }
 
-  .form-section {
-    padding: 8px 0;
-  }
-
-  :deep(.el-form-item) {
-    margin-bottom: 12px;
+  .form-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

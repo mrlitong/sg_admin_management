@@ -196,24 +196,29 @@ export function useTableResponsive() {
  * 对话框响应式配置Hook
  */
 export function useDialogResponsive() {
-  const { isMobile, isTablet } = useResponsive()
-  
-  // 对话框宽度
+  const { isMobile, isTablet, windowWidth } = useResponsive()
+
+  // 对话框宽度 - 针对编辑表单优化
   const dialogWidth = computed(() => {
     if (isMobile.value) return '95%'
-    if (isTablet.value) return '80%'
-    return '50%'
+    if (isTablet.value) return '90%'
+
+    // 桌面端根据屏幕宽度动态调整
+    if (windowWidth.value >= 1920) return '85%'  // 4K屏幕
+    if (windowWidth.value >= 1600) return '90%'  // 大屏幕
+    if (windowWidth.value >= 1366) return '95%'  // 标准桌面
+    return '98%'  // 小屏桌面
   })
-  
+
   // 是否全屏显示
   const fullscreen = computed(() => isMobile.value)
-  
+
   // 对话框最大高度
   const maxHeight = computed(() => {
     if (isMobile.value) return '100vh'
-    return '80vh'
+    return '90vh'
   })
-  
+
   return {
     dialogWidth,
     fullscreen,
