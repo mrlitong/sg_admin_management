@@ -11,14 +11,14 @@
       ref="rechargeFormRef"
       :model="rechargeForm"
       :rules="rules"
-      :label-width="isMobile ? '80px' : '100px'"
+      :label-width="isMobile ? 'auto' : '100px'"
       :label-position="isMobile ? 'top' : 'right'"
     >
       <el-form-item label="充值账号">
         <el-input 
           v-model="userData.account" 
           disabled
-          :size="isMobile ? 'large' : 'default'"
+          :size="'default'"
         />
       </el-form-item>
       
@@ -34,7 +34,7 @@
           placeholder="保持当前等级"
           clearable
           style="width: 100%"
-          :size="isMobile ? 'large' : 'default'"
+          :size="'default'"
         >
           <el-option
             v-for="(level, key) in availableLevels"
@@ -55,11 +55,17 @@
         </div>
       </el-form-item>
       
-      <el-form-item label="当前充值金额">
-        <el-text>￥{{ userData.membership_pay_money || 0 }}</el-text>
+      <el-form-item v-if="!isMobile" label="当前充值金额">
+        <span style="display: inline-block; line-height: 32px; color: var(--el-text-color-regular);">
+          ￥{{ userData.membership_pay_money || 0 }}
+        </span>
       </el-form-item>
-      
-      <el-form-item label="当前到期时间">
+      <div v-else class="mobile-info-item">
+        <span class="mobile-info-label">累计金额：</span>
+        <span class="mobile-info-value">￥{{ userData.membership_pay_money || 0 }}</span>
+      </div>
+
+      <el-form-item v-if="!isMobile" label="当前到期时间">
         <div style="display: flex; align-items: center; flex-wrap: wrap;">
           <el-text>{{ formatDate(userData.membership_expire_date) }}</el-text>
           <template v-if="calculatedExpireDate">
@@ -71,6 +77,16 @@
           </template>
         </div>
       </el-form-item>
+      <div v-else class="mobile-info-item">
+        <span class="mobile-info-label">到期时间：</span>
+        <span class="mobile-info-value">{{ formatDate(userData.membership_expire_date) }}</span>
+        <template v-if="calculatedExpireDate">
+          <div style="margin-top: 4px; color: #67c23a; font-size: 12px;">
+            → {{ formatDate(calculatedExpireDate) }} (延长{{ addedDays }}天)
+          </div>
+        </template>
+      </div>
+
       
       <el-form-item label="充值金额" prop="amount">
         <el-input-number
@@ -79,7 +95,7 @@
           :precision="2"
           placeholder="请输入充值金额"
           style="width: 100%"
-          :size="isMobile ? 'large' : 'default'"
+          :size="'default'"
         >
           <template #prefix>¥</template>
         </el-input-number>
@@ -91,10 +107,10 @@
       
       <el-form-item label="充值时长" prop="duration">
         <!-- 模式选择标签页 -->
-        <el-radio-group 
-          v-model="durationModeType" 
-          style="margin-bottom: 12px;"
-          :size="isMobile ? 'default' : 'default'"
+        <el-radio-group
+          v-model="durationModeType"
+          style="margin-bottom: 8px; width: 100%;"
+          :size="isMobile ? 'small' : 'default'"
         >
           <el-radio-button label="quick">快速选择</el-radio-button>
           <el-radio-button label="days">自定义天数</el-radio-button>
@@ -108,7 +124,7 @@
             placeholder="请选择充值类型"
             style="width: 100%;"
             @change="handleQuickSelect"
-            :size="isMobile ? 'large' : 'default'"
+            :size="'default'"
           >
             <el-option label="1天卡" :value="1" />
             <el-option label="3天卡" :value="3" />
@@ -135,7 +151,7 @@
             style="width: 100%;"
             :controls-position="'right'"
             @change="handleDaysChange"
-            :size="isMobile ? 'large' : 'default'"
+            :size="'default'"
           />
         </div>
         
@@ -150,7 +166,7 @@
             value-format="YYYY-MM-DD HH:mm:ss"
             :disabled-date="disabledDate"
             @change="handleDirectDateChange"
-            :size="isMobile ? 'large' : 'default'"
+            :size="'default'"
           />
         </div>
       </el-form-item>
@@ -159,9 +175,9 @@
         <el-input
           v-model="rechargeForm.remark"
           type="textarea"
-          :rows="isMobile ? 2 : 3"
+          :rows="2"
           placeholder="请输入备注信息（选填）"
-          :size="isMobile ? 'large' : 'default'"
+          :size="'default'"
         />
       </el-form-item>
     </el-form>
@@ -380,6 +396,27 @@ const handleConfirm = async () => {
   justify-content: flex-end;
 }
 
+/* 移动端信息项样式 */
+.mobile-info-item {
+  padding: 8px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  font-size: 14px;
+}
+
+.mobile-info-label {
+  color: var(--el-text-color-regular);
+  font-size: 13px;
+  display: inline-block;
+  min-width: 70px;
+}
+
+.mobile-info-value {
+  color: var(--el-text-color-primary);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 /* 移动端样式优化 */
 @media (max-width: 767px) {
   :deep(.el-dialog) {
@@ -388,61 +425,130 @@ const handleConfirm = async () => {
     height: 100vh;
     margin: 0 !important;
   }
-  
+
   :deep(.el-dialog__header) {
-    padding: 16px;
+    padding: 12px 16px;
     border-bottom: 1px solid #e4e7ed;
     flex-shrink: 0;
   }
-  
+
+  :deep(.el-dialog__title) {
+    font-size: 16px;
+  }
+
   :deep(.el-dialog__body) {
     flex: 1;
     overflow-y: auto;
-    /* 为系统UI预留底部安全区域 */
-    padding-bottom: 20px;
-    /* 支持iOS安全区域 */
-    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    padding: 12px 16px;
+    /* 为底部按钮栏预留空间，避免内容被遮挡 */
+    padding-bottom: 70px;
   }
-  
+
   :deep(.el-dialog__footer) {
     border-top: 1px solid #e4e7ed;
-    position: sticky;
+    position: fixed;
     bottom: 0;
-    background: white;
+    left: 0;
+    right: 0;
+    background: var(--el-bg-color);
     z-index: 10;
-    flex-shrink: 0;
-    /* 为系统按钮预留底部空间 */
-    padding-bottom: 60px;
-    /* 支持iOS安全区域 */
-    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+    padding: 12px 16px;
+    /* 减小底部预留空间 */
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   }
-  
+
+  /* 暗色主题适配 */
+  :deep(.el-dialog__footer[data-theme="dark"]) {
+    background: var(--el-bg-color-page);
+  }
+
+  /* 减小表单项间距 */
   :deep(.el-form-item) {
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
-  
+
   :deep(.el-form-item__label) {
-    padding-bottom: 4px;
+    padding-bottom: 2px;
+    font-size: 13px;
+    line-height: 1.2;
+    white-space: nowrap !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: auto !important;
+    max-width: 100%;
+    text-align: left !important;
+    display: block !important;
   }
-  
+
+  /* 减小输入控件字体大小 */
+  :deep(.el-input__inner),
+  :deep(.el-input-number__input-inner),
+  :deep(.el-select__input),
+  :deep(.el-textarea__inner) {
+    font-size: 14px;
+  }
+
+  /* 减小标签字体大小 */
+  :deep(.el-tag) {
+    font-size: 12px;
+  }
+
+  /* 优化单选按钮组 */
   :deep(.el-radio-group) {
     display: flex;
     flex-wrap: wrap;
   }
-  
+
   :deep(.el-radio-button) {
+    margin-bottom: 6px;
+  }
+
+  :deep(.el-radio-button__inner) {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+
+  /* 减小备注框高度和最后一项的间距 */
+  :deep(.el-form-item:last-child) {
     margin-bottom: 8px;
   }
-  
-  /* 减少备注框最后一项的间距，避免过多占用空间 */
-  :deep(.el-form-item:last-child) {
-    margin-bottom: 12px;
-  }
-  
-  /* 确保textarea不会过高 */
+
+  /* 限制textarea高度 */
   :deep(.el-textarea__inner) {
-    max-height: 80px;
+    max-height: 60px;
+    min-height: 50px;
     resize: none;
+    font-size: 13px;
+  }
+
+  /* 优化按钮大小和间距 */
+  :deep(.el-button) {
+    font-size: 14px;
+    padding: 8px 15px;
+  }
+
+  /* 优化选择器下拉项的高度 */
+  :deep(.el-select-dropdown__item) {
+    font-size: 13px;
+    padding: 0 10px;
+    height: 32px;
+    line-height: 32px;
+  }
+
+  /* 优化日期选择器 */
+  :deep(.el-date-editor) {
+    font-size: 14px;
+  }
+
+  /* 优化提示文字 */
+  :deep(.el-form-item__error) {
+    font-size: 11px;
+  }
+
+  /* 提示信息字体大小 */
+  div[style*="color: #409EFF"],
+  div[style*="color: #E6A23C"] {
+    font-size: 11px !important;
   }
 }
 </style>
