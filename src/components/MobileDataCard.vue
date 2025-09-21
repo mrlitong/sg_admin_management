@@ -4,33 +4,18 @@
     <div class="card-header">
       <div class="card-title">
         <span class="account">{{ userData.account }}</span>
-        <el-tag 
-          v-if="membershipLevel !== null && membershipLevel >= 0"
-          :type="getMembershipTagType(membershipLevel)" 
-          size="small"
-          effect="dark"
-        >
-          {{ getMembershipLabel(membershipLevel) }}
-        </el-tag>
-        <el-tag 
-          v-else
-          type="info"
-          size="small"
-        >
-          未开通
-        </el-tag>
       </div>
-      <el-dropdown 
+      <el-dropdown
         v-if="showActions"
         @command="handleCommand"
         @click.stop
         trigger="click"
         placement="bottom-end"
       >
-        <el-button 
-          type="text" 
-          :icon="MoreFilled" 
-          circle 
+        <el-button
+          type="text"
+          :icon="MoreFilled"
+          circle
           size="small"
           @click.stop
         />
@@ -52,66 +37,72 @@
     
     <!-- 卡片内容 -->
     <div class="card-body">
+      <!-- 第一行：在线状态和最后在线时间 -->
+      <div class="info-row-compact">
+        <div class="compact-item">
+          <span class="compact-label">状态:</span>
+          <span class="compact-value" :class="localAuxiliaryOnline ? 'text-success' : 'text-regular'">
+            {{ localAuxiliaryOnline ? '在线' : '离线' }}
+          </span>
+        </div>
+        <div class="compact-item">
+          <span class="compact-label">最后在线:</span>
+          <span class="compact-value">{{ userData.last_online_time ? formatDateTime(userData.last_online_time) : '-' }}</span>
+        </div>
+      </div>
+
+      <!-- 第二行：会员级别和充值金额 -->
+      <div class="info-row-compact">
+        <div class="compact-item">
+          <span class="compact-label">会员:</span>
+          <el-tag
+            v-if="membershipLevel !== null && membershipLevel >= 0"
+            :type="getMembershipTagType(membershipLevel)"
+            size="small"
+            effect="dark"
+          >
+            {{ getMembershipLabel(membershipLevel) }}
+          </el-tag>
+          <span v-else class="compact-value">未开通</span>
+        </div>
+        <div class="compact-item">
+          <span class="compact-label">充值:</span>
+          <span class="compact-value text-primary">¥{{ userData.membership_pay_money || 0 }}</span>
+        </div>
+      </div>
+
       <!-- 基本信息 -->
       <div class="info-row" v-if="userData.real_account">
         <span class="info-label">真实账号:</span>
         <span class="info-value">{{ userData.real_account }}</span>
       </div>
-      
+
       <div class="info-row" v-if="userData.main_account">
         <span class="info-label">主账号:</span>
         <span class="info-value">{{ userData.main_account }}</span>
       </div>
-      
-      <div class="info-row" v-if="userData.contact">
-        <span class="info-label">联系方式:</span>
-        <span class="info-value">{{ userData.contact }}</span>
+
+      <!-- 第三行：区服和到期时间 -->
+      <div class="info-row-compact" v-if="userData.server_name || membershipExpireDate">
+        <div class="compact-item" v-if="userData.server_name">
+          <span class="compact-label">区服:</span>
+          <span class="compact-value">{{ userData.server_name }}{{ userData.server_info ? `-${userData.server_info}` : '' }}</span>
+        </div>
+        <div class="compact-item" v-if="membershipExpireDate">
+          <span class="compact-label">到期:</span>
+          <span class="compact-value" :class="{ 'text-danger': isExpiringSoon }">
+            {{ formatDate(membershipExpireDate) }}
+          </span>
+        </div>
       </div>
-      
-      <div class="info-row" v-if="userData.server_name">
-        <span class="info-label">区服:</span>
-        <span class="info-value">{{ userData.server_name }}{{ userData.server_info ? ` - ${userData.server_info}` : '' }}</span>
-      </div>
-      
-      <!-- 会员信息 -->
-      <div class="info-row" v-if="membershipExpireDate">
-        <span class="info-label">到期时间:</span>
-        <span class="info-value" :class="{ 'text-danger': isExpiringSoon }">
-          {{ formatDate(membershipExpireDate) }}
-        </span>
-      </div>
-      
-      <div class="info-row" v-if="userData.membership_pay_money">
-        <span class="info-label">付费金额:</span>
-        <span class="info-value text-primary">¥{{ userData.membership_pay_money }}</span>
-      </div>
-      
+
       <!-- 备注 -->
       <div class="info-row remark" v-if="userData.remarks">
         <span class="info-label">备注:</span>
         <span class="info-value text-ellipsis-2">{{ userData.remarks }}</span>
       </div>
     </div>
-    
-    <!-- 卡片底部操作 -->
-    <div class="card-footer" v-if="showFooterActions">
-      <div class="footer-actions">
-        <el-switch
-          v-if="showToggle"
-          v-model="localAuxiliaryOnline"
-          :loading="toggleLoading"
-          size="small"
-          inline-prompt
-          active-text="开"
-          inactive-text="关"
-          @change="handleToggleChange"
-          @click.stop
-        />
-        <span v-if="userData.last_online_time" class="last-online">
-          最后在线: {{ formatDateTime(userData.last_online_time) }}
-        </span>
-      </div>
-    </div>
+
   </div>
 </template>
 
@@ -131,25 +122,16 @@ const props = defineProps({
     type: Boolean,
     default: true
   },
-  showToggle: {
-    type: Boolean,
-    default: true
-  },
-  showFooterActions: {
-    type: Boolean,
-    default: true
-  },
   selectable: {
     type: Boolean,
     default: false
   }
 })
 
-const emit = defineEmits(['edit', 'delete', 'toggle', 'click', 'recharge'])
+const emit = defineEmits(['edit', 'delete', 'click', 'recharge'])
 
 // 本地状态
-const localAuxiliaryOnline = ref(props.userData.auxiliary_online === 1)
-const toggleLoading = ref(false)
+const localAuxiliaryOnline = ref(props.userData.is_open === 1)
 
 // 计算属性
 const membershipLevel = computed(() => props.userData.membership_level)
@@ -228,29 +210,15 @@ const handleDelete = () => {
   })
 }
 
-// 处理开关切换
-const handleToggleChange = async (value) => {
-  toggleLoading.value = true
-  try {
-    await emit('toggle', props.userData, value)
-    ElMessage.success(value ? '已开启挂机' : '已关闭挂机')
-  } catch (error) {
-    // 恢复原状态
-    localAuxiliaryOnline.value = !value
-    ElMessage.error('操作失败')
-  } finally {
-    toggleLoading.value = false
-  }
-}
 </script>
 
 <style scoped>
 .mobile-card {
   background: var(--card-bg);
-  border-radius: 8px;
-  padding: 12px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  border-radius: 6px;
+  padding: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   transition: all 0.3s;
   cursor: pointer;
 }
@@ -265,50 +233,53 @@ const handleToggleChange = async (value) => {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 12px;
-  padding-bottom: 8px;
+  margin-bottom: 6px;
+  padding-bottom: 6px;
   border-bottom: 1px solid var(--border-color-lighter);
 }
 
 .card-title {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex: 1;
 }
 
 .account {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--text-color-primary);
 }
 
 /* 卡片内容 */
 .card-body {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .info-row {
   display: flex;
   align-items: flex-start;
-  margin-bottom: 6px;
-  font-size: 14px;
+  margin-bottom: 4px;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .info-row.remark {
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 .info-label {
   color: var(--text-color-regular);
-  min-width: 70px;
+  min-width: 60px;
   flex-shrink: 0;
+  font-size: 12px;
 }
 
 .info-value {
   color: var(--text-color-secondary);
   flex: 1;
   word-break: break-all;
+  font-size: 12px;
 }
 
 .info-value.text-primary {
@@ -320,23 +291,73 @@ const handleToggleChange = async (value) => {
   color: var(--danger-color);
 }
 
-/* 卡片底部 */
-.card-footer {
-  margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border-color-lighter);
-}
-
-.footer-actions {
+/* 紧凑信息行样式 */
+.info-row-compact {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 11px;
+  line-height: 1.4;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 4px;
+  padding: 4px 6px;
 }
 
-.last-online {
-  font-size: 12px;
+:global(.dark) .info-row-compact {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.compact-item {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.compact-label {
+  color: var(--text-color-regular);
+  font-size: 11px;
+  margin-right: 2px;
+  flex-shrink: 0;
+}
+
+.compact-value {
+  color: var(--text-color-secondary);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.compact-value.text-primary {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.compact-value.text-danger {
+  color: var(--danger-color);
+}
+
+.compact-value.text-success {
+  color: var(--success-color, #67c23a);
+  font-weight: 600;
+}
+
+.compact-value.text-regular {
   color: var(--text-color-regular);
 }
+
+/* 会员标签在紧凑行中的样式 */
+.compact-item :deep(.el-tag) {
+  margin-left: 2px;
+  vertical-align: middle;
+  display: inline-flex;
+  align-items: center;
+}
+
 
 /* 文本省略 */
 .text-ellipsis-2 {
@@ -349,31 +370,18 @@ const handleToggleChange = async (value) => {
 
 /* 标签样式覆盖 */
 :deep(.el-tag) {
-  height: 20px;
-  line-height: 18px;
-  padding: 0 6px;
-  font-size: 12px;
-}
-
-/* 开关样式覆盖 */
-:deep(.el-switch) {
-  height: 20px;
-}
-
-:deep(.el-switch__core) {
-  height: 20px;
-  min-width: 40px;
-}
-
-:deep(.el-switch__inner) {
+  height: 18px;
+  line-height: 16px;
+  padding: 0 5px;
   font-size: 11px;
 }
 
+
 /* 下拉按钮样式 */
 :deep(.el-button.is-circle) {
-  width: 28px;
-  height: 28px;
-  padding: 6px;
+  width: 24px;
+  height: 24px;
+  padding: 4px;
 }
 
 /* 选中状态 */

@@ -102,8 +102,8 @@
               :shortcuts="dateShortcuts"
             />
           </el-form-item>
-          <el-form-item label="备注信息">
-            <el-input v-model="filterForm.remarks" placeholder="支持模糊查询" clearable size="large" />
+          <el-form-item label="备注">
+            <el-input v-model="filterForm.remarks" placeholder="支持模糊查询" clearable size="default" />
           </el-form-item>
           <el-form-item label="在线状态">
             <el-select v-model="filterForm.auxiliary_online" placeholder="请选择" clearable size="large" style="width: 100%">
@@ -137,7 +137,7 @@
       description="您需要输入具体的账号信息才能查询用户数据"
       :closable="false"
       show-icon
-      style="margin-bottom: 20px"
+      style="margin-bottom: 10px"
     />
 
     <!-- 查询结果统计 -->
@@ -160,12 +160,9 @@
         :key="item.id"
         :user-data="item"
         :show-actions="isSuper"
-        :show-toggle="isSuper"
-        :show-footer-actions="true"
         @recharge="handleRecharge"
         @edit="handleEdit"
         @delete="handleDelete"
-        @toggle="handleToggleAuxiliary"
       />
 
       <!-- 移动端分页 -->
@@ -250,7 +247,6 @@ const {
   handleEdit,
   handleSaveUser,
   handleDelete,
-  handleToggleAuxiliary,
   handleRecharge,
   handleRechargeConfirm,
   handleTransferConfirm,
@@ -270,21 +266,21 @@ onMounted(() => {
 
 <style scoped>
 .user-data-container {
-  padding: 12px;
+  padding: 8px;
   background: transparent;
 }
 
 .mobile-toolbar {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
 .toolbar-left,
 .toolbar-right {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
 }
 
@@ -292,26 +288,54 @@ onMounted(() => {
   justify-content: flex-start;
 }
 
+.toolbar-left :deep(.el-button.is-circle) {
+  width: 32px;
+  height: 32px;
+}
+
 .toolbar-right {
   flex-direction: row;
-  gap: 8px;
+  gap: 6px;
+}
+
+.toolbar-right :deep(.el-button.is-circle) {
+  width: 32px;
+  height: 32px;
+}
+
+.toolbar-right :deep(.el-input) {
+  font-size: 14px;
+}
+
+.toolbar-right :deep(.el-input__inner) {
+  height: 32px;
+  line-height: 32px;
+  font-size: 14px;
 }
 
 /* 高级筛选移动端优化 */
 .mobile-filter {
   background: var(--bg-color-secondary);
-  padding: 12px;
-  margin-bottom: 12px;
+  padding: 8px;
+  margin-bottom: 8px;
   border-radius: 4px;
 }
 
 .mobile-filter :deep(.el-form-item__label) {
-  width: 80px !important;
-  font-size: 13px;
+  width: 70px !important;
+  font-size: 12px;
+  padding: 0;
+  line-height: 1.2;
 }
 
 .mobile-filter :deep(.el-form-item) {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+}
+
+.mobile-filter :deep(.el-button) {
+  font-size: 13px;
+  padding: 6px 12px;
+  height: auto;
 }
 
 /* 移动端卡片容器 */
@@ -321,36 +345,50 @@ onMounted(() => {
 
 /* 移动端分页 */
 .mobile-pagination {
-  margin-top: 16px;
-  padding: 12px 0;
+  margin-top: 10px;
+  padding: 8px 0;
   display: flex;
   justify-content: center;
 }
 
+.mobile-pagination :deep(.el-pager li) {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+  font-size: 12px;
+}
+
+.mobile-pagination :deep(.btn-prev),
+.mobile-pagination :deep(.btn-next) {
+  width: 28px;
+  height: 28px;
+  line-height: 28px;
+}
+
 /* 结果统计移动端 */
 .result-summary {
-  margin-bottom: 12px;
-  padding: 8px 12px;
+  margin-bottom: 8px;
+  padding: 6px 10px;
   background-color: var(--bg-color-secondary);
   border: 1px solid var(--border-color-light);
   border-radius: 4px;
   display: flex;
   align-items: center;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .result-summary .el-text {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
+  gap: 6px;
+  font-size: 12px;
   color: var(--text-color-regular);
 }
 
 .result-summary strong {
   color: var(--primary-color);
-  font-size: 16px;
-  margin: 0 4px;
+  font-size: 14px;
+  margin: 0 2px;
   font-weight: 600;
 }
 
@@ -360,5 +398,45 @@ onMounted(() => {
     max-height: calc(100vh - 180px);
     overflow-y: auto;
   }
+}
+
+/* Alert 组件紧凑样式 */
+:deep(.el-alert) {
+  padding: 8px 12px;
+}
+
+:deep(.el-alert__title) {
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+:deep(.el-alert__description) {
+  font-size: 12px;
+  line-height: 1.4;
+  margin: 4px 0 0;
+}
+
+:deep(.el-alert__icon) {
+  font-size: 14px;
+}
+
+/* 输入框组件优化 */
+:deep(.el-input--default .el-input__inner) {
+  height: 32px;
+  line-height: 32px;
+  font-size: 14px;
+}
+
+:deep(.el-select--default) {
+  font-size: 14px;
+}
+
+:deep(.el-input-number--default) {
+  line-height: 30px;
+}
+
+:deep(.el-input-number--default .el-input__inner) {
+  height: 30px;
+  line-height: 30px;
 }
 </style>
