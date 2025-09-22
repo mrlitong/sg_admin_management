@@ -131,7 +131,7 @@ const props = defineProps({
 const emit = defineEmits(['edit', 'delete', 'click', 'recharge'])
 
 // 本地状态
-const localAuxiliaryOnline = ref(props.userData.is_open === 1)
+const localAuxiliaryOnline = ref(props.userData.auxiliary_online === 1)
 
 // 计算属性
 const membershipLevel = computed(() => props.userData.membership_level)
