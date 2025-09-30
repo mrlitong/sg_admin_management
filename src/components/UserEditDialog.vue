@@ -778,21 +778,39 @@ const handleSave = async () => {
   font-size: 14px;
 }
 
+/* 移动端表单项改为垂直布局 */
+.mobile-form :deep(.el-form-item) {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .mobile-form :deep(.el-form-item__label) {
-  width: 80px !important;
+  width: 100% !important;
+  text-align: left !important;
+  padding: 0 0 4px 0 !important;
   font-size: 13px;
+  height: auto !important;
+  line-height: 1.5 !important;
+}
+
+.mobile-form :deep(.el-form-item__content) {
+  margin-left: 0 !important;
+  width: 100% !important;
 }
 
 .mobile-form :deep(.el-input__wrapper),
 .mobile-form :deep(.el-select__wrapper),
-.mobile-form :deep(.el-input-number__wrapper) {
-  height: 36px;
+.mobile-form :deep(.el-input-number__wrapper),
+.mobile-form :deep(.el-date-editor) {
+  height: 40px;
+  width: 100% !important;
 }
 
 .mobile-form :deep(.el-input__inner),
 .mobile-form :deep(.el-input-number__inner) {
-  height: 36px;
-  line-height: 36px;
+  height: 40px;
+  line-height: 40px;
   font-size: 14px;
 }
 
