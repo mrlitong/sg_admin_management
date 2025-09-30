@@ -108,14 +108,14 @@
           游戏信息
         </h3>
         <div class="form-grid">
-          <el-form-item label="区名" prop="server_name">
+          <el-form-item label="区名" prop="server_name" :class="{ 'full-width-mobile': isMobile }">
             <el-input
               v-model="formData.server_name"
               placeholder="请输入区名"
             />
           </el-form-item>
 
-          <el-form-item label="区服" prop="server_info">
+          <el-form-item label="区服" prop="server_info" :class="{ 'full-width-mobile': isMobile }">
             <el-input
               v-model="formData.server_info"
               placeholder="例如：4_5"
@@ -124,14 +124,14 @@
             </el-input>
           </el-form-item>
 
-          <el-form-item label="区号" prop="server_zone">
+          <el-form-item label="区号" prop="server_zone" :class="{ 'full-width-mobile': isMobile }">
             <el-input
               v-model="formData.server_zone"
               placeholder="请输入区号"
             />
           </el-form-item>
 
-          <div></div> <!-- 空占位，保持网格对齐 -->
+          <div v-if="!isMobile"></div> <!-- 桌面端空占位，保持网格对齐 -->
 
           <el-form-item label="服务器地址" prop="websocket_url" class="full-width">
             <el-input
@@ -778,6 +778,11 @@ const handleSave = async () => {
   font-size: 14px;
 }
 
+/* 移动端确保游戏信息字段占满全宽 */
+.mobile-form .full-width-mobile {
+  grid-column: 1 / -1;
+}
+
 /* 移动端表单项改为垂直布局 */
 .mobile-form :deep(.el-form-item) {
   display: flex;
@@ -799,10 +804,17 @@ const handleSave = async () => {
   width: 100% !important;
 }
 
+.mobile-form :deep(.el-input),
+.mobile-form :deep(.el-select),
+.mobile-form :deep(.el-input-number),
+.mobile-form :deep(.el-date-editor) {
+  width: 100% !important;
+}
+
 .mobile-form :deep(.el-input__wrapper),
 .mobile-form :deep(.el-select__wrapper),
 .mobile-form :deep(.el-input-number__wrapper),
-.mobile-form :deep(.el-date-editor) {
+.mobile-form :deep(.el-date-editor .el-input__wrapper) {
   height: 40px;
   width: 100% !important;
 }
@@ -812,6 +824,15 @@ const handleSave = async () => {
   height: 40px;
   line-height: 40px;
   font-size: 14px;
+}
+
+/* 移动端带前缀的输入框特殊处理 */
+.mobile-form :deep(.el-input-group) {
+  width: 100% !important;
+}
+
+.mobile-form :deep(.el-input-group__prepend) {
+  padding: 0 8px;
 }
 
 /* 通用样式重置 - 消除所有可能的装饰符号 */
