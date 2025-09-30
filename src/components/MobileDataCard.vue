@@ -82,13 +82,25 @@
         <span class="info-value">{{ userData.main_account }}</span>
       </div>
 
-      <!-- 第三行：区服和到期时间 -->
-      <div class="info-row-compact" v-if="userData.server_name || membershipExpireDate">
+      <!-- 游戏信息：区名、区服、区号 -->
+      <div class="info-row-compact game-info-row" v-if="userData.server_name || userData.server_info || userData.server_zone">
         <div class="compact-item" v-if="userData.server_name">
-          <span class="compact-label">区服:</span>
-          <span class="compact-value">{{ userData.server_name }}{{ userData.server_info ? `-${userData.server_info}` : '' }}</span>
+          <span class="compact-label">区名:</span>
+          <span class="compact-value">{{ userData.server_name }}</span>
         </div>
-        <div class="compact-item" v-if="membershipExpireDate">
+        <div class="compact-item" v-if="userData.server_info">
+          <span class="compact-label">区服:</span>
+          <span class="compact-value">{{ userData.server_info }}</span>
+        </div>
+        <div class="compact-item" v-if="userData.server_zone">
+          <span class="compact-label">区号:</span>
+          <span class="compact-value">{{ userData.server_zone }}</span>
+        </div>
+      </div>
+
+      <!-- 到期时间单独一行 -->
+      <div class="info-row-compact" v-if="membershipExpireDate">
+        <div class="compact-item">
           <span class="compact-label">到期:</span>
           <span class="compact-value" :class="{ 'text-danger': isExpiringSoon }">
             {{ formatDate(membershipExpireDate) }}
@@ -307,6 +319,17 @@ const handleDelete = () => {
 
 :global(.dark) .info-row-compact {
   background: rgba(255, 255, 255, 0.02);
+}
+
+/* 游戏信息行 - 支持换行显示 */
+.game-info-row {
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.game-info-row .compact-item {
+  flex: 0 0 calc(33.333% - 3px);
+  min-width: 0;
 }
 
 .compact-item {
