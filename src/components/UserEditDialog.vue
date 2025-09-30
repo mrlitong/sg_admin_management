@@ -191,12 +191,15 @@
           </el-form-item>
 
           <el-form-item label="到期时间" prop="membership_expire_date">
-            <div class="expire-time">
-              <span v-if="formData.membership_expire_date">
-                {{ formatExpireDate(formData.membership_expire_date) }}
-              </span>
-              <span v-else class="no-expire">无到期时间</span>
-            </div>
+            <el-date-picker
+              v-model="formData.membership_expire_date"
+              type="datetime"
+              placeholder="选择到期时间"
+              format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              style="width: 100%"
+              clearable
+            />
           </el-form-item>
         </div>
       </div>
@@ -727,22 +730,22 @@ const handleSave = async () => {
   height: 24px;
 }
 
-/* 到期时间显示 */
-.expire-time {
-  height: var(--form-input-height);
-  line-height: var(--form-input-height);
-  padding: 0 12px;
-  background: var(--el-bg-color-page);
-  border: 1px solid var(--el-border-color-base);
-  border-radius: 6px;
-  font-size: 14px;
-  color: var(--el-text-color-regular);
+/* 日期选择器样式 */
+.user-edit-form :deep(.el-date-editor) {
   width: 100%;
-  transition: border-color 0.3s ease;
 }
 
-.no-expire {
-  color: var(--el-text-color-placeholder);
+.user-edit-form :deep(.el-date-editor .el-input__wrapper) {
+  height: var(--form-input-height);
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  border: 1px solid var(--el-border-color-base);
+}
+
+.user-edit-form :deep(.el-date-editor .el-input__inner) {
+  height: var(--form-input-height);
+  line-height: var(--form-input-height);
+  font-size: 14px;
 }
 
 /* 输入框前缀 */
@@ -987,11 +990,30 @@ html.dark .user-edit-dialog {
     border-bottom: 2px solid #444444 !important; /* 加粗分割线 */
   }
 
-  /* 到期时间显示框 */
-  .expire-time {
-    background: #1a1b1c !important;
+  /* 日期选择器在暗色主题下的样式 */
+  :deep(.el-date-editor .el-input__wrapper) {
+    background-color: #1a1b1c !important;
     border: 1px solid #555555 !important;
-    color: var(--text-color-regular) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    transition: border-color 0.3s ease !important;
+    position: relative;
+    overflow: hidden;
+  }
+
+  :deep(.el-date-editor .el-input__inner) {
+    background-color: transparent !important;
+    border: none !important;
+    color: var(--text-color-primary) !important;
+  }
+
+  :deep(.el-date-editor .el-input__wrapper):hover {
+    border-color: #737373 !important;
+  }
+
+  :deep(.el-date-editor .el-input__wrapper):focus-within {
+    border-color: var(--input-focus-border) !important;
+    box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2) !important;
   }
 
   /* 输入框前缀 */
