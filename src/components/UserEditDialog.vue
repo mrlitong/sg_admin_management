@@ -48,8 +48,6 @@
             <el-input
               v-model="formData.password"
               placeholder="请输入密码"
-              type="password"
-              show-password
             />
           </el-form-item>
 
