@@ -288,7 +288,14 @@ export function useUserData() {
         ElMessage.success('创建成功')
       }
       editDialogVisible.value = false
-      fetchData()
+      // 重置到第一页，保持筛选条件
+      pagination.page = 1
+      // 根据当前模式刷新数据
+      if (isDefaultMode.value) {
+        fetchDefaultData()
+      } else {
+        fetchData()
+      }
     } catch (error) {
       console.error('保存失败:', error)
     }
@@ -304,7 +311,12 @@ export function useUserData() {
       try {
         await deleteUser(row.account)
         ElMessage.success('删除成功')
-        fetchData()
+        // 删除后保持当前页，如果当前页没有数据了会自动调整
+        if (isDefaultMode.value) {
+          fetchDefaultData()
+        } else {
+          fetchData()
+        }
       } catch (error) {
         console.error('删除失败:', error)
       }
@@ -322,7 +334,13 @@ export function useUserData() {
       try {
         await batchDeleteUsers(accounts)
         ElMessage.success('批量删除成功')
-        fetchData()
+        // 批量删除后重置到第一页
+        pagination.page = 1
+        if (isDefaultMode.value) {
+          fetchDefaultData()
+        } else {
+          fetchData()
+        }
       } catch (error) {
         console.error('批量删除失败:', error)
       }
@@ -408,6 +426,8 @@ export function useUserData() {
       ElMessage.success(messages.join('，'))
 
       rechargeDialogVisible.value = false
+      // 重置到第一页，保持筛选条件
+      pagination.page = 1
       // 刷新当前页面数据
       if (isDefaultMode.value) {
         fetchDefaultData()
@@ -427,6 +447,8 @@ export function useUserData() {
       if (res.code === 0) {
         ElMessage.success(`会员转移成功！已将 ${transferData.source_account} 的会员权益转移到 ${transferData.target_account}`)
         transferDialogVisible.value = false
+        // 重置到第一页，保持筛选条件
+        pagination.page = 1
         // 刷新当前页面数据
         if (isDefaultMode.value) {
           fetchDefaultData()
