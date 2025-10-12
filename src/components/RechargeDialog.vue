@@ -4,7 +4,7 @@
     title="用户充值"
     :width="dialogWidth"
     :fullscreen="isMobile"
-    :close-on-click-modal="!isMobile"
+    :close-on-click-modal="false"
     @close="handleClose"
   >
     <el-form
