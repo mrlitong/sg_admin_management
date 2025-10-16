@@ -29,6 +29,35 @@
       class="user-edit-form"
       :class="{ 'mobile-form': isMobile }"
     >
+      <!-- 复制已有用户 - 仅新增模式显示 -->
+      <div v-if="!userData" class="form-group copy-user-group">
+        <h3 class="group-title">
+          <el-icon><CopyDocument /></el-icon>
+          复制已有用户数据
+        </h3>
+        <div class="copy-user-content" :class="{ 'mobile-layout': isMobile }">
+          <el-input
+            v-model="copyFromAccount"
+            placeholder="输入要复制的账号"
+            clearable
+            :style="{ width: isMobile ? '100%' : '280px' }"
+            @keyup.enter="handleCopyUserData"
+          />
+          <el-button
+            type="primary"
+            :loading="copying"
+            @click="handleCopyUserData"
+            :size="isMobile ? 'default' : 'default'"
+          >
+            <el-icon><CopyDocument /></el-icon>
+            复制数据
+          </el-button>
+          <span class="copy-hint" v-if="!isMobile">
+            💡 复制后会自动填充所有字段（账号除外），您只需修改新账号即可
+          </span>
+        </div>
+      </div>
+
       <!-- 基本信息 -->
       <div class="form-group">
         <h3 class="group-title">
@@ -289,7 +318,7 @@
 <script setup>
 import { ref, reactive, watch, computed } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Close, Check, User, Trophy, Star, Setting, DataAnalysis } from '@element-plus/icons-vue'
+import { Close, Check, User, Trophy, Star, Setting, DataAnalysis, CopyDocument } from '@element-plus/icons-vue'
 import { MEMBERSHIP_LEVELS, GAME_PLATFORMS } from '../utils/constants'
 import { useResponsive } from '../utils/responsive'
 import request from '../utils/request'
@@ -307,6 +336,10 @@ const { isMobile } = useResponsive()
 const formRef = ref()
 const originalData = ref(null)
 const validating = ref(false)
+
+// 复制用户数据相关
+const copyFromAccount = ref('')
+const copying = ref(false)
 
 const formData = reactive({
   account: '',
@@ -423,6 +456,84 @@ const handleUserSettingChange = () => {
     }
   } catch (error) {
     ElMessage.error('用户设置JSON格式错误')
+  }
+}
+
+// 复制已有用户数据
+const handleCopyUserData = async () => {
+  if (!copyFromAccount.value || !copyFromAccount.value.trim()) {
+    ElMessage.warning('请输入要复制的账号')
+    return
+  }
+
+  copying.value = true
+
+  try {
+    const sourceAccount = copyFromAccount.value.trim()
+    const response = await request.get(`/admin/users/${sourceAccount}`)
+    const userData = response.data
+
+    if (!userData) {
+      ElMessage.error('用户不存在')
+      return
+    }
+
+    // 填充表单数据，但排除account字段（账号必须手动输入）
+    Object.keys(userData).forEach(key => {
+      if (key !== 'account' && key in formData) {
+        formData[key] = userData[key]
+      }
+    })
+
+    // 1. 账号保持为空（已默认排除）
+    formData.account = ''
+
+    // 2. 主账户设置为原账号A
+    formData.main_account = sourceAccount
+
+    // 3. 区名、区服、区号、服务器地址清空
+    formData.server_name = ''
+    formData.server_info = ''
+    formData.server_zone = ''
+    formData.websocket_url = ''
+
+    // 4. 会员信息重置
+    formData.membership_level = 3  // 钻石会员
+    formData.membership_pay_money = 0
+    formData.bucket = 0
+    formData.membership_expire_date = null
+
+    // 5. 系统设置
+    formData.is_open = 1
+    formData.dingding = 1
+
+    // 6. 扩展数据设置为空对象
+    formData.user_login_data = '{}'
+    formData.game_info = {}
+    formData.user_setting = {}
+
+    // 处理JSON字段的文本框显示
+    gameInfoText.value = '{}'
+    userSettingText.value = '{}'
+
+    ElMessage.success({
+      message: `已成功复制 ${sourceAccount} 的数据，请输入新账号后保存`,
+      duration: 3000
+    })
+
+    // 清空复制账号输入框
+    copyFromAccount.value = ''
+  } catch (error) {
+    console.error('复制用户数据失败:', error)
+    if (error.response?.status === 404) {
+      ElMessage.error('用户不存在')
+    } else if (error.response?.status === 403) {
+      ElMessage.error('无权限访问该用户')
+    } else {
+      ElMessage.error(error.response?.data?.message || '复制失败，请稍后重试')
+    }
+  } finally {
+    copying.value = false
   }
 }
 
@@ -621,6 +732,44 @@ const handleSave = async () => {
 .form-group:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   border-color: var(--el-color-primary-light-7);
+}
+
+/* 复制用户区域 - 特殊样式 */
+.copy-user-group {
+  background: linear-gradient(135deg, #f5f7fa 0%, #eef2f7 100%);
+  border: 2px dashed var(--el-color-primary-light-5);
+  box-shadow: 0 2px 4px rgba(64, 158, 255, 0.1);
+}
+
+.copy-user-group:hover {
+  border-color: var(--el-color-primary-light-3);
+  box-shadow: 0 4px 8px rgba(64, 158, 255, 0.15);
+}
+
+.copy-user-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.copy-hint {
+  font-size: 13px;
+  color: var(--el-text-color-secondary);
+  line-height: 1.5;
+  flex: 1;
+  min-width: 200px;
+}
+
+/* 移动端复制区域布局 */
+.copy-user-content.mobile-layout {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.copy-user-content.mobile-layout .el-button {
+  width: 100%;
+  margin-top: 8px;
 }
 
 .group-title {
@@ -1089,6 +1238,22 @@ html.dark .user-edit-dialog {
   /* 对话框头部分割线加强 */
   .dialog-header {
     border-bottom: 2px solid #444444 !important;
+  }
+
+  /* 复制用户区域 - 暗色主题 */
+  .copy-user-group {
+    background: linear-gradient(135deg, #2a2b2c 0%, #242526 100%) !important;
+    border: 2px dashed var(--el-color-primary-light-3) !important;
+    box-shadow: 0 2px 4px rgba(64, 158, 255, 0.2) !important;
+  }
+
+  .copy-user-group:hover {
+    border-color: var(--el-color-primary) !important;
+    box-shadow: 0 4px 8px rgba(64, 158, 255, 0.3) !important;
+  }
+
+  .copy-hint {
+    color: #b3b3b3 !important;
   }
 }
 
