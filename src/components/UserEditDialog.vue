@@ -7,19 +7,8 @@
     :close-on-click-modal="!isMobile"
     @close="handleClose"
     class="user-edit-dialog"
+    :class="{ 'is-mobile': isMobile }"
   >
-    <!-- 顶部操作按钮 -->
-    <div class="dialog-header">
-      <el-button @click="handleClose" :size="isMobile ? 'small' : 'default'">
-        <el-icon><Close /></el-icon>
-        取消
-      </el-button>
-      <el-button type="primary" @click="handleSave" :size="isMobile ? 'small' : 'default'" class="save-button">
-        <el-icon><Check /></el-icon>
-        保存
-      </el-button>
-    </div>
-
     <el-form
       ref="formRef"
       :model="formData"
@@ -29,295 +18,307 @@
       class="user-edit-form"
       :class="{ 'mobile-form': isMobile }"
     >
-      <!-- 复制已有用户 - 仅新增模式显示 -->
-      <div v-if="!userData" class="form-group copy-user-group">
-        <h3 class="group-title">
-          <el-icon><CopyDocument /></el-icon>
-          复制已有用户数据
-        </h3>
-        <div class="copy-user-content" :class="{ 'mobile-layout': isMobile }">
-          <el-input
-            v-model="copyFromAccount"
-            placeholder="输入要复制的账号"
-            clearable
-            :style="{ width: isMobile ? '100%' : '280px' }"
-            @keyup.enter="handleCopyUserData"
-          />
-          <el-button
-            type="primary"
-            :loading="copying"
-            @click="handleCopyUserData"
-            :size="isMobile ? 'default' : 'default'"
-          >
+      <div class="section-grid" :class="{ 'is-mobile': isMobile }">
+        <!-- 复制已有用户 - 仅新增模式显示 -->
+        <div v-if="!userData" class="form-group copy-user-group section-full">
+          <h3 class="group-title">
             <el-icon><CopyDocument /></el-icon>
-            复制数据
-          </el-button>
-          <span class="copy-hint" v-if="!isMobile">
-            💡 复制后会自动填充所有字段（账号除外），您只需修改新账号即可
-          </span>
-        </div>
-      </div>
-
-      <!-- 基本信息 -->
-      <div class="form-group">
-        <h3 class="group-title">
-          <el-icon><User /></el-icon>
-          基本信息
-        </h3>
-        <div class="form-grid">
-          <el-form-item label="账号" prop="account">
+            复制已有用户数据
+          </h3>
+          <div class="copy-user-content" :class="{ 'mobile-layout': isMobile }">
             <el-input
-              v-model="formData.account"
-              placeholder="请输入账号"
-              :disabled="!!userData"
+              v-model="copyFromAccount"
+              placeholder="输入要复制的账号"
+              clearable
+              :style="{ width: isMobile ? '100%' : '260px' }"
+              @keyup.enter="handleCopyUserData"
             />
-          </el-form-item>
-
-          <el-form-item label="密码" prop="password">
-            <el-input
-              v-model="formData.password"
-              placeholder="请输入密码"
-            />
-          </el-form-item>
-
-          <el-form-item label="关联账户" prop="real_account">
-            <el-input
-              v-model="formData.real_account"
-              placeholder="请输入关联账户"
-            />
-          </el-form-item>
-
-          <el-form-item label="主账户" prop="main_account">
-            <el-input
-              v-model="formData.main_account"
-              placeholder="请输入主账户"
-            />
-          </el-form-item>
-
-          <el-form-item label="联系方式" prop="contact">
-            <el-input
-              v-model="formData.contact"
-              placeholder="微信号/手机号"
-            />
-          </el-form-item>
-
-          <el-form-item label="游戏版本" prop="game_platform">
-            <el-select
-              v-model="formData.game_platform"
-              placeholder="请选择游戏版本"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="(label, value) in GAME_PLATFORMS"
-                :key="value"
-                :label="label"
-                :value="Number(value)"
-              />
-            </el-select>
-          </el-form-item>
-
-          <el-form-item label="账号校验" v-if="formData.game_platform === 0">
             <el-button
               type="primary"
-              @click="validateAccount"
-              :loading="validating"
+              :loading="copying"
+              @click="handleCopyUserData"
+              :size="isMobile ? 'small' : 'default'"
             >
-              校验账号密码
+              <el-icon><CopyDocument /></el-icon>
+              复制数据
             </el-button>
-          </el-form-item>
+            <span class="copy-hint" v-if="!isMobile">
+              💡 复制后会自动填充所有字段（账号除外），您只需修改新账号即可
+            </span>
+          </div>
         </div>
-      </div>
 
-      <!-- 游戏信息 -->
-      <div class="form-group">
-        <h3 class="group-title">
-          <el-icon><Trophy /></el-icon>
-          游戏信息
-        </h3>
-        <div class="form-grid">
-          <el-form-item label="区名" prop="server_name" :class="{ 'full-width-mobile': isMobile }">
-            <el-input
-              v-model="formData.server_name"
-              placeholder="请输入区名"
-            />
-          </el-form-item>
-
-          <el-form-item label="区服" prop="server_info" :class="{ 'full-width-mobile': isMobile }">
-            <el-input
-              v-model="formData.server_info"
-              placeholder="例如：4_5"
-            >
-              <template #prepend>h</template>
-            </el-input>
-          </el-form-item>
-
-          <el-form-item label="区号" prop="server_zone" :class="{ 'full-width-mobile': isMobile }">
-            <el-input
-              v-model="formData.server_zone"
-              placeholder="请输入区号"
-            />
-          </el-form-item>
-
-          <div v-if="!isMobile"></div> <!-- 桌面端空占位，保持网格对齐 -->
-
-          <el-form-item label="服务器地址" prop="websocket_url" class="full-width">
-            <el-input
-              v-model="formData.websocket_url"
-              placeholder="服务器地址"
-            />
-          </el-form-item>
-
-          <el-form-item label="游戏链接" prop="game_web_url" class="full-width">
-            <el-input
-              v-model="formData.game_web_url"
-              placeholder="游戏Web链接地址"
-            />
-          </el-form-item>
-        </div>
-      </div>
-
-      <!-- 会员信息 -->
-      <div class="form-group">
-        <h3 class="group-title">
-          <el-icon><Star /></el-icon>
-          会员信息
-        </h3>
-        <div class="form-grid">
-          <el-form-item label="会员级别" prop="membership_level">
-            <el-select
-              v-model="formData.membership_level"
-              placeholder="请选择会员级别"
-              style="width: 100%"
-            >
-              <el-option
-                v-for="(info, value) in MEMBERSHIP_LEVELS"
-                :key="value"
-                :label="info.label"
-                :value="Number(value)"
+        <!-- 基本信息 -->
+        <div class="form-group section-basic">
+          <h3 class="group-title">
+            <el-icon><User /></el-icon>
+            基本信息
+          </h3>
+          <div class="form-grid">
+            <el-form-item label="账号" prop="account">
+              <el-input
+                v-model="formData.account"
+                placeholder="请输入账号"
+                :disabled="!!userData"
               />
-            </el-select>
-          </el-form-item>
+            </el-form-item>
 
-          <el-form-item label="充值金额" prop="membership_pay_money">
-            <el-input-number
-              v-model="formData.membership_pay_money"
-              :min="0"
-              placeholder="充值金额"
-              style="width: 100%"
-              :controls="false"
-            />
-          </el-form-item>
+            <el-form-item label="密码" prop="password">
+              <el-input
+                v-model="formData.password"
+                placeholder="请输入密码"
+              />
+            </el-form-item>
 
-          <el-form-item label="分桶号" prop="bucket">
-            <el-input
-              :model-value="formData.bucket !== null && formData.bucket !== undefined ? String(formData.bucket) : ''"
-              placeholder="系统自动分配"
-              disabled
-              style="width: 100%"
-            />
-          </el-form-item>
+            <el-form-item label="关联账户" prop="real_account">
+              <el-input
+                v-model="formData.real_account"
+                placeholder="请输入关联账户"
+              />
+            </el-form-item>
 
-          <el-form-item label="到期时间" prop="membership_expire_date">
-            <el-date-picker
-              v-model="formData.membership_expire_date"
-              type="datetime"
-              placeholder="选择到期时间"
-              format="YYYY-MM-DD HH:mm:ss"
-              value-format="YYYY-MM-DD HH:mm:ss"
-              style="width: 100%"
-              clearable
-            />
-          </el-form-item>
+            <el-form-item label="主账户" prop="main_account">
+              <el-input
+                v-model="formData.main_account"
+                placeholder="请输入主账户"
+              />
+            </el-form-item>
+
+            <el-form-item label="联系方式" prop="contact">
+              <el-input
+                v-model="formData.contact"
+                placeholder="微信号/手机号"
+              />
+            </el-form-item>
+
+            <el-form-item label="游戏版本" prop="game_platform">
+              <el-select
+                v-model="formData.game_platform"
+                placeholder="请选择游戏版本"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="(label, value) in GAME_PLATFORMS"
+                  :key="value"
+                  :label="label"
+                  :value="Number(value)"
+                />
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="账号校验" v-if="formData.game_platform === 0" class="action-item">
+              <el-button
+                type="primary"
+                @click="validateAccount"
+                :loading="validating"
+                :size="isMobile ? 'small' : 'default'"
+              >
+                校验账号密码
+              </el-button>
+            </el-form-item>
+          </div>
         </div>
-      </div>
 
-      <!-- 系统设置 -->
-      <div class="form-group">
-        <h3 class="group-title">
-          <el-icon><Setting /></el-icon>
-          系统设置
-        </h3>
-        <div class="form-grid">
-          <el-form-item label="开启状态" prop="is_open">
-            <el-switch
-              v-model="formData.is_open"
-              :active-value="1"
-              :inactive-value="0"
-              active-text="开启"
-              inactive-text="关闭"
-            />
-          </el-form-item>
+        <!-- 游戏信息 -->
+        <div class="form-group section-game">
+          <h3 class="group-title">
+            <el-icon><Trophy /></el-icon>
+            游戏信息
+          </h3>
+          <div class="form-grid">
+            <el-form-item label="区名" prop="server_name" :class="{ 'full-width-mobile': isMobile }">
+              <el-input
+                v-model="formData.server_name"
+                placeholder="请输入区名"
+              />
+            </el-form-item>
 
-          <el-form-item label="钉钉通知" prop="dingding">
-            <el-switch
-              v-model="formData.dingding"
-              :active-value="1"
-              :inactive-value="0"
-              active-text="开启"
-              inactive-text="关闭"
-            />
-          </el-form-item>
+            <el-form-item label="区服" prop="server_info" :class="{ 'full-width-mobile': isMobile }">
+              <el-input
+                v-model="formData.server_info"
+                placeholder="例如：4_5"
+              >
+                <template #prepend>h</template>
+              </el-input>
+            </el-form-item>
 
-          <el-form-item label="横幅通知" prop="banner" class="full-width">
-            <el-input
-              v-model="formData.banner"
-              placeholder="横幅通知内容"
-            />
-          </el-form-item>
+            <el-form-item label="区号" prop="server_zone" :class="{ 'full-width-mobile': isMobile }">
+              <el-input
+                v-model="formData.server_zone"
+                placeholder="请输入区号"
+              />
+            </el-form-item>
 
-          <el-form-item label="备注信息" prop="remarks" class="full-width">
-            <el-input
-              v-model="formData.remarks"
-              placeholder="备注信息"
-            />
-          </el-form-item>
+            <div v-if="!isMobile" class="grid-placeholder"></div>
+
+            <el-form-item label="服务器地址" prop="websocket_url" class="full-width">
+              <el-input
+                v-model="formData.websocket_url"
+                placeholder="服务器地址"
+              />
+            </el-form-item>
+
+            <el-form-item label="游戏链接" prop="game_web_url" class="full-width">
+              <el-input
+                v-model="formData.game_web_url"
+                placeholder="游戏Web链接地址"
+              />
+            </el-form-item>
+          </div>
         </div>
-      </div>
 
-      <!-- 扩展数据 -->
-      <div class="form-group" v-if="!isMobile">
-        <h3 class="group-title">
-          <el-icon><DataAnalysis /></el-icon>
-          扩展数据
-        </h3>
-        <div class="form-grid extended-data">
-          <el-form-item label="登录数据" prop="user_login_data">
-            <el-input
-              v-model="formData.user_login_data"
-              type="textarea"
-              :rows="4"
-              placeholder="用户登录相关数据"
-            />
-          </el-form-item>
+        <!-- 会员信息 -->
+        <div class="form-group section-membership">
+          <h3 class="group-title">
+            <el-icon><Star /></el-icon>
+            会员信息
+          </h3>
+          <div class="form-grid">
+            <el-form-item label="会员级别" prop="membership_level">
+              <el-select
+                v-model="formData.membership_level"
+                placeholder="请选择会员级别"
+                style="width: 100%"
+              >
+                <el-option
+                  v-for="(info, value) in MEMBERSHIP_LEVELS"
+                  :key="value"
+                  :label="info.label"
+                  :value="Number(value)"
+                />
+              </el-select>
+            </el-form-item>
 
-          <el-form-item label="游戏信息" prop="game_info">
-            <el-input
-              v-model="gameInfoText"
-              type="textarea"
-              :rows="4"
-              placeholder="JSON格式的游戏信息"
-              @blur="handleGameInfoChange"
-            />
-          </el-form-item>
+            <el-form-item label="充值金额" prop="membership_pay_money">
+              <el-input-number
+                v-model="formData.membership_pay_money"
+                :min="0"
+                placeholder="充值金额"
+                style="width: 100%"
+                :controls="false"
+              />
+            </el-form-item>
 
-          <el-form-item label="用户设置" prop="user_setting">
-            <el-input
-              v-model="userSettingText"
-              type="textarea"
-              :rows="4"
-              placeholder="JSON格式的用户设置"
-              @blur="handleUserSettingChange"
-            />
-          </el-form-item>
+            <el-form-item label="分桶号" prop="bucket">
+              <el-input
+                :model-value="formData.bucket !== null && formData.bucket !== undefined ? String(formData.bucket) : ''"
+                placeholder="系统自动分配"
+                disabled
+                style="width: 100%"
+              />
+            </el-form-item>
+
+            <el-form-item label="到期时间" prop="membership_expire_date">
+              <el-date-picker
+                v-model="formData.membership_expire_date"
+                type="datetime"
+                placeholder="选择到期时间"
+                format="YYYY-MM-DD HH:mm:ss"
+                value-format="YYYY-MM-DD HH:mm:ss"
+                style="width: 100%"
+                clearable
+              />
+            </el-form-item>
+          </div>
+        </div>
+
+        <!-- 系统设置 -->
+        <div class="form-group section-system">
+          <h3 class="group-title">
+            <el-icon><Setting /></el-icon>
+            系统设置
+          </h3>
+          <div class="form-grid">
+            <el-form-item label="开启状态" prop="is_open">
+              <el-switch
+                v-model="formData.is_open"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+
+            <el-form-item label="挂机权限" prop="dingding">
+              <el-switch
+                v-model="formData.dingding"
+                :active-value="1"
+                :inactive-value="0"
+              />
+            </el-form-item>
+
+            <el-form-item label="横幅通知" prop="banner" class="full-width banner-item">
+              <el-input
+                v-model="formData.banner"
+                placeholder="横幅通知内容"
+              />
+            </el-form-item>
+
+            <el-form-item label="备注信息" prop="remarks" class="full-width remarks-item">
+              <el-input
+                v-model="formData.remarks"
+                placeholder="备注信息"
+              />
+            </el-form-item>
+          </div>
+        </div>
+
+        <!-- 扩展数据 -->
+        <div class="form-group section-extended section-full" v-if="!isMobile">
+          <h3 class="group-title">
+            <el-icon><DataAnalysis /></el-icon>
+            扩展数据
+          </h3>
+          <div class="form-grid extended-data">
+            <el-form-item label="登录数据" prop="user_login_data">
+              <el-input
+                v-model="formData.user_login_data"
+                type="textarea"
+                :rows="3"
+                placeholder="用户登录相关数据"
+              />
+            </el-form-item>
+
+            <el-form-item label="游戏信息" prop="game_info">
+              <el-input
+                v-model="gameInfoText"
+                type="textarea"
+                :rows="3"
+                placeholder="JSON格式的游戏信息"
+                @blur="handleGameInfoChange"
+              />
+            </el-form-item>
+
+            <el-form-item label="用户设置" prop="user_setting">
+              <el-input
+                v-model="userSettingText"
+                type="textarea"
+                :rows="3"
+                placeholder="JSON格式的用户设置"
+                @blur="handleUserSettingChange"
+              />
+            </el-form-item>
+          </div>
         </div>
       </div>
     </el-form>
+
+    <template #footer>
+      <div class="dialog-footer-actions" :class="{ 'mobile-footer': isMobile }">
+        <el-button @click="handleClose" :size="isMobile ? 'small' : 'default'">
+          <el-icon><Close /></el-icon>
+          取消
+        </el-button>
+        <el-button type="primary" @click="handleSave" :size="isMobile ? 'small' : 'default'" class="save-button">
+          <el-icon><Check /></el-icon>
+          保存
+        </el-button>
+      </div>
+    </template>
   </el-dialog>
 </template>
 
 <script setup>
-import { ref, reactive, watch, computed } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import { ref, reactive, watch } from 'vue'
+import { ElMessage } from 'element-plus'
 import { Close, Check, User, Trophy, Star, Setting, DataAnalysis, CopyDocument } from '@element-plus/icons-vue'
 import { MEMBERSHIP_LEVELS, GAME_PLATFORMS } from '../utils/constants'
 import { useResponsive } from '../utils/responsive'
@@ -377,19 +378,6 @@ const formRules = {
   server_name: [
     { required: true, message: '请输入服务器名称', trigger: 'blur' }
   ]
-}
-
-// 格式化日期显示
-const formatExpireDate = (date) => {
-  if (!date) return ''
-  const d = new Date(date)
-  const year = d.getFullYear()
-  const month = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  const hour = String(d.getHours()).padStart(2, '0')
-  const minute = String(d.getMinutes()).padStart(2, '0')
-  const second = String(d.getSeconds()).padStart(2, '0')
-  return `${year}-${month}-${day} ${hour}:${minute}:${second}`
 }
 
 // 监听userData变化
@@ -670,30 +658,35 @@ const handleSave = async () => {
 <style scoped>
 /* 对话框样式 */
 .user-edit-dialog :deep(.el-dialog) {
-  max-width: 1400px;
-  min-width: 800px;
+  max-width: 1280px;
+  min-width: 920px;
   background: var(--el-bg-color-overlay) !important;
+}
+
+.user-edit-dialog.is-mobile :deep(.el-dialog) {
+  min-width: auto;
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .user-edit-dialog :deep(.el-dialog__body) {
-  padding: 0 24px 24px 24px;
-  max-height: 85vh;
-  overflow-y: auto;
+  padding: 12px 24px 8px;
   background: var(--el-bg-color-overlay) !important;
 }
 
-/* 顶部操作栏 */
-.dialog-header {
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-  padding: 16px 0;
-  margin-bottom: 20px;
-  border-bottom: 2px solid var(--el-border-color-light);
-  position: sticky;
-  top: 0;
-  background: var(--el-bg-color-overlay);
-  z-index: 10;
+.user-edit-dialog:not(.is-mobile) :deep(.el-dialog__body) {
+  max-height: none;
+  overflow: visible;
+}
+
+.user-edit-dialog.is-mobile :deep(.el-dialog__body) {
+  padding: 12px 18px 90px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 /* 保存按钮突出样式 */
@@ -713,20 +706,95 @@ const handleSave = async () => {
   transform: translateY(0);
 }
 
+.user-edit-dialog :deep(.el-dialog__footer) {
+  padding: 0 24px 24px;
+}
+
+.user-edit-dialog.is-mobile :deep(.el-dialog__footer) {
+  padding: 0 18px 0;
+  margin: 0;
+}
+
+.dialog-footer-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+}
+
+.dialog-footer-actions.mobile-footer {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  padding: 12px 0 8px;
+  background: var(--el-bg-color-overlay);
+  border-top: 1px solid var(--el-border-color-light);
+  box-shadow: 0 -6px 12px rgba(0, 0, 0, 0.08);
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  z-index: 20;
+}
+
+.dialog-footer-actions.mobile-footer .el-button {
+  width: 100%;
+}
+
 /* 表单整体样式 */
 .user-edit-form {
-  --form-input-height: 40px;
-  --form-label-width: 100px;
+  --form-input-height: 36px;
+  --form-label-width: 96px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.section-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+  align-items: start;
+}
+
+.section-grid.is-mobile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  align-items: stretch;
+}
+
+.section-grid .section-full {
+  grid-column: 1 / -1;
+}
+
+.section-grid.is-mobile .section-full {
+  width: 100%;
+}
+
+.section-grid.is-mobile .grid-placeholder {
+  display: none;
+}
+
+.section-grid.is-mobile .form-group {
+  width: 100%;
 }
 
 /* 表单分组 */
 .form-group {
-  margin-bottom: 32px;
+  margin: 0;
   background: var(--el-bg-color);
   border: 1px solid var(--el-border-color-light);
-  border-radius: 8px;
-  padding: 20px;
+  border-radius: 10px;
+  padding: 16px;
   transition: all 0.3s ease;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-sizing: border-box;
 }
 
 .form-group:hover {
@@ -773,27 +841,45 @@ const handleSave = async () => {
 }
 
 .group-title {
-  margin: 0 0 20px 0;
-  font-size: 16px;
+  margin: 0 0 12px 0;
+  font-size: 15px;
   font-weight: 600;
   color: var(--el-color-primary);
   display: flex;
   align-items: center;
   gap: 8px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--el-border-color-light);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--el-border-color-light);
 }
 
 /* 网格布局 */
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 18px;
+  row-gap: 16px;
   align-items: start;
 }
 
 .form-grid .full-width {
   grid-column: span 2;
+}
+
+.form-grid .action-item {
+  grid-column: span 2;
+}
+
+.grid-placeholder {
+  visibility: hidden;
+}
+
+.section-system .banner-item {
+  grid-column: 3 / 5;
+}
+
+.section-system .remarks-item {
+  grid-column: 1 / 5;
+  margin-top: 4px;
 }
 
 .form-grid.extended-data {
@@ -814,6 +900,7 @@ const handleSave = async () => {
   border-radius: 6px;
   transition: all 0.3s ease;
   border: 1px solid var(--el-border-color-base);
+  box-sizing: border-box;
 }
 
 /* 亮色模式输入框悬停和聚焦效果 */
@@ -902,27 +989,56 @@ const handleSave = async () => {
   color: var(--el-text-color-regular);
   font-weight: 600;
   padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* 禁用状态 */
 .user-edit-form :deep(.el-input.is-disabled .el-input__wrapper) {
-  background: var(--el-bg-color-page);
-  border-color: var(--el-border-color-lighter);
-  opacity: 0.6;
+  background: var(--el-fill-color-lighter);
+  border-color: var(--el-border-color-light);
+  opacity: 1;
 }
 
 .user-edit-form :deep(.el-input.is-disabled .el-input__inner) {
-  color: var(--el-text-color-placeholder);
+  color: var(--el-text-color-disabled);
+  cursor: not-allowed;
 }
 
 /* 移动端适配 */
 .mobile-form .form-grid {
   grid-template-columns: 1fr;
-  gap: 16px;
+  row-gap: 16px;
+  column-gap: 0;
 }
 
 .mobile-form .group-title {
-  font-size: 14px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+
+.mobile-form .form-group {
+  padding: 14px 16px;
+  border-radius: 14px;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.mobile-form {
+  --form-input-height: 34px;
+  gap: 16px;
+}
+
+.mobile-form .banner-item,
+.mobile-form .remarks-item {
+  grid-column: 1 / -1 !important;
+}
+
+.mobile-form :deep(.el-form-item) {
+  padding: 0;
+  margin: 0;
 }
 
 /* 移动端确保游戏信息字段占满全宽 */
@@ -949,6 +1065,7 @@ const handleSave = async () => {
 .mobile-form :deep(.el-form-item__content) {
   margin-left: 0 !important;
   width: 100% !important;
+  gap: 8px;
 }
 
 .mobile-form :deep(.el-input),
@@ -962,16 +1079,25 @@ const handleSave = async () => {
 .mobile-form :deep(.el-select__wrapper),
 .mobile-form :deep(.el-input-number__wrapper),
 .mobile-form :deep(.el-date-editor .el-input__wrapper) {
-  height: 40px;
+  height: 36px;
   width: 100% !important;
+  border-radius: 8px;
+  box-sizing: border-box;
 }
 
 .mobile-form :deep(.el-input__inner),
 .mobile-form :deep(.el-input-number__inner) {
-  height: 40px;
-  line-height: 40px;
-  font-size: 14px;
+  height: 36px;
+  line-height: 36px;
+  font-size: 13px;
 }
+
+.mobile-form :deep(.el-select .el-input__inner) {
+  height: 36px;
+  line-height: 36px;
+  font-size: 13px;
+}
+
 
 /* 移动端带前缀的输入框特殊处理 */
 .mobile-form :deep(.el-input-group) {
@@ -979,7 +1105,17 @@ const handleSave = async () => {
 }
 
 .mobile-form :deep(.el-input-group__prepend) {
-  padding: 0 8px;
+  padding: 0 12px;
+  height: 36px;
+  line-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px 0 0 8px;
+}
+
+.mobile-form :deep(.el-input-group .el-input__wrapper) {
+  border-radius: 0 8px 8px 0;
 }
 
 /* 通用样式重置 - 消除所有可能的装饰符号 */
