@@ -261,6 +261,20 @@
           </div>
         </div>
 
+        <!-- 操作按钮 -->
+        <div class="form-group section-actions section-full">
+          <div class="action-buttons" :class="{ 'mobile-actions': isMobile }">
+            <el-button @click="handleClose" :size="isMobile ? 'small' : 'default'">
+              <el-icon><Close /></el-icon>
+              取消
+            </el-button>
+            <el-button type="primary" @click="handleSave" :size="isMobile ? 'small' : 'default'" class="save-button">
+              <el-icon><Check /></el-icon>
+              保存
+            </el-button>
+          </div>
+        </div>
+
         <!-- 扩展数据 -->
         <div class="form-group section-extended section-full" v-if="!isMobile">
           <h3 class="group-title">
@@ -300,19 +314,6 @@
         </div>
       </div>
     </el-form>
-
-    <template #footer>
-      <div class="dialog-footer-actions" :class="{ 'mobile-footer': isMobile }">
-        <el-button @click="handleClose" :size="isMobile ? 'small' : 'default'">
-          <el-icon><Close /></el-icon>
-          取消
-        </el-button>
-        <el-button type="primary" @click="handleSave" :size="isMobile ? 'small' : 'default'" class="save-button">
-          <el-icon><Check /></el-icon>
-          保存
-        </el-button>
-      </div>
-    </template>
   </el-dialog>
 </template>
 
@@ -684,7 +685,7 @@ const handleSave = async () => {
 }
 
 .user-edit-dialog.is-mobile :deep(.el-dialog__body) {
-  padding: 12px 18px 90px;
+  padding: 12px 18px 20px;
   flex: 1;
   overflow-y: auto;
 }
@@ -706,40 +707,44 @@ const handleSave = async () => {
   transform: translateY(0);
 }
 
-.user-edit-dialog :deep(.el-dialog__footer) {
-  padding: 0 24px 24px;
+/* 操作按钮分区 */
+.section-actions {
+  background: transparent !important;
+  border: none !important;
+  margin-top: 8px;
 }
 
-.user-edit-dialog.is-mobile :deep(.el-dialog__footer) {
-  padding: 0 18px 0;
-  margin: 0;
+.section-actions:hover {
+  box-shadow: none !important;
+  border: none !important;
 }
 
-.dialog-footer-actions {
+.action-buttons {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 12px;
 }
 
-.dialog-footer-actions.mobile-footer {
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  flex-direction: column;
-  align-items: stretch;
-  gap: 10px;
-  padding: 12px 0 8px;
-  background: var(--el-bg-color-overlay);
-  border-top: 1px solid var(--el-border-color-light);
-  box-shadow: 0 -6px 12px rgba(0, 0, 0, 0.08);
-  padding-bottom: calc(12px + env(safe-area-inset-bottom));
-  z-index: 20;
+.action-buttons :deep(.el-button) {
+  min-width: 120px;
+  padding: 0 20px;
 }
 
-.dialog-footer-actions.mobile-footer .el-button {
+.action-buttons :deep(.el-button + .el-button) {
+  margin-left: 0;
+}
+
+.action-buttons.mobile-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.action-buttons.mobile-actions .el-button {
   width: 100%;
+  height: 44px;
+  font-size: 15px;
 }
 
 /* 表单整体样式 */
