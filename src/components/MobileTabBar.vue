@@ -20,7 +20,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
-import { Document, DataAnalysis, ChatDotRound, User } from '@element-plus/icons-vue'
+import { Document, MessageBox, ChatDotRound, DataAnalysis, User } from '@element-plus/icons-vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -45,15 +45,20 @@ const menuItems = computed(() => {
       icon: Document
     },
     {
-      path: '/analytics',
-      label: '分析',
-      icon: DataAnalysis
+      path: '/feedback',
+      label: '反馈',
+      icon: MessageBox
     },
     {
       path: '/chat',
       label: '客服',
       icon: ChatDotRound,
-      badge: null // 可以添加未读消息数
+      badge: null
+    },
+    {
+      path: '/analytics',
+      label: '分析',
+      icon: DataAnalysis
     }
   ]
   

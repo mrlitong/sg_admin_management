@@ -55,32 +55,36 @@
           class="aside"
           :class="{ 'collapsed': sidebarCollapsed }"
         >
-          <el-menu
-            :default-active="activeMenu"
-            router
-            :background-color="menuBgColor"
-            :text-color="menuTextColor"
-            :active-text-color="menuActiveTextColor"
-            :collapse="sidebarCollapsed"
-            :collapse-transition="false"
-          >
-            <el-menu-item index="/users">
-              <el-icon><Document /></el-icon>
-              <span>用户数据管理</span>
-            </el-menu-item>
-            <el-menu-item index="/analytics">
-              <el-icon><DataAnalysis /></el-icon>
-              <span>数据分析中心</span>
-            </el-menu-item>
-            <el-menu-item index="/chat">
-              <el-icon><ChatDotRound /></el-icon>
-              <span>客服聊天</span>
-            </el-menu-item>
-            <el-menu-item index="/admins" v-if="userInfo?.is_super">
-              <el-icon><User /></el-icon>
-              <span>客服管理</span>
-            </el-menu-item>
-          </el-menu>
+            <el-menu
+              :default-active="activeMenu"
+              router
+              :background-color="menuBgColor"
+              :text-color="menuTextColor"
+              :active-text-color="menuActiveTextColor"
+              :collapse="sidebarCollapsed"
+              :collapse-transition="false"
+            >
+              <el-menu-item index="/users">
+                <el-icon><Document /></el-icon>
+                <span>用户数据管理</span>
+              </el-menu-item>
+              <el-menu-item index="/feedback">
+                <el-icon><MessageBox /></el-icon>
+                <span>反馈管理</span>
+              </el-menu-item>
+              <el-menu-item index="/chat">
+                <el-icon><ChatDotRound /></el-icon>
+                <span>客服聊天</span>
+              </el-menu-item>
+              <el-menu-item index="/analytics">
+                <el-icon><DataAnalysis /></el-icon>
+                <span>数据分析中心</span>
+              </el-menu-item>
+              <el-menu-item index="/admins" v-if="userInfo?.is_super">
+                <el-icon><User /></el-icon>
+                <span>客服管理</span>
+              </el-menu-item>
+            </el-menu>
         </el-aside>
         
         <!-- 主内容区 -->
@@ -130,7 +134,7 @@ import { useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { changePassword } from '../api/admin'
-import { UserFilled, ArrowDown, Document, User, ChatDotRound, DataAnalysis, Expand, Fold, Sunny, Moon } from '@element-plus/icons-vue'
+import { UserFilled, ArrowDown, Document, MessageBox, User, ChatDotRound, DataAnalysis, Expand, Fold, Sunny, Moon } from '@element-plus/icons-vue'
 import { useResponsive, useDialogResponsive } from '../utils/responsive'
 import { useThemeStore } from '../stores/theme'
 import MobileTabBar from './MobileTabBar.vue'

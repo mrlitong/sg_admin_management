@@ -24,6 +24,12 @@ const routes = [
         meta: { title: '用户数据管理' }
       },
       {
+        path: 'feedback',
+        name: 'FeedbackManagement',
+        component: () => import('../views/FeedbackManagement.vue'),
+        meta: { title: '反馈管理' }
+      },
+      {
         path: 'admins',
         name: 'AdminList',
         component: () => import('../views/AdminList.vue'),
